@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { About, CounterButton, Home } from "modules/main";
+import Login from "modules/auth/components/Login";
 
 function App() {
     return (
@@ -19,6 +20,9 @@ function App() {
                             <LinkContainer to="/about">
                                 <Nav.Link>About</Nav.Link>
                             </LinkContainer>
+                            <LinkContainer to="/login">
+                                <Nav.Link>Login</Nav.Link>
+                            </LinkContainer>
                         </Nav>
                     </Container>
                 </Navbar>
@@ -27,9 +31,8 @@ function App() {
                     <Routes>
                         <Route path="/" Component={Home} />
                         <Route path="/about" Component={About} />
+                        <Route path="/login" Component={Login} />
                     </Routes>
-
-                    <CounterButton />
                 </Container>
             </BrowserRouter>
         </div>
