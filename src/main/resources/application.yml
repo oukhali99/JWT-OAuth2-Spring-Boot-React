@@ -1,13 +1,13 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://199.195.249.139:5432/spring_website
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: postgresql
-    databse-platform: org.hibernate.dialect.PostgreSQLDialect
+    datasource:
+        url: jdbc:postgresql://199.195.249.139:5432/spring_website
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+        database: postgresql
+        databse-platform: org.hibernate.dialect.PostgreSQLDialect
