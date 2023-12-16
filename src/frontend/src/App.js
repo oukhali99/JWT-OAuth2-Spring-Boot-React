@@ -1,9 +1,27 @@
 import React from "react";
-import { CounterButton } from "modules/main";
+import { About, CounterButton, Home } from "modules/main";
+import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 
 function App() {
     return (
-        <div className="App">
+        <div>
+            <BrowserRouter>
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/about">About</Link>
+                        </li>
+                    </ul>
+                </nav>
+
+                <Routes>
+                    <Route path="/" Component={Home} />
+                    <Route path="/about" Component={About} />
+                </Routes>
+            </BrowserRouter>
             <CounterButton />
         </div>
     );

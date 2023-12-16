@@ -9,4 +9,4 @@ export const setAppState = () => (dispatch, getState) => {
 
 export const incrementCounter = () => (dispatch, getState) => {
     dispatch(incrementCounterAction());
-}
+};
