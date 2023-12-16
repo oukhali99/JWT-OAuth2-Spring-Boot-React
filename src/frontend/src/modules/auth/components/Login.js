@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
-import { Button, Modal, ButtonGroup, Container, Form } from "react-bootstrap";
+import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
+import { HttpStatusCode } from "axios";
 
 const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState(undefined);
+    const [password, setPassword] = useState(undefined);
+    const [response, setResponse] = useState(undefined);
 
     return (
         <Modal show={showModal} onHide={onHide}>
@@ -38,12 +40,24 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
 
             <Modal.Footer>
                 <ButtonGroup>
-                    <Button onClick={() => authenticate(username, password)}>Login</Button>
-                    <Button onClick={() => register(username, password)}>Register</Button>
+                    <Button
+                        onClick={async () => setResponse(await authenticate(username, password))}
+                    >
+                        Login
+                    </Button>
+                    <Button onClick={async () => setResponse(await register(username, password))}>
+                        Register
+                    </Button>
                 </ButtonGroup>
-            </Modal.Footer>
 
-            {authToken}
+                {response.status !== HttpStatusCode.Ok && (
+                    <Container>
+                        <Alert key="danger" variant="danger">
+                            {JSON.stringify(response)}
+                        </Alert>
+                    </Container>
+                )}
+            </Modal.Footer>
         </Modal>
     );
 };
