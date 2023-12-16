@@ -1,6 +1,4 @@
-import logo from "./logo.svg";
-import "./App.css";
-
+import React from "react";
 import { CounterButton } from "modules/main";
 
 function App() {
