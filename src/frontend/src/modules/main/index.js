@@ -1,3 +1,7 @@
-import MyComponent from "./components/MyComponent";
+import * as actions from "./redux/main.actions";
+import reducer from "./redux/main.reducer";
 
-export { MyComponent }
+export { actions };
+export default reducer;
+
+export { default as CounterButton } from "./components/CounterButton";
