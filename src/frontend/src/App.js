@@ -1,28 +1,37 @@
 import React from "react";
-import { About, CounterButton, Home } from "modules/main";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import { About, CounterButton, Home } from "modules/main";
 
 function App() {
     return (
         <div>
             <BrowserRouter>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/about">About</Link>
-                        </li>
-                    </ul>
-                </nav>
+                <Navbar bg="dark" data-bs-theme="dark">
+                    <Container>
+                        <Nav>
+                            <LinkContainer to="/">
+                                <Nav.Link>Home</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/about">
+                                <Nav.Link>About</Nav.Link>
+                            </LinkContainer>
+                        </Nav>
+                    </Container>
+                </Navbar>
 
-                <Routes>
-                    <Route path="/" Component={Home} />
-                    <Route path="/about" Component={About} />
-                </Routes>
+                <Container>
+                    <Routes>
+                        <Route path="/" Component={Home} />
+                        <Route path="/about" Component={About} />
+                    </Routes>
+
+                    <CounterButton />
+                </Container>
             </BrowserRouter>
-            <CounterButton />
         </div>
     );
 }
