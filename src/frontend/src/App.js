@@ -32,10 +32,7 @@ function App() {
                         <Route path="/" Component={Home} />
                         <Route path="/about" Component={About} />
                     </Routes>
-                    <Login
-                        showModal={showLoginModal}
-                        onHide={() => setShowLoginModal(false)}
-                    />
+                    <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
                 </Container>
             </BrowserRouter>
         </div>
