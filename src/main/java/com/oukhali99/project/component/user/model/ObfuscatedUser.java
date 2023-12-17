@@ -11,7 +11,7 @@ public class ObfuscatedUser {
         this.user = user;
     }
 
-    private User user;
+    protected User user;
 
     public String getFirstName() {
         return user.getFirstName();
@@ -33,12 +33,12 @@ public class ObfuscatedUser {
         return user.getAuthorityStringList();
     }
 
-    public List<ObfuscatedUser> getObfuscatedFriendList() {
-        List<ObfuscatedUser> obfuscatedUserList = new LinkedList<>();
+    public List<String> getFriendUsernameList() {
+        List<String> friendUsernameList = new LinkedList<>();
         for (User friend : user.getFriends()) {
-            obfuscatedUserList.add(new ObfuscatedUser(friend));
+            friendUsernameList.add(friend.getUsername());
         }
-        return obfuscatedUserList;
+        return friendUsernameList;
     }
 
 }

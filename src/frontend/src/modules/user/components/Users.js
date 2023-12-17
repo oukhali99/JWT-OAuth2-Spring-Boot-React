@@ -6,8 +6,9 @@ import { selectors as authSelectors } from "modules/auth";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
 import { Button, ButtonGroup, Container, Table } from "react-bootstrap";
+import { SocialButtons, actions as userActions } from "..";
 
-const Users = ({ authToken, username, authenticatedPostRequest }) => {
+const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
@@ -56,25 +57,26 @@ const Users = ({ authToken, username, authenticatedPostRequest }) => {
                         <th>Last Name</th>
                         <th>Username</th>
                         <th>Authorities</th>
+                        <th>Friends</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
-                        <tr>
-                            <td>{user.id || "N/A"}</td>
-                            <td>{user.firstName || "N/A"}</td>
-                            <td>{user.lastName || "N/A"}</td>
-                            <td>{user.username || "N/A"}</td>
-                            <td>{user.authorityStringList.join(", ") || "N/A"}</td>
-                            <td style={{ textAlign: "center" }}>
-                                <ButtonGroup>
-                                    <Button>Add Friend</Button>
-                                    <Button variant="danger">Block</Button>
-                                </ButtonGroup>
-                            </td>
-                        </tr>
-                    ))}
+                    {users
+                        .filter((user) => user.username !== username)
+                        .map((user) => (
+                            <tr>
+                                <td>{user?.id || "N/A"}</td>
+                                <td>{user?.firstName || "N/A"}</td>
+                                <td>{user?.lastName || "N/A"}</td>
+                                <td>{user?.username || "N/A"}</td>
+                                <td>{user?.authorityStringList?.join(", ") || "N/A"}</td>
+                                <td>{user?.friendUsernameList?.join(", ") || "N/A"}</td>
+                                <td style={{ textAlign: "center" }}>
+                                    <SocialButtons user={user} />
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </Table>
         </Container>
@@ -88,6 +90,7 @@ const stateToProps = (state) => ({
 
 const dispatchToProps = {
     authenticatedPostRequest: apiActions.authenticatedPostRequest,
+    addFriend: userActions.addFriend,
 };
 
 export default connect(stateToProps, dispatchToProps)(Users);

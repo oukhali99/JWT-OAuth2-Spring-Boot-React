@@ -49,4 +49,21 @@ public class UserService implements UserDetailsService {
         findByEmail(username).addAuthorityString(authorityString);
     }
 
+    @Transactional
+    public void addFriend(String username, String otherUsername) throws MyException {
+        User myUserFoo = findByEmail(username);
+        User otherUserFoo = findByEmail(otherUsername);
+
+        User myUser = userRepository.getReferenceById(myUserFoo.getId());
+        User otherUser = userRepository.getReferenceById(otherUserFoo.getId());
+
+        if (myUser.getReceivedFriendRequests().contains(otherUser)) {
+            myUser.addFriend(otherUser);
+            otherUser.addFriend(myUser);
+        }
+        else {
+            otherUser.addReceivedFriendRequest(myUser);
+        }
+    }
+
 }

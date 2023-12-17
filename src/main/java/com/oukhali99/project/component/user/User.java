@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.parameters.P;
@@ -31,11 +32,15 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    @Column(unique = true)
     private String email;
 
     private String passwordHash;
 
     private List<String> authorityStringList;
+
+    @ManyToMany
+    private List<User> receivedFriendRequests;
 
     @ManyToMany
     private List<User> friends;
@@ -57,6 +62,22 @@ public class User implements UserDetails {
         }
 
         authorityStringList.add(authorityString);
+    }
+
+    public void addFriend(User user) {
+        if (receivedFriendRequests.contains(user)) {
+            receivedFriendRequests.remove(user);
+        }
+
+        if (!friends.contains(user)) {
+            friends.add(user);
+        }
+    }
+
+    public void addReceivedFriendRequest(User user) {
+        if (!receivedFriendRequests.contains(user)) {
+            receivedFriendRequests.add(user);
+        }
     }
 
     @Override
