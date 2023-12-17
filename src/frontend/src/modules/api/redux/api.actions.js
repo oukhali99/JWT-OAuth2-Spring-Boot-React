@@ -26,7 +26,7 @@ export const authenticatedPostRequest = (endpoint, body, config) => async (dispa
     const jwtToken = authSelectors.getToken(getState());
     const response = await postRequest(endpoint, body, {
         headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            Authorization: jwtToken && `Bearer ${jwtToken}`,
         },
         ...config,
     });
