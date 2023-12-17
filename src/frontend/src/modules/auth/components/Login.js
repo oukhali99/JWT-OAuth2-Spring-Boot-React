@@ -12,6 +12,8 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
     const [response, setResponse] = useState(undefined);
 
     const onHideWrapper = () => {
+        setUsername("");
+        setPassword("");
         setResponse(undefined);
         onHide();
     };
