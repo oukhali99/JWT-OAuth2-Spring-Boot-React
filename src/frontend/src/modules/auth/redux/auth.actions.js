@@ -5,9 +5,14 @@ import { HttpStatusCode } from "axios";
 import { actions as apiActions } from "modules/api";
 
 export const setTokenAction = createAction("auth/setTokenAction");
+export const clearTokenAction = createAction("auth/clearTokenAction");
 
 export const setToken = (token) => (dispatch, getState) => {
     dispatch(setTokenAction({ token }));
+};
+
+export const clearToken = () => (dispatch, getState) => {
+    dispatch(clearTokenAction());
 };
 
 export const authenticate = (username, password) => async (dispatch, getState) => {

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { About, Users, Home } from "modules/main";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
 
-const App = ({ authToken, setToken }) => {
+const App = ({ authToken, clearToken }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     return (
@@ -29,7 +29,7 @@ const App = ({ authToken, setToken }) => {
                             {authToken === undefined ? (
                                 <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
                             ) : (
-                                <Nav.Link onClick={() => setToken(undefined)}>Logout</Nav.Link>
+                                <Nav.Link onClick={() => clearToken()}>Logout</Nav.Link>
                             )}
                         </Nav>
                     </Container>
@@ -54,6 +54,7 @@ const stateToProps = (state) => ({
 
 const dispatchToProps = {
     setToken: authActions.setToken,
+    clearToken: authActions.clearToken,
 };
 
 export default connect(stateToProps, dispatchToProps)(App);
