@@ -39,11 +39,11 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
                                         "/auth/**",
-                                        "/user/add-authority"
+                                        "/user"
                                 )
                                 .permitAll()
                                 .requestMatchers(
-                                        "/user"
+                                        "/user/add-authority"
                                 )
                                 .hasAuthority("ADMIN")
                                 .anyRequest()

@@ -44,7 +44,7 @@ const Users = ({ authToken, username, authenticatedPostRequest }) => {
         );
     }
 
-    const users = response.data;
+    const users = response?.data?.obfuscatedUserList || [];
 
     return (
         <Container className="m-4">

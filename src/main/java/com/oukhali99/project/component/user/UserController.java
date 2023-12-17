@@ -1,6 +1,7 @@
 package com.oukhali99.project.component.user;
 
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponseBody;
 import com.oukhali99.project.model.responsebody.ErrorCode;
 import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
 import com.oukhali99.project.model.responsebody.MyResponseBody;
@@ -19,8 +20,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<List<User>> home() {
-        return ResponseEntity.of(Optional.ofNullable(userService.findAll()));
+    public ResponseEntity<ObfuscatedUserListResponseBody> home() {
+        List<User> userList = userService.findAll();
+        ObfuscatedUserListResponseBody obfuscatedUserListResponseBody = new ObfuscatedUserListResponseBody(
+                "Successfully retrieved user list",
+                userList
+        );
+        return ResponseEntity.ok(obfuscatedUserListResponseBody);
     }
 
     @PostMapping("/add-authority")
