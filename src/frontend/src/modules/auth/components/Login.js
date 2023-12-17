@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
 import { HttpStatusCode } from "axios";
+import { ResponseAlert } from "modules/common";
 
 const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
-    const [username, setUsername] = useState(undefined);
-    const [password, setPassword] = useState(undefined);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [response, setResponse] = useState(undefined);
 
     return (
@@ -50,11 +51,9 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                     </Button>
                 </ButtonGroup>
 
-                {response.status !== HttpStatusCode.Ok && (
+                {response && (
                     <Container>
-                        <Alert key="danger" variant="danger">
-                            {JSON.stringify(response)}
-                        </Alert>
+                        <ResponseAlert response={response} />
                     </Container>
                 )}
             </Modal.Footer>
