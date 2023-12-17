@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<ObfuscatedUserListResponseBody> home() {
+    public ResponseEntity<MyResponseBody> home() {
         List<User> userList = userService.findAll();
         ObfuscatedUserListResponseBody obfuscatedUserListResponseBody = new ObfuscatedUserListResponseBody(
                 "Successfully retrieved user list",
