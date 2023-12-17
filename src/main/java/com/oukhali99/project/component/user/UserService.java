@@ -2,6 +2,7 @@ package com.oukhali99.project.component.user;
 
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,4 +48,10 @@ public class UserService implements UserDetailsService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    @Transactional
+    public void addAuthority(String username, String authorityString) throws UsernameNotFoundException {
+        findByEmail(username).addAuthorityString(authorityString);
+    }
+
 }

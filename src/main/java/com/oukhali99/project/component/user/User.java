@@ -1,5 +1,6 @@
 package com.oukhali99.project.component.user;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -32,9 +35,25 @@ public class User implements UserDetails {
 
     private String passwordHash;
 
+    private List<String> authorityStringList;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        List<GrantedAuthority> authorityList = new LinkedList<>();
+
+        for (String authorityString : authorityStringList) {
+            authorityList.add(new SimpleGrantedAuthority(authorityString));
+        }
+
+        return authorityList;
+    }
+
+    public void addAuthorityString(String authorityString) {
+        if (authorityStringList == null) {
+            authorityStringList = new LinkedList<>();
+        }
+
+        authorityStringList.add(authorityString);
     }
 
     @Override

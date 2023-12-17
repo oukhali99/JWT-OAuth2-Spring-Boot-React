@@ -36,9 +36,14 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
                                         "/auth/register",
-                                        "/auth/authenticate"
+                                        "/auth/authenticate",
+                                        "/user/make-admin"
                                 )
                                 .permitAll()
+                                .requestMatchers(
+                                        "/user"
+                                )
+                                .hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                                 ;

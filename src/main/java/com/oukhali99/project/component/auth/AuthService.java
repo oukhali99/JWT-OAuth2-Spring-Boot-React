@@ -52,6 +52,10 @@ public class AuthService {
                 .passwordHash(passwordEncoder.encode(password))
                 .build()
                 ;
+
+        // Make him a user
+        user.addAuthorityString("USER");
+
         userService.addUser(user);
         String jwtToken = jwtService.generateToken(user);
 

@@ -13,9 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(MyException.class)
-    protected ResponseEntity<String> handle(MyException myException, WebRequest webRequest) {
+    protected ResponseEntity<MyException> handle(MyException myException, WebRequest webRequest) {
         myException.printStackTrace();
-        return new ResponseEntity<>(myException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(myException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
