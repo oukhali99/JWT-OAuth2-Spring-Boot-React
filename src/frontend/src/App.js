@@ -4,7 +4,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { About, CounterButton, Home } from "modules/main";
+import { About, Users, Home } from "modules/main";
 import Login from "modules/auth/components/Login";
 
 function App() {
@@ -22,6 +22,9 @@ function App() {
                             <LinkContainer to="/about">
                                 <Nav.Link>About</Nav.Link>
                             </LinkContainer>
+                            <LinkContainer to="/users">
+                                <Nav.Link>Users</Nav.Link>
+                            </LinkContainer>
                             <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
                         </Nav>
                     </Container>
@@ -31,6 +34,7 @@ function App() {
                     <Routes>
                         <Route path="/" Component={Home} />
                         <Route path="/about" Component={About} />
+                        <Route path="/users" Component={Users} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
                 </Container>
