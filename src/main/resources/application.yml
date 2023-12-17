@@ -1,6 +1,5 @@
 spring:
     datasource:
-        url: jdbc:postgresql://199.195.249.139:5432/spring_website
         driver-class-name: org.postgresql.Driver
     jpa:
         hibernate:
