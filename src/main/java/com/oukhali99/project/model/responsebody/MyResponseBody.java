@@ -1,7 +1,13 @@
 package com.oukhali99.project.model.responsebody;
 
-public interface MyResponseBody {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-    Object getBody();
+@Data
+@AllArgsConstructor
+public class MyResponseBody {
+
+    private ErrorCode errorCode;
 
 }

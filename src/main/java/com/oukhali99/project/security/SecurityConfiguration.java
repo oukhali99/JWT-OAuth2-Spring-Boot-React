@@ -26,6 +26,9 @@ public class SecurityConfiguration {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
+    @Autowired
+    private ExceptionCatcherFilter exceptionCatcherFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -35,8 +38,7 @@ public class SecurityConfiguration {
                     public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationManagerRequestMatcherRegistry) {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
-                                        "/auth/register",
-                                        "/auth/authenticate",
+                                        "/auth/**",
                                         "/user/add-authority"
                                 )
                                 .permitAll()
@@ -58,6 +60,7 @@ public class SecurityConfiguration {
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionCatcherFilter, JwtAuthenticationFilter.class)
                 ;
 
         return httpSecurity.build();

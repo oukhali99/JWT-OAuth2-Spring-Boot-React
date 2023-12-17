@@ -7,15 +7,11 @@ import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
 import { Button, Container, Table } from "react-bootstrap";
 
-const Users = ({ authToken, username }) => {
+const Users = ({ authToken, username, authenticatedPostRequest }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        const res = await apiActions.getRequest("/user", {
-            headers: {
-                Authorization: `Bearer ${authToken}`,
-            },
-        });
+        const res = await authenticatedPostRequest("/user");
         setResponse(res);
     };
 
@@ -33,10 +29,7 @@ const Users = ({ authToken, username }) => {
                 <ResponseAlert response={response} />
                 <Button
                     onClick={async () => {
-                        await apiActions.getRequest("/user/add-authority", {
-                            headers: {
-                                Authorization: `Bearer ${authToken}`,
-                            },
+                        await authenticatedPostRequest("/user/add-authority", undefined, {
                             params: {
                                 username,
                                 authority: "ADMIN",
@@ -86,6 +79,8 @@ const stateToProps = (state) => ({
     username: authSelectors.getUsername(state),
 });
 
-const dispatchToProps = {};
+const dispatchToProps = {
+    authenticatedPostRequest: apiActions.authenticatedPostRequest,
+};
 
 export default connect(stateToProps, dispatchToProps)(Users);

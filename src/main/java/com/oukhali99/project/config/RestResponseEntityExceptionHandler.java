@@ -1,7 +1,8 @@
 package com.oukhali99.project.config;
 
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
+import com.oukhali99.project.model.responsebody.ErrorCode;
+import com.oukhali99.project.model.responsebody.MyExceptionResponseBody;
 import com.oukhali99.project.model.responsebody.MyResponseBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class RestResponseEntityExceptionHandler {
         log.error(myException.getMessage());
         myException.printStackTrace();
         return new ResponseEntity<>(
-                new MyMessageResponseBody(myException.getMessage()),
+                new MyExceptionResponseBody(myException),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
