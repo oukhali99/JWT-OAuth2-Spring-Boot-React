@@ -27,8 +27,9 @@ const App = ({ authToken, setToken }) => {
                             <LinkContainer to="/users">
                                 <Nav.Link>Users</Nav.Link>
                             </LinkContainer>
-                            <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
-                            {authToken !== undefined && (
+                            {authToken === undefined ? (
+                                <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
+                            ) : (
                                 <Nav.Link onClick={() => setToken(undefined)}>Logout</Nav.Link>
                             )}
                         </Nav>
