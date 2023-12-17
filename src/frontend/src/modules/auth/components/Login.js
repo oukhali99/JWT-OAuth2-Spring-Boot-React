@@ -42,11 +42,25 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
             <Modal.Footer>
                 <ButtonGroup>
                     <Button
-                        onClick={async () => setResponse(await authenticate(username, password))}
+                        onClick={async () => {
+                            const response = await authenticate(username, password);
+                            setResponse(response);
+                            if (response.status === HttpStatusCode.Ok) {
+                                onHide();
+                            }
+                        }}
                     >
                         Login
                     </Button>
-                    <Button onClick={async () => setResponse(await register(username, password))}>
+                    <Button
+                        onClick={async () => {
+                            const response = await register(username, password);
+                            setResponse(response);
+                            if (response.status === HttpStatusCode.Ok) {
+                                onHide();
+                            }
+                        }}
+                    >
                         Register
                     </Button>
                 </ButtonGroup>
