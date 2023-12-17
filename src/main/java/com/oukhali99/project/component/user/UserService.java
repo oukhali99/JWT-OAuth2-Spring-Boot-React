@@ -51,11 +51,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void addFriend(String username, String otherUsername) throws MyException {
-        User myUserFoo = findByEmail(username);
-        User otherUserFoo = findByEmail(otherUsername);
-
-        User myUser = userRepository.getReferenceById(myUserFoo.getId());
-        User otherUser = userRepository.getReferenceById(otherUserFoo.getId());
+        User myUser = findByEmail(username);
+        User otherUser = findByEmail(otherUsername);
 
         if (myUser.getReceivedFriendRequests().contains(otherUser)) {
             myUser.addFriend(otherUser);
@@ -64,6 +61,15 @@ public class UserService implements UserDetailsService {
         else {
             otherUser.addReceivedFriendRequest(myUser);
         }
+    }
+
+    @Transactional
+    public void removeFriend(String username, String otherUsername) throws MyException {
+        User myUser = findByEmail(username);
+        User otherUser = findByEmail(otherUsername);
+
+        myUser.removeFriend(otherUser);
+        otherUser.removeFriend(myUser);
     }
 
 }

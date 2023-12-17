@@ -80,6 +80,15 @@ public class User implements UserDetails {
         }
     }
 
+    public void removeFriend(User user) {
+        if (friends.contains(user)) {
+            friends.remove(user);
+        }
+        if (receivedFriendRequests.contains(user)) {
+            receivedFriendRequests.remove(user);
+        }
+    }
+
     @Override
     public String getPassword() {
         return passwordHash;

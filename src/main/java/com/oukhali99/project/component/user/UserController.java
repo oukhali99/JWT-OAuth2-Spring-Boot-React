@@ -60,6 +60,19 @@ public class UserController {
         return ResponseEntity.ok(new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully added " + username));
     }
 
+    @PostMapping("/remove-friend")
+    public ResponseEntity<MyResponseBody> removeFriend(
+            @RequestParam String username,
+            @RequestHeader(name = "Authorization") String authorization
+    ) throws MyException {
+        String jwtToken = authorization.substring(7);
+        String myUsername = jwtService.extractUsername(jwtToken);
+
+        userService.removeFriend(myUsername, username);
+
+        return ResponseEntity.ok(new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully removed " + username));
+    }
+
     @PostMapping("/get-self")
     public ResponseEntity<MyResponseBody> getSelf(
             @RequestHeader(name = "Authorization") String authorization

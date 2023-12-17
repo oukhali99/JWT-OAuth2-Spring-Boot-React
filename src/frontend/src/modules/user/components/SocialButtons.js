@@ -5,11 +5,26 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { actions as userActions } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
 
-const SocialButtons = ({ addFriend, user, selfUsername }) => {
+const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUsers }) => {
     const firstButton = user?.friendUsernameList?.includes(selfUsername) ? (
-        <Button>Message</Button>
+        <Button
+            variant="danger"
+            onClick={async () => {
+                await removeFriend(user.username);
+                refreshUsers();
+            }}
+        >
+            UnFriend
+        </Button>
     ) : (
-        <Button onClick={() => addFriend(user.username)}>Add Friend</Button>
+        <Button
+            onClick={async () => {
+                await addFriend(user.username);
+                refreshUsers();
+            }}
+        >
+            Add Friend
+        </Button>
     );
 
     return (
@@ -26,6 +41,7 @@ const stateToProps = (state) => ({
 
 const dispatchToProps = {
     addFriend: userActions.addFriend,
+    removeFriend: userActions.removeFriend,
 };
 
 export default connect(stateToProps, dispatchToProps)(SocialButtons);

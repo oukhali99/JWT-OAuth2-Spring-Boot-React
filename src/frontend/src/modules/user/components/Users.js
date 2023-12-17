@@ -12,8 +12,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => 
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        const res = await authenticatedPostRequest("/user");
-        setResponse(res);
+        setResponse(await authenticatedPostRequest("/user"));
     };
 
     useEffect(() => {
@@ -73,7 +72,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => 
                                 <td>{user?.authorityStringList?.join(", ") || "N/A"}</td>
                                 <td>{user?.friendUsernameList?.join(", ") || "N/A"}</td>
                                 <td style={{ textAlign: "center" }}>
-                                    <SocialButtons user={user} />
+                                    <SocialButtons user={user} refreshUsers={refreshUsers} />
                                 </td>
                             </tr>
                         ))}
