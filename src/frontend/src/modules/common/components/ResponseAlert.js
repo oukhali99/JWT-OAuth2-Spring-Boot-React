@@ -8,18 +8,27 @@ const ResponseAlert = ({ response }) => {
             case HttpStatusCode.Ok:
                 return "success";
             case HttpStatusCode.InternalServerError:
+            case HttpStatusCode.Forbidden:
                 return "danger";
             default:
                 return "";
         }
     }, [response]);
 
-    const altMessage = response.status === HttpStatusCode.Ok ? "Success" : "Failiure";
+    const altMessage = useMemo(() => {
+        switch (response.status) {
+            case HttpStatusCode.Ok:
+                return "Success";
+            case HttpStatusCode.Forbidden:
+                return "Access Denied";
+            default:
+                return "Failiure";
+        }
+    }, [response]);
+
     return (
         <Alert key={variant} variant={variant}>
-            <Container>
-                {response?.data?.message || altMessage}
-            </Container>
+            <Container>{response?.data?.message || altMessage}</Container>
         </Alert>
     );
 };

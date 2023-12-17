@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 
 import { About, Users, Home } from "modules/main";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
-import { setToken } from "modules/auth/redux/auth.actions";
 
 const App = ({ authToken, setToken }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
