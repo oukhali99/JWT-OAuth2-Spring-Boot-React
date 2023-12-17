@@ -5,20 +5,22 @@ import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 
-const Users = ({ authToken }) => {
+const Users = ({ authToken, username }) => {
     const [response, setResponse] = useState(undefined);
 
+    const refreshUsers = async () => {
+        const res = await apiActions.getRequest("/user", {
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+        });
+        setResponse(res);
+    };
+
     useEffect(() => {
-        (async () => {
-            const res = await apiActions.getRequest("/user", {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            });
-            setResponse(res);
-        })();
+        refreshUsers();
     }, [authToken, setResponse]);
 
     if (!response) {
@@ -26,7 +28,27 @@ const Users = ({ authToken }) => {
     }
 
     if (response?.status !== HttpStatusCode.Ok) {
-        return <ResponseAlert response={response} />;
+        return (
+            <Container className="m-4">
+                <ResponseAlert response={response} />
+                <Button
+                    onClick={async () => {
+                        await apiActions.getRequest("/user/add-authority", {
+                            headers: {
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                            params: {
+                                username,
+                                authority: "ADMIN",
+                            },
+                        });
+                        refreshUsers();
+                    }}
+                >
+                    Become Admin
+                </Button>
+            </Container>
+        );
     }
 
     const users = response.data;
@@ -59,6 +81,7 @@ const Users = ({ authToken }) => {
 
 const stateToProps = (state) => ({
     authToken: authSelectors.getToken(state),
+    username: authSelectors.getUsername(state),
 });
 
 const dispatchToProps = {};
