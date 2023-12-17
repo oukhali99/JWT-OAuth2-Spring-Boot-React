@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import React, { useMemo } from "react";
-import { Alert } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 
 const ResponseAlert = ({ response }) => {
     const variant = useMemo(() => {
@@ -14,9 +14,12 @@ const ResponseAlert = ({ response }) => {
         }
     }, [response]);
 
+    const altMessage = response.status === HttpStatusCode.Ok ? "Success" : "Failiure";
     return (
         <Alert key={variant} variant={variant}>
-            {response?.data?.message || JSON.stringify(response?.data)}
+            <Container>
+                {response?.data?.message || altMessage}
+            </Container>
         </Alert>
     );
 };
