@@ -62,6 +62,7 @@ const Users = ({ authToken, username }) => {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Username</th>
+                        <th>Authorities</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,7 @@ const Users = ({ authToken, username }) => {
                             <th>{user.firstName || "N/A"}</th>
                             <th>{user.lastName || "N/A"}</th>
                             <th>{user.username || "N/A"}</th>
+                            <th>{user.authorityStringList.join(", ") || "N/A"}</th>
                         </tr>
                     ))}
                 </tbody>
