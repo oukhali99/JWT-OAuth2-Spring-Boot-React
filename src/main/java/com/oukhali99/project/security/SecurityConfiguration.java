@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         "/auth/register",
                                         "/auth/authenticate",
-                                        "/user/make-admin"
+                                        "/user/add-authority"
                                 )
                                 .permitAll()
                                 .requestMatchers(
