@@ -5,6 +5,7 @@ import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
+import { Container, Table } from "react-bootstrap";
 
 const Users = ({ authToken }) => {
     const [response, setResponse] = useState(undefined);
@@ -25,12 +26,35 @@ const Users = ({ authToken }) => {
     }
 
     if (response?.status !== HttpStatusCode.Ok) {
-        return (
-            <ResponseAlert response={response} />
-        );
+        return <ResponseAlert response={response} />;
     }
 
-    return <>{JSON.stringify(response)}</>;
+    const users = response.data;
+
+    return (
+        <Container className="m-4">
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                        <tr>
+                            <th>{user.id || "N/A"}</th>
+                            <th>{user.firstName || "N/A"}</th>
+                            <th>{user.lastName || "N/A"}</th>
+                            <th>{user.username || "N/A"}</th>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </Container>
+    );
 };
 
 const stateToProps = (state) => ({

@@ -11,8 +11,13 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState(undefined);
 
+    const onHideWrapper = () => {
+        setResponse(undefined);
+        onHide();
+    };
+
     return (
-        <Modal show={showModal} onHide={onHide}>
+        <Modal show={showModal} onHide={onHideWrapper}>
             <Modal.Header>
                 <h1>Login</h1>
             </Modal.Header>
@@ -46,7 +51,7 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                             const response = await authenticate(username, password);
                             setResponse(response);
                             if (response.status === HttpStatusCode.Ok) {
-                                onHide();
+                                onHideWrapper();
                             }
                         }}
                     >
@@ -57,7 +62,7 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                             const response = await register(username, password);
                             setResponse(response);
                             if (response.status === HttpStatusCode.Ok) {
-                                onHide();
+                                onHideWrapper();
                             }
                         }}
                     >
