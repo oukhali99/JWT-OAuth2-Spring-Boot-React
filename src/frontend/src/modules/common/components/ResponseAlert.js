@@ -28,7 +28,9 @@ const ResponseAlert = ({ response }) => {
 
     return (
         <Alert key={variant} variant={variant}>
-            <Container>{response?.data?.errorCode} {response?.data?.body?.message || altMessage}</Container>
+            <Container>
+                {response?.data?.errorCode} {response?.data?.body?.message || altMessage}
+            </Container>
         </Alert>
     );
 };

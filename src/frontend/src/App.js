@@ -5,7 +5,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { connect } from "react-redux";
 
-import { About, Users, Home } from "modules/main";
+import { About, Home } from "modules/main";
+import { Users } from "modules/user";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
 
 const App = ({ authToken, logout }) => {

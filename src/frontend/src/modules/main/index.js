@@ -8,4 +8,3 @@ export default reducer;
 export { default as CounterButton } from "./components/CounterButton";
 export { default as Home } from "./components/Home";
 export { default as About } from "./components/About";
-export { default as Users } from "./components/Users";
