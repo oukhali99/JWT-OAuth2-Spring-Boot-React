@@ -6,6 +6,7 @@ import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.responsebody.ErrorCode;
 import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
 import com.oukhali99.project.model.responsebody.MyResponseBody;
@@ -40,7 +41,7 @@ public class AuthController {
     public ResponseEntity<MyResponseBody> authenticate(
             @RequestParam String username,
             @RequestParam String password
-    ) throws UsernameNotFoundException, MyAuthenticationException {
+    ) throws MyException {
         MyResponseBody myResponseBody = new AuthResponseBody(
                 ErrorCode.SUCCESS,
                 "Authentication successful",

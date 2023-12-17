@@ -5,6 +5,7 @@ import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,7 +29,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String authenticate(String username, String password) throws UsernameNotFoundException, MyAuthenticationException {
+    public String authenticate(String username, String password) throws MyException {
         try {
             // The below line will throw an error if the username or password is wrong
             authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(

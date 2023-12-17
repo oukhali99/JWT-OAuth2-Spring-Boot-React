@@ -6,6 +6,8 @@ import com.oukhali99.project.security.exception.MyExceptionWrapperBadJwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,7 +49,7 @@ public class JwtService {
                     .getBody()
                     ;
         }
-        catch (ExpiredJwtException | MalformedJwtException e) {
+        catch (JwtException e) {
             throw new MyExceptionWrapperBadJwtToken(e);
         }
     }

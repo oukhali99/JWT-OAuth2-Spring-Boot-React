@@ -2,6 +2,7 @@ package com.oukhali99.project.component.user;
 
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponseBody;
+import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.responsebody.ErrorCode;
 import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
 import com.oukhali99.project.model.responsebody.MyResponseBody;
@@ -33,7 +34,7 @@ public class UserController {
     public ResponseEntity<MyResponseBody> makeAdmin(
             @RequestParam String username,
             @RequestParam String authority
-    ) throws UsernameNotFoundException {
+    ) throws MyException {
         userService.addAuthority(username, authority);
         return ResponseEntity.ok(
                 new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully made " + username + " a " + authority)

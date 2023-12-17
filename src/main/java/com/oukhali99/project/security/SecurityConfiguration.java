@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(exceptionCatcherFilter, JwtAuthenticationFilter.class)
+                //.addFilterBefore(exceptionCatcherFilter, JwtAuthenticationFilter.class)
                 ;
 
         return httpSecurity.build();

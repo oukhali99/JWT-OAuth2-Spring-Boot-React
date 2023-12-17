@@ -2,6 +2,7 @@ package com.oukhali99.project.component.user;
 
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.exception.MyException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +18,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findByEmail(String email) throws UsernameNotFoundException {
+    public User findByEmail(String email) throws MyException {
         Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(email);
-        }
-
-        return userOptional.orElseThrow();
+        return userOptional.orElseThrow(() -> new UsernameNotFoundException(email));
     }
 
     public void addUser(User user) throws UserWithThatEmailAlreadyExists {
@@ -39,9 +35,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         try {
             return findByEmail(username);
-        }
-        catch (UsernameNotFoundException e) {
-            throw new org.springframework.security.core.userdetails.UsernameNotFoundException(username + " not found");
+        } catch (MyException e) {
+            return null;
         }
     }
 
@@ -50,7 +45,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void addAuthority(String username, String authorityString) throws UsernameNotFoundException {
+    public void addAuthority(String username, String authorityString) throws MyException {
         findByEmail(username).addAuthorityString(authorityString);
     }
 

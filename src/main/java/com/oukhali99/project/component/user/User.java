@@ -37,6 +37,9 @@ public class User implements UserDetails {
 
     private List<String> authorityStringList;
 
+    @ManyToMany
+    private List<User> friends;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new LinkedList<>();

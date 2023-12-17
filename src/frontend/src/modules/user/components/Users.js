@@ -5,7 +5,7 @@ import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Container, Table } from "react-bootstrap";
 
 const Users = ({ authToken, username, authenticatedPostRequest }) => {
     const [response, setResponse] = useState(undefined);
@@ -56,16 +56,23 @@ const Users = ({ authToken, username, authenticatedPostRequest }) => {
                         <th>Last Name</th>
                         <th>Username</th>
                         <th>Authorities</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {users.map((user) => (
                         <tr>
-                            <th>{user.id || "N/A"}</th>
-                            <th>{user.firstName || "N/A"}</th>
-                            <th>{user.lastName || "N/A"}</th>
-                            <th>{user.username || "N/A"}</th>
-                            <th>{user.authorityStringList.join(", ") || "N/A"}</th>
+                            <td>{user.id || "N/A"}</td>
+                            <td>{user.firstName || "N/A"}</td>
+                            <td>{user.lastName || "N/A"}</td>
+                            <td>{user.username || "N/A"}</td>
+                            <td>{user.authorityStringList.join(", ") || "N/A"}</td>
+                            <td style={{ textAlign: "center" }}>
+                                <ButtonGroup>
+                                    <Button>Add Friend</Button>
+                                    <Button variant="danger">Block</Button>
+                                </ButtonGroup>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
