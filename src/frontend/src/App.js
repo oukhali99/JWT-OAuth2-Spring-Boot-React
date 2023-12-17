@@ -3,11 +3,13 @@ import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { connect } from "react-redux";
 
 import { About, Users, Home } from "modules/main";
-import Login from "modules/auth/components/Login";
+import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
+import { setToken } from "modules/auth/redux/auth.actions";
 
-function App() {
+const App = ({ authToken, setToken }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     return (
@@ -26,6 +28,9 @@ function App() {
                                 <Nav.Link>Users</Nav.Link>
                             </LinkContainer>
                             <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
+                            {authToken !== undefined && (
+                                <Nav.Link onClick={() => setToken(undefined)}>Logout</Nav.Link>
+                            )}
                         </Nav>
                     </Container>
                 </Navbar>
@@ -41,6 +46,14 @@ function App() {
             </BrowserRouter>
         </div>
     );
-}
+};
 
-export default App;
+const stateToProps = (state) => ({
+    authToken: authSelectors.getToken(state),
+});
+
+const dispatchToProps = {
+    setToken: authActions.setToken,
+};
+
+export default connect(stateToProps, dispatchToProps)(App);

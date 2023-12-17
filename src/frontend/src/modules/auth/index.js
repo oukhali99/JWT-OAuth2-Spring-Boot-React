@@ -5,3 +5,4 @@ import reducer from "./redux/auth.reducer";
 export default reducer;
 
 export { actions, selectors };
+export { default as Login } from "./components/Login";
