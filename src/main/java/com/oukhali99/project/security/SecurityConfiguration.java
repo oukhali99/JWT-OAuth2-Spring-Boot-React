@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
                                         "/auth/**",
-                                        "/user"
+                                        "/user/get-all"
                                 )
                                 .permitAll()
                                 .requestMatchers(

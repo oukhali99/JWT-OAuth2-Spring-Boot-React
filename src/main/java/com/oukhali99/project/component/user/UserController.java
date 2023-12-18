@@ -26,13 +26,20 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("")
-    public ResponseEntity<MyResponseBody> home() {
+    @PostMapping("/get-all")
+    public ResponseEntity<MyResponseBody> home(
+            @RequestHeader(name = "Authorization") String authorization
+    ) throws MyException {
+        String jwtToken = authorization.substring(7);
+        String username = jwtService.extractUsername(jwtToken);
+
         List<User> userList = userService.findAll();
         ObfuscatedUserListResponseBody obfuscatedUserListResponseBody = new ObfuscatedUserListResponseBody(
                 "Successfully retrieved user list",
-                userList
+                userList,
+                username
         );
+
         return ResponseEntity.ok(obfuscatedUserListResponseBody);
     }
 

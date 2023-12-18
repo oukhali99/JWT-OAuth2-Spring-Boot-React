@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Alert, Button, ButtonGroup } from "react-bootstrap";
 
 import { actions as userActions } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
@@ -15,6 +15,16 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
             }}
         >
             UnFriend
+        </Button>
+    ) : user?.selfSendThisPersonAFriendRequest ? (
+        <Button
+            variant="danger"
+            onClick={async () => {
+                await removeFriend(user.username);
+                refreshUsers();
+            }}
+        >
+            Cancel Request
         </Button>
     ) : (
         <Button

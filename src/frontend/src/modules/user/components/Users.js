@@ -12,7 +12,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => 
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        setResponse(await authenticatedPostRequest("/user"));
+        setResponse(await authenticatedPostRequest("/user/get-all"));
     };
 
     useEffect(() => {
