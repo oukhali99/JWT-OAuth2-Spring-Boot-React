@@ -21,12 +21,12 @@ public class ObfuscatedUserListResponseBody extends MyMessageResponseBody {
         }
     }
 
-    public ObfuscatedUserListResponseBody(String message, List<User> userList, String selfUsername) {
+    public ObfuscatedUserListResponseBody(String message, List<User> userList, User selfUser) {
         super(ErrorCode.SUCCESS, message);
 
         obfuscatedUserList = new LinkedList<>();
         for (User user : userList) {
-            obfuscatedUserList.add(new ObfuscatedUser(user, selfUsername));
+            obfuscatedUserList.add(new ObfuscatedUser(user, selfUser));
         }
     }
 

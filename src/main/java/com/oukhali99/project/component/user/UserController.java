@@ -32,12 +32,13 @@ public class UserController {
     ) throws MyException {
         String jwtToken = authorization.substring(7);
         String username = jwtService.extractUsername(jwtToken);
+        User selfUser = userService.findByEmail(username);
 
         List<User> userList = userService.findAll();
         ObfuscatedUserListResponseBody obfuscatedUserListResponseBody = new ObfuscatedUserListResponseBody(
                 "Successfully retrieved user list",
                 userList,
-                username
+                selfUser
         );
 
         return ResponseEntity.ok(obfuscatedUserListResponseBody);

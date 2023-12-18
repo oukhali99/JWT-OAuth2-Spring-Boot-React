@@ -7,16 +7,15 @@ import java.util.List;
 
 public class ObfuscatedUser {
 
-    private String friendUsername;
+    private User selfUser;
 
     public ObfuscatedUser(User user) {
         this.user = user;
-        this.friendUsername = null;
     }
 
-    public ObfuscatedUser(User user, String friendUsername) {
+    public ObfuscatedUser(User user, User selfUser) {
         this.user = user;
-        this.friendUsername = friendUsername;
+        this.selfUser = selfUser;
     }
 
     protected User user;
@@ -49,18 +48,20 @@ public class ObfuscatedUser {
         return friendUsernameList;
     }
 
-    public Boolean getSelfSendThisPersonAFriendRequest() {
-        if (friendUsername == null) {
+    public Boolean getSelfSentThisPersonAFriendRequest() {
+        if (selfUser == null) {
             return false;
         }
 
-        for (User user : user.getReceivedFriendRequests()) {
-            if (user.getEmail().equals(friendUsername)) {
-                return true;
-            }
+        return user.getReceivedFriendRequests().contains(selfUser);
+    }
+
+    public Boolean getThisPersonSentSelfAFriendRequest() {
+        if (selfUser == null) {
+            return false;
         }
 
-        return false;
+        return selfUser.getReceivedFriendRequests().contains(user);
     }
 
 }

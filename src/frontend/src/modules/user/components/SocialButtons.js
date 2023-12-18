@@ -16,7 +16,7 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
         >
             UnFriend
         </Button>
-    ) : user?.selfSendThisPersonAFriendRequest ? (
+    ) : user?.selfSentThisPersonAFriendRequest ? (
         <Button
             variant="danger"
             onClick={async () => {
@@ -25,6 +25,16 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
             }}
         >
             Cancel Request
+        </Button>
+    ) : user?.thisPersonSentSelfAFriendRequest ? (
+        <Button
+            onClick={async () => {
+                await addFriend(user.username);
+                refreshUsers();
+            }}
+            variant="success"
+        >
+            Accept Request
         </Button>
     ) : (
         <Button

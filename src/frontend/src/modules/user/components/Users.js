@@ -5,7 +5,7 @@ import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
-import { Button, ButtonGroup, Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { SocialButtons, actions as userActions } from "..";
 
 const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => {
