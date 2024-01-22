@@ -102,21 +102,4 @@ public class UserController {
         );
     }
 
-    @PostMapping("/create-bid")
-    public ResponseEntity<ApiResponse> createBid(
-            @RequestHeader(name = "Authorization") String authorization,
-            @RequestParam long listingId,
-            @RequestParam long priceDollars
-    ) throws MyException {
-        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        User owner = userService.findByEmail(username);
-        Listing listing = listingService.getById(listingId);
-
-        Bid bid = new Bid(owner, listing, new Price(priceDollars));
-        listingService.addBid(bid);
-        owner = userService.addBid(bid);
-
-        return ResponseEntity.ok(new ApiObjectResponse(owner));
-    }
-
 }
