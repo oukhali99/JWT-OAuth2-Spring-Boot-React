@@ -1,9 +1,8 @@
 package com.oukhali99.project.config;
 
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.responsebody.ErrorCode;
-import com.oukhali99.project.model.responsebody.MyExceptionResponseBody;
-import com.oukhali99.project.model.responsebody.MyResponseBody;
+import com.oukhali99.project.model.apiresponse.ApiExceptionResponse;
+import com.oukhali99.project.model.apiresponse.BaseApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +15,11 @@ import org.springframework.web.context.request.WebRequest;
 public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(MyException.class)
-    protected ResponseEntity<MyResponseBody> handle(MyException myException, WebRequest webRequest) {
+    protected ResponseEntity<BaseApiResponse> handle(MyException myException, WebRequest webRequest) {
         log.error(myException.getMessage());
         myException.printStackTrace();
         return new ResponseEntity<>(
-                new MyExceptionResponseBody(myException),
+                new ApiExceptionResponse(myException),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }

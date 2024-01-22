@@ -2,17 +2,17 @@ package com.oukhali99.project.component.user.model.responsebody;
 
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.model.ObfuscatedUser;
-import com.oukhali99.project.model.responsebody.ErrorCode;
-import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
+import com.oukhali99.project.model.apiresponse.ErrorCode;
+import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class ObfuscatedUserListResponseBody extends MyMessageResponseBody {
+public class ObfuscatedUserListResponse extends ApiMessageResponse {
 
     private List<ObfuscatedUser> obfuscatedUserList;
 
-    public ObfuscatedUserListResponseBody(String message, List<User> userList) {
+    public ObfuscatedUserListResponse(String message, List<User> userList) {
         super(ErrorCode.SUCCESS, message);
 
         obfuscatedUserList = new LinkedList<>();
@@ -21,7 +21,7 @@ public class ObfuscatedUserListResponseBody extends MyMessageResponseBody {
         }
     }
 
-    public ObfuscatedUserListResponseBody(String message, List<User> userList, User selfUser) {
+    public ObfuscatedUserListResponse(String message, List<User> userList, User selfUser) {
         super(ErrorCode.SUCCESS, message);
 
         obfuscatedUserList = new LinkedList<>();

@@ -1,9 +1,9 @@
 package com.oukhali99.project.component.auth.model.responsebody;
 
-import com.oukhali99.project.model.responsebody.ErrorCode;
-import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
+import com.oukhali99.project.model.apiresponse.ErrorCode;
+import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
 
-public class AuthResponseBody extends MyMessageResponseBody {
+public class AuthResponse extends ApiMessageResponse {
 
     public String getUsername() {
         return username;
@@ -17,7 +17,7 @@ public class AuthResponseBody extends MyMessageResponseBody {
 
     private String token;
 
-    public AuthResponseBody(ErrorCode errorCode, String message, String token, String username) {
+    public AuthResponse(ErrorCode errorCode, String message, String token, String username) {
         super(errorCode, message);
         this.username = username;
         this.token = token;

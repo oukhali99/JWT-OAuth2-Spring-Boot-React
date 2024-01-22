@@ -1,7 +1,7 @@
 package com.oukhali99.project.security.exception;
 
 import com.oukhali99.project.exception.MyExceptionWrapper;
-import com.oukhali99.project.model.responsebody.ErrorCode;
+import com.oukhali99.project.model.apiresponse.ErrorCode;
 
 public class MyExceptionWrapperBadJwtToken extends MyExceptionWrapper {
 

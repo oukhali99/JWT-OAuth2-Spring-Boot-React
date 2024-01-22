@@ -1,4 +1,4 @@
-package com.oukhali99.project.model.responsebody;
+package com.oukhali99.project.model.apiresponse;
 
 public enum ErrorCode {
     SUCCESS,

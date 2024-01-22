@@ -1,7 +1,6 @@
 package com.oukhali99.project.exception;
 
-import com.oukhali99.project.model.responsebody.ErrorCode;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.oukhali99.project.model.apiresponse.ErrorCode;
 
 public abstract class MyException extends Exception {
 

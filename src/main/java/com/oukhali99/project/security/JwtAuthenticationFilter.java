@@ -1,11 +1,9 @@
 package com.oukhali99.project.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oukhali99.project.component.user.UserService;
-import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.responsebody.MyExceptionResponseBody;
+import com.oukhali99.project.model.apiresponse.ApiExceptionResponse;
 import com.oukhali99.project.security.exception.MyExceptionWrapperBadJwtToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -105,7 +103,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response,
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 objectMapper.writeValueAsString(
-                        new MyExceptionResponseBody(new MyExceptionWrapperBadJwtToken(exception))
+                        new ApiExceptionResponse(new MyExceptionWrapperBadJwtToken(exception))
                 )
         );
     }

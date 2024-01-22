@@ -1,7 +1,5 @@
 package com.oukhali99.project.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.responsebody.MyExceptionResponseBody;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

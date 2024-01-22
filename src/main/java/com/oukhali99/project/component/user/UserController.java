@@ -1,20 +1,18 @@
 package com.oukhali99.project.component.user;
 
-import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
-import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponseBody;
-import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponseBody;
+import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
+import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.responsebody.ErrorCode;
-import com.oukhali99.project.model.responsebody.MyMessageResponseBody;
-import com.oukhali99.project.model.responsebody.MyResponseBody;
+import com.oukhali99.project.model.apiresponse.ErrorCode;
+import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
+import com.oukhali99.project.model.apiresponse.BaseApiResponse;
 import com.oukhali99.project.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -27,7 +25,7 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/get-all")
-    public ResponseEntity<MyResponseBody> home(
+    public ResponseEntity<BaseApiResponse> home(
             @RequestHeader(name = "Authorization") String authorization
     ) throws MyException {
         String jwtToken = authorization.substring(7);
@@ -35,7 +33,7 @@ public class UserController {
         User selfUser = userService.findByEmail(username);
 
         List<User> userList = userService.findAll();
-        ObfuscatedUserListResponseBody obfuscatedUserListResponseBody = new ObfuscatedUserListResponseBody(
+        ObfuscatedUserListResponse obfuscatedUserListResponseBody = new ObfuscatedUserListResponse(
                 "Successfully retrieved user list",
                 userList,
                 selfUser
@@ -45,18 +43,18 @@ public class UserController {
     }
 
     @PostMapping("/add-authority")
-    public ResponseEntity<MyResponseBody> makeAdmin(
+    public ResponseEntity<BaseApiResponse> makeAdmin(
             @RequestParam String username,
             @RequestParam String authority
     ) throws MyException {
         userService.addAuthority(username, authority);
         return ResponseEntity.ok(
-                new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully made " + username + " a " + authority)
+                new ApiMessageResponse(ErrorCode.SUCCESS, "Successfully made " + username + " a " + authority)
         );
     }
 
     @PostMapping("/add-friend")
-    public ResponseEntity<MyResponseBody> addFriend(
+    public ResponseEntity<BaseApiResponse> addFriend(
             @RequestParam String username,
             @RequestHeader(name = "Authorization") String authorization
     ) throws MyException {
@@ -65,11 +63,11 @@ public class UserController {
 
         userService.addFriend(myUsername, username);
 
-        return ResponseEntity.ok(new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully added " + username));
+        return ResponseEntity.ok(new ApiMessageResponse(ErrorCode.SUCCESS, "Successfully added " + username));
     }
 
     @PostMapping("/remove-friend")
-    public ResponseEntity<MyResponseBody> removeFriend(
+    public ResponseEntity<BaseApiResponse> removeFriend(
             @RequestParam String username,
             @RequestHeader(name = "Authorization") String authorization
     ) throws MyException {
@@ -78,18 +76,18 @@ public class UserController {
 
         userService.removeFriend(myUsername, username);
 
-        return ResponseEntity.ok(new MyMessageResponseBody(ErrorCode.SUCCESS, "Successfully removed " + username));
+        return ResponseEntity.ok(new ApiMessageResponse(ErrorCode.SUCCESS, "Successfully removed " + username));
     }
 
     @PostMapping("/get-self")
-    public ResponseEntity<MyResponseBody> getSelf(
+    public ResponseEntity<BaseApiResponse> getSelf(
             @RequestHeader(name = "Authorization") String authorization
     ) throws MyException {
         String jwtToken = authorization.substring(7);
         String myUsername = jwtService.extractUsername(jwtToken);
 
         ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.findByEmail(myUsername));
-        return ResponseEntity.ok(new ObfuscatedSelfResponseBody(obfuscatedSelf));
+        return ResponseEntity.ok(new ObfuscatedSelfResponse(obfuscatedSelf));
     }
 
 }
