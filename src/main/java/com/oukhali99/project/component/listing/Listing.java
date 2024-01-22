@@ -1,5 +1,6 @@
 package com.oukhali99.project.component.listing;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.model.Price;
@@ -29,6 +30,7 @@ public class Listing {
     @OneToMany
     private List<Bid> bids;
 
+    @JsonIgnore
     public ListingId getId() {
         return new ListingId(ownerUsername, id);
     }
