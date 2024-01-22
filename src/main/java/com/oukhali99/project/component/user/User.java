@@ -1,6 +1,7 @@
 package com.oukhali99.project.component.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oukhali99.project.component.listing.Listing;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,9 @@ public class User implements UserDetails {
 
     @ManyToMany
     private List<User> friends;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Listing> listings;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -134,6 +138,10 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void addListing(Listing listing) {
+        this.listings.add(listing);
     }
 
 }

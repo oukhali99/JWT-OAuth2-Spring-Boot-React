@@ -1,12 +1,12 @@
 package com.oukhali99.project.component.user;
 
+import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.apiresponse.ErrorCode;
-import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
-import com.oukhali99.project.model.apiresponse.BaseApiResponse;
+import com.oukhali99.project.model.Price;
+import com.oukhali99.project.model.apiresponse.*;
 import com.oukhali99.project.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +81,20 @@ public class UserController {
 
         ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.findByEmail(myUsername));
         return ResponseEntity.ok(new ObfuscatedSelfResponse(obfuscatedSelf));
+    }
+
+    @PostMapping("/create-listing")
+    public ResponseEntity<ApiResponse> create(
+            @RequestHeader(name = "Authorization") String authorization,
+            @RequestParam String title,
+            @RequestParam long priceDollars
+    ) throws MyException {
+        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        User owner = userService.findByEmail(username);
+        return ResponseEntity.ok(new ApiObjectResponse(
+                userService.addListing(new Listing(owner))
+            )
+        );
     }
 
 }

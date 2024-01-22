@@ -1,7 +1,9 @@
 package com.oukhali99.project.component.user;
 
+import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,15 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public User getById(long id) throws EntityDoesNotExistException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new EntityDoesNotExistException();
+        }
+
+        return userOptional.get();
+    }
 
     public User findByEmail(String email) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -70,6 +81,13 @@ public class UserService implements UserDetailsService {
 
         myUser.removeFriend(otherUser);
         otherUser.removeFriend(myUser);
+    }
+
+    @Transactional
+    public User addListing(Listing listing) throws EntityDoesNotExistException {
+        User user = listing.getOwner();
+        getById(user.getId()).addListing(listing);
+        return user;
     }
 
 }

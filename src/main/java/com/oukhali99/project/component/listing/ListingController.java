@@ -1,6 +1,9 @@
 package com.oukhali99.project.component.listing;
 
+import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.user.User;
+import com.oukhali99.project.component.user.UserService;
+import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.Price;
 import com.oukhali99.project.model.apiresponse.ApiListResponse;
@@ -21,32 +24,27 @@ public class ListingController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping
     public ResponseEntity<ApiResponse> findAll() {
         return ResponseEntity.ok(new ApiListResponse(listingService.findAll()));
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> create(
-            @RequestHeader(name = "Authorization") String authorization,
-            @RequestParam String title,
-            @RequestParam long priceDollars
-    ) throws MyException {
-        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        return ResponseEntity.ok(new ApiObjectResponse(
-                listingService.save(
-                        new Listing(username, title, new Price(priceDollars)))
-                )
-        );
     }
 
     @PostMapping("/bid")
     public ResponseEntity<ApiResponse> bid(
         @RequestHeader(name = "Authorization") String authorization,
         @RequestParam String ownerUsername,
-        @RequestParam long id
-    ) {
-        return null;
+        @RequestParam long listingId,
+        @RequestParam long priceDollars
+    ) throws EntityDoesNotExistException {
+        Listing listing = listingService.getById(ownerUsername, listingId);
+        listingService.addBid(
+                listing,
+                new Bid(listing, new Price(priceDollars))
+        );
+        return ResponseEntity.ok(new ApiObjectResponse("ok"));
     }
 
 }

@@ -24,7 +24,7 @@ public class ListingService {
     @Autowired
     private UserService userService;
 
-    public Listing getById(ListingId listingId) throws EntityDoesNotExistException {
+    public Listing getById(Long listingId) throws EntityDoesNotExistException {
         Optional<Listing> listingOptional = listingRepository.findById(listingId);
         if (listingOptional.isEmpty()) {
             throw new EntityDoesNotExistException();
@@ -34,8 +34,7 @@ public class ListingService {
     }
 
     public Listing getById(String ownerUsername, long id) throws EntityDoesNotExistException {
-        ListingId listingId = new ListingId(ownerUsername, id);
-        return getById(listingId);
+        return getById(id);
     }
 
     public List<Listing> findAll() {
@@ -43,7 +42,7 @@ public class ListingService {
     }
 
     public Listing save(Listing listing) throws EntityAlreadyExistsException {
-        if (listingRepository.findById(listing.getListingId()).isPresent()) {
+        if (listingRepository.findById(listing.getId()).isPresent()) {
             throw new EntityAlreadyExistsException();
         }
 
@@ -52,9 +51,13 @@ public class ListingService {
     }
 
     @Transactional
+    private void addBid(Long listingId, Bid bid) throws EntityDoesNotExistException {
+        getById(listingId).addBid(bid);
+    }
+
+    @Transactional
     public void addBid(Listing listing, Bid bid) throws EntityDoesNotExistException {
-        getById(listing.getListingId()).addBid(bid);
-        listing.addBid(bid);
+        addBid(listing.getId(), bid);
     }
 
 }
