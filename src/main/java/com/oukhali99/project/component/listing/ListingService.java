@@ -21,9 +21,6 @@ public class ListingService {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private UserService userService;
-
     public Listing getById(Long listingId) throws EntityDoesNotExistException {
         Optional<Listing> listingOptional = listingRepository.findById(listingId);
         if (listingOptional.isEmpty()) {
@@ -56,8 +53,8 @@ public class ListingService {
     }
 
     @Transactional
-    public void addBid(Listing listing, Bid bid) throws EntityDoesNotExistException {
-        addBid(listing.getId(), bid);
+    public void addBid(Bid bid) throws EntityDoesNotExistException {
+        addBid(bid.getListing().getId(), bid);
     }
 
 }

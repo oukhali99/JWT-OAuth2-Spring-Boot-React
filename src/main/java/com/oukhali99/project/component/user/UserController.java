@@ -1,6 +1,8 @@
 package com.oukhali99.project.component.user;
 
+import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.listing.Listing;
+import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
@@ -20,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ListingService listingService;
 
     @Autowired
     private JwtService jwtService;
@@ -84,7 +89,7 @@ public class UserController {
     }
 
     @PostMapping("/create-listing")
-    public ResponseEntity<ApiResponse> create(
+    public ResponseEntity<ApiResponse> createListing(
             @RequestHeader(name = "Authorization") String authorization,
             @RequestParam String title,
             @RequestParam long priceDollars
@@ -92,9 +97,26 @@ public class UserController {
         String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
         User owner = userService.findByEmail(username);
         return ResponseEntity.ok(new ApiObjectResponse(
-                userService.addListing(new Listing(owner))
-            )
+                        userService.addListing(new Listing(owner, title, new Price(priceDollars)))
+                )
         );
+    }
+
+    @PostMapping("/create-bid")
+    public ResponseEntity<ApiResponse> createBid(
+            @RequestHeader(name = "Authorization") String authorization,
+            @RequestParam long listingId,
+            @RequestParam long priceDollars
+    ) throws MyException {
+        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        User owner = userService.findByEmail(username);
+        Listing listing = listingService.getById(listingId);
+
+        Bid bid = new Bid(owner, listing, new Price(priceDollars));
+        listingService.addBid(bid);
+        owner = userService.addBid(bid);
+
+        return ResponseEntity.ok(new ApiObjectResponse(owner));
     }
 
 }

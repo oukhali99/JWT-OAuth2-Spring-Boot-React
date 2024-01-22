@@ -1,6 +1,7 @@
 package com.oukhali99.project.component.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.listing.Listing;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
@@ -51,6 +52,9 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Listing> listings;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Bid> bids;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -144,4 +148,7 @@ public class User implements UserDetails {
         this.listings.add(listing);
     }
 
+    public void addBid(Bid bid) {
+        bids.add(bid);
+    }
 }

@@ -2,6 +2,7 @@ package com.oukhali99.project.component.bid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oukhali99.project.component.listing.Listing;
+import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.model.Price;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,12 +23,21 @@ public class Bid {
     @ManyToOne
     private Listing listing;
 
+    @JsonIgnore
+    @ManyToOne
+    private User bidder;
+
     @Embedded
     private Price price;
 
-    public Bid(Listing listing, Price price) {
+    public Bid(User bidder, Listing listing, Price price) {
+        this(bidder);
         this.listing = listing;
         this.price = price;
+    }
+
+    public Bid(User bidder) {
+        this.bidder = bidder;
     }
 
     @Override
@@ -42,4 +52,5 @@ public class Bid {
     public int hashCode() {
         return Objects.hash(id, listing);
     }
+
 }

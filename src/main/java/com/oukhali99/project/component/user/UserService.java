@@ -1,6 +1,8 @@
 package com.oukhali99.project.component.user;
 
+import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.listing.Listing;
+import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
@@ -85,9 +87,16 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User addListing(Listing listing) throws EntityDoesNotExistException {
-        User user = listing.getOwner();
-        getById(user.getId()).addListing(listing);
+        User user = getById(listing.getOwner().getId());
+        user.addListing(listing);
         return user;
+    }
+
+    @Transactional
+    public User addBid(Bid bid) throws EntityDoesNotExistException {
+        User bidder = getById(bid.getBidder().getId());
+        bidder.addBid(bid);
+        return bidder;
     }
 
 }

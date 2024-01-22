@@ -38,11 +38,11 @@ public class ListingController {
         @RequestParam String ownerUsername,
         @RequestParam long listingId,
         @RequestParam long priceDollars
-    ) throws EntityDoesNotExistException {
+    ) throws MyException {
         Listing listing = listingService.getById(ownerUsername, listingId);
+        User bidder = userService.findByEmail(jwtService.extractUsernameFromAuthorizationHeader(authorization));
         listingService.addBid(
-                listing,
-                new Bid(listing, new Price(priceDollars))
+                new Bid(bidder, listing, new Price(priceDollars))
         );
         return ResponseEntity.ok(new ApiObjectResponse("ok"));
     }
