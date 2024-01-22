@@ -47,4 +47,18 @@ public class ListingController {
         return ResponseEntity.ok(new ApiObjectResponse("ok"));
     }
 
+    @PutMapping
+    public ResponseEntity<ApiResponse> putListing(
+            @RequestHeader(name = "Authorization") String authorization,
+            @RequestParam String title,
+            @RequestParam long priceDollars
+    ) throws MyException {
+        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        User owner = userService.findByEmail(username);
+        return ResponseEntity.ok(new ApiObjectResponse(
+                        userService.addListing(new Listing(owner, title, new Price(priceDollars)))
+                )
+        );
+    }
+
 }

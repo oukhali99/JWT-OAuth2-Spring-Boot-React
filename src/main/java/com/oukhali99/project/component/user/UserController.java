@@ -24,9 +24,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private ListingService listingService;
-
-    @Autowired
     private JwtService jwtService;
 
     @PostMapping("/get-all")
@@ -86,20 +83,6 @@ public class UserController {
 
         ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.findByEmail(myUsername));
         return ResponseEntity.ok(new ObfuscatedSelfResponse(obfuscatedSelf));
-    }
-
-    @PostMapping("/create-listing")
-    public ResponseEntity<ApiResponse> createListing(
-            @RequestHeader(name = "Authorization") String authorization,
-            @RequestParam String title,
-            @RequestParam long priceDollars
-    ) throws MyException {
-        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        User owner = userService.findByEmail(username);
-        return ResponseEntity.ok(new ApiObjectResponse(
-                        userService.addListing(new Listing(owner, title, new Price(priceDollars)))
-                )
-        );
     }
 
 }
