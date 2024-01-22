@@ -1,17 +1,12 @@
 package com.oukhali99.project.component.listing;
 
 import com.oukhali99.project.component.bid.Bid;
-import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
-import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.exception.EntityAlreadyExistsException;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
-import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.apiresponse.ApiResponse;
 import com.oukhali99.project.security.JwtService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +43,7 @@ public class ListingService {
     }
 
     public Listing save(Listing listing) throws EntityAlreadyExistsException {
-        if (listingRepository.findById(listing.getId()).isPresent()) {
+        if (listingRepository.findById(listing.getListingId()).isPresent()) {
             throw new EntityAlreadyExistsException();
         }
 
@@ -58,7 +53,7 @@ public class ListingService {
 
     @Transactional
     public void addBid(Listing listing, Bid bid) throws EntityDoesNotExistException {
-        getById(listing.getId()).addBid(bid);
+        getById(listing.getListingId()).addBid(bid);
         listing.addBid(bid);
     }
 

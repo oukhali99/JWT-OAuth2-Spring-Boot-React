@@ -2,7 +2,6 @@ package com.oukhali99.project.component.listing;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oukhali99.project.component.bid.Bid;
-import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.model.Price;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,7 +30,7 @@ public class Listing {
     private List<Bid> bids;
 
     @JsonIgnore
-    public ListingId getId() {
+    public ListingId getListingId() {
         return new ListingId(ownerUsername, id);
     }
 
