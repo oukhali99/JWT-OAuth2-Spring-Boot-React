@@ -25,18 +25,11 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/get-all")
-    public ResponseEntity<BaseApiResponse> home(
-            @RequestHeader(name = "Authorization") String authorization
-    ) throws MyException {
-        String jwtToken = authorization.substring(7);
-        String username = jwtService.extractUsername(jwtToken);
-        User selfUser = userService.findByEmail(username);
-
+    public ResponseEntity<BaseApiResponse> home() throws MyException {
         List<User> userList = userService.findAll();
         ObfuscatedUserListResponse obfuscatedUserListResponseBody = new ObfuscatedUserListResponse(
                 "Successfully retrieved user list",
-                userList,
-                selfUser
+                userList
         );
 
         return ResponseEntity.ok(obfuscatedUserListResponseBody);
