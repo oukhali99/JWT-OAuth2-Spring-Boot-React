@@ -30,6 +30,11 @@ public class JwtService {
         return extractAllClaims(jwtToken).getSubject();
     }
 
+    public String extractUsernameFromAuthorizationHeader(String authorizationHeader) throws MyException {
+        String jwtToken = authorizationHeader.substring(7);
+        return extractAllClaims(jwtToken).getSubject();
+    }
+
     public Date extractExpirationDate(String token) throws MyException {
         return extractClaim(token, Claims::getExpiration);
     }
