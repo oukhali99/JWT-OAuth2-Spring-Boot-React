@@ -4,10 +4,12 @@ import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.model.Price;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @IdClass(ListingId.class)
 @Data
+@NoArgsConstructor
 public class Listing {
 
     @Id
@@ -15,6 +17,7 @@ public class Listing {
     private User owner;
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private String title;
@@ -23,6 +26,10 @@ public class Listing {
 
     public ListingId getId() {
         return new ListingId(owner, id);
+    }
+
+    public Listing(User owner) {
+        this.owner = owner;
     }
 
 }
