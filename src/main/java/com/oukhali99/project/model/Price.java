@@ -1,12 +1,14 @@
 package com.oukhali99.project.model;
 
 import jakarta.persistence.Embeddable;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Embeddable
+@NoArgsConstructor
 public class Price {
 
-    private final Long dollars;
+    private Long dollars;
 
 }

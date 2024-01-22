@@ -1,8 +1,8 @@
 package com.oukhali99.project.component.user.exception;
 
-import com.oukhali99.project.exception.MyException;
+import com.oukhali99.project.exception.EntityDoesNotExistException;
 
-public class UsernameNotFoundException extends MyException {
+public class UsernameNotFoundException extends EntityDoesNotExistException {
 
     private String username;
 

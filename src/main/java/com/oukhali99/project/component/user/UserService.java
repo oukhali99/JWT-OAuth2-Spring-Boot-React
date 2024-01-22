@@ -18,7 +18,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findByEmail(String email) throws MyException {
+    public User findByEmail(String email) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
         return userOptional.orElseThrow(() -> new UsernameNotFoundException(email));
     }

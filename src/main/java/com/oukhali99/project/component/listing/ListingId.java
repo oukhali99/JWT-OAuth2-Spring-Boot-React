@@ -11,12 +11,12 @@ import java.util.Objects;
 @NoArgsConstructor
 public class ListingId implements Serializable {
 
-    private User owner;
+    private String ownerUsername;
 
     private Long id;
 
-    public ListingId(User owner, Long id) {
-        this.owner = owner;
+    public ListingId(String ownerUsername, Long id) {
+        this.ownerUsername = ownerUsername;
         this.id = id;
     }
 
@@ -25,12 +25,12 @@ public class ListingId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListingId listingId = (ListingId) o;
-        return owner.equals(listingId.owner) && id.equals(listingId.id);
+        return ownerUsername.equals(listingId.ownerUsername) && id.equals(listingId.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, id);
+        return Objects.hash(ownerUsername, id);
     }
 
 }

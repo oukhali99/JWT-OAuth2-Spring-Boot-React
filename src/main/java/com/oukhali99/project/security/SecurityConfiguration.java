@@ -36,6 +36,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(new Customizer<AuthorizeHttpRequestsConfigurer<org.springframework.security.config.annotation.web.builders.HttpSecurity>.AuthorizationManagerRequestMatcherRegistry>() {
                     @Override
                     public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationManagerRequestMatcherRegistry) {
+
+                        authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll();
+
+                        /*
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(
                                         "/auth/**",
@@ -49,6 +53,7 @@ public class SecurityConfiguration {
                                 .anyRequest()
                                 .authenticated()
                                 ;
+                         */
                     }
                 })
                 .sessionManagement(new Customizer<SessionManagementConfigurer<HttpSecurity>>() {
