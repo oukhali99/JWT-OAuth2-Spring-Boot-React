@@ -1,8 +1,21 @@
 import { Button } from "react-bootstrap";
-import React from "react";
+import React, { useState } from "react";
 
 const RefreshButton = ({ refresh }) => {
-    return <Button onClick={refresh}>Refresh</Button>;
+    const [message, setMessage] = useState();
+
+    const onClick = async () => {
+        setMessage("Refreshing...");
+        await refresh();
+        setMessage(undefined);
+    }
+
+    return (
+        <div>
+            <Button onClick={onClick}>Refresh</Button>
+            {message}
+        </div>
+    );
 };
 
 export default RefreshButton;

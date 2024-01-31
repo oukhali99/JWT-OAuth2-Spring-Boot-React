@@ -11,7 +11,6 @@ const Users = ({ authToken, username, authenticatedGetRequest }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        setResponse(undefined);
         setResponse(await authenticatedGetRequest("/user"));
     };
 

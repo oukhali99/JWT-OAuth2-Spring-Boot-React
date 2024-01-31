@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { About, Home } from "modules/main";
 import { Account, Users } from "modules/user";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
+import { ListingHome } from "modules/listing";
 
 const App = ({ authToken, logout, username }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -26,6 +27,9 @@ const App = ({ authToken, logout, username }) => {
                             </LinkContainer>
                             <LinkContainer to="/users">
                                 <Nav.Link>Users</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/listing">
+                                <Nav.Link>Listings</Nav.Link>
                             </LinkContainer>
                             {username === undefined ? (
                                 <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
@@ -46,6 +50,7 @@ const App = ({ authToken, logout, username }) => {
                         <Route path="/" Component={Home} />
                         <Route path="/about" Component={About} />
                         <Route path="/users" Component={Users} />
+                        <Route path="/listing" Component={ListingHome} />
                         <Route path="/account" Component={Account} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
