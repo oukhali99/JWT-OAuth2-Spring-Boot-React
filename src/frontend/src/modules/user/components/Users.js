@@ -48,6 +48,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGet
 
     return (
         <Container className="m-4">
+            <ResponseAlert response={response} />
             <Table striped bordered hover>
                 <thead>
                     <tr>
