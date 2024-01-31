@@ -3,15 +3,15 @@ import { connect } from "react-redux";
 
 import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
-import { HttpStatusCode } from "axios";
-import { ResponseAlert } from "modules/common";
-import { Button, Container, Table } from "react-bootstrap";
+import { RefreshButton, ResponseAlert } from "modules/common";
+import { Container, Table } from "react-bootstrap";
 import { SocialButtons, actions as userActions } from "..";
 
 const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGetRequest, addFriend }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
+        setResponse(undefined)
         setResponse(await authenticatedGetRequest("/user"));
     };
 
@@ -19,36 +19,13 @@ const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGet
         refreshUsers();
     }, [authToken, setResponse]);
 
-    if (!response) {
-        return undefined;
-    }
-
-    if (response?.status !== HttpStatusCode.Ok) {
-        return (
-            <Container className="m-4">
-                <ResponseAlert response={response} />
-                <Button
-                    onClick={async () => {
-                        await authenticatedPostRequest("/user/add-authority", undefined, {
-                            params: {
-                                username,
-                                authority: "ADMIN",
-                            },
-                        });
-                        refreshUsers();
-                    }}
-                >
-                    Become Admin
-                </Button>
-            </Container>
-        );
-    }
-
     const users = response?.data?.content || [];
-
     return (
         <Container className="m-4">
-            <ResponseAlert response={response} />
+            <Container className="mb-4">
+                <ResponseAlert response={response} />
+                <RefreshButton refresh={refreshUsers} />
+            </Container>
             <Table striped bordered hover>
                 <thead>
                     <tr>

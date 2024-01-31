@@ -4,7 +4,7 @@ import { Alert, Container } from "react-bootstrap";
 
 const ResponseAlert = ({ response }) => {
     const variant = useMemo(() => {
-        switch (response.status) {
+        switch (response?.status) {
             case HttpStatusCode.Ok:
                 return "success";
             case HttpStatusCode.InternalServerError:
@@ -16,7 +16,7 @@ const ResponseAlert = ({ response }) => {
     }, [response]);
 
     const altMessage = useMemo(() => {
-        switch (response.status) {
+        switch (response?.status) {
             case HttpStatusCode.Ok:
                 return "Success";
             case HttpStatusCode.Forbidden:
@@ -29,7 +29,7 @@ const ResponseAlert = ({ response }) => {
     return (
         <Alert key={variant} variant={variant}>
             <Container>
-                {response?.data?.errorCode} {response?.data?.body?.message || altMessage}
+                {response?.data?.errorCode} {response?.data?.message}
             </Container>
         </Alert>
     );
