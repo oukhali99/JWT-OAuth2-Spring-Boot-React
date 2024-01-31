@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 @RestControllerAdvice
 @Slf4j
-public class RestResponseEntityExceptionHandler {
+public class MyExceptionHandler {
 
     @ExceptionHandler(MyException.class)
     protected ResponseEntity<BaseApiResponse> handle(MyException myException, WebRequest webRequest) {
