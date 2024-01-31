@@ -26,10 +26,17 @@ const ResponseAlert = ({ response }) => {
         }
     }, [response]);
 
+    if (
+        response === undefined
+        || response?.data?.errorCode === "SUCCESS"
+    ) {
+        return <></>;
+    }
+
     return (
         <Alert key={variant} variant={variant}>
             <Container>
-                {response?.data?.errorCode} {response?.data?.message}
+                {response?.data?.errorCode} | {response?.data?.content}
             </Container>
         </Alert>
     );

@@ -15,17 +15,29 @@ const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGet
         setResponse(await authenticatedGetRequest("/user"));
     };
 
+    const controls = (
+        <Container className="mb-4">
+            <ResponseAlert response={response} />
+            <RefreshButton refresh={refreshUsers} />
+        </Container>
+    );
+
     useEffect(() => {
         refreshUsers();
     }, [authToken, setResponse]);
 
+    if (response?.data?.errorCode !== "SUCCESS") {
+        return (
+            <Container>
+                {controls}
+            </Container>
+        );
+    }
+
     const users = response?.data?.content || [];
     return (
         <Container className="m-4">
-            <Container className="mb-4">
-                <ResponseAlert response={response} />
-                <RefreshButton refresh={refreshUsers} />
-            </Container>
+            {controls}
             <Table striped bordered hover>
                 <thead>
                     <tr>
