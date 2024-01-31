@@ -8,11 +8,11 @@ import { ResponseAlert } from "modules/common";
 import { Button, Container, Table } from "react-bootstrap";
 import { SocialButtons, actions as userActions } from "..";
 
-const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => {
+const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGetRequest, addFriend }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        setResponse(await authenticatedPostRequest("/user/get-all"));
+        setResponse(await authenticatedGetRequest("/user"));
     };
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => 
         );
     }
 
-    const users = response?.data?.obfuscatedUserList || [];
+    const users = response?.data?.content || [];
 
     return (
         <Container className="m-4">
@@ -65,12 +65,12 @@ const Users = ({ authToken, username, authenticatedPostRequest, addFriend }) => 
                         .filter((user) => user.username !== username)
                         .map((user) => (
                             <tr>
-                                <td>{user?.id || "N/A"}</td>
-                                <td>{user?.firstName || "N/A"}</td>
-                                <td>{user?.lastName || "N/A"}</td>
-                                <td>{user?.username || "N/A"}</td>
-                                <td>{user?.authorityStringList?.join(", ") || "N/A"}</td>
-                                <td>{user?.friendUsernameList?.join(", ") || "N/A"}</td>
+                                <td>{user?.user?.id || "N/A"}</td>
+                                <td>{user?.user?.firstName || "N/A"}</td>
+                                <td>{user?.user?.lastName || "N/A"}</td>
+                                <td>{user?.user?.username || "N/A"}</td>
+                                <td>{user?.user?.authorityStringList?.join(", ") || "N/A"}</td>
+                                <td>{user?.user?.friendUsernameList?.join(", ") || "N/A"}</td>
                                 <td style={{ textAlign: "center" }}>
                                     <SocialButtons user={user} refreshUsers={refreshUsers} />
                                 </td>
@@ -88,6 +88,7 @@ const stateToProps = (state) => ({
 });
 
 const dispatchToProps = {
+    authenticatedGetRequest: apiActions.authenticatedGetRequest,
     authenticatedPostRequest: apiActions.authenticatedPostRequest,
     addFriend: userActions.addFriend,
 };

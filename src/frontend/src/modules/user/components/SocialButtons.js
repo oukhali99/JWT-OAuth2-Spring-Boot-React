@@ -5,12 +5,12 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { actions as userActions } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
 
-const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUsers }) => {
-    const firstButton = user?.friendUsernameList?.includes(selfUsername) ? (
+const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers }) => {
+    const firstButton = user?.isAFriend ? (
         <Button
             variant="danger"
             onClick={async () => {
-                await removeFriend(user.username);
+                await removeFriend(user?.user?.username);
                 refreshUsers();
             }}
         >
@@ -20,7 +20,7 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
         <Button
             variant="danger"
             onClick={async () => {
-                await removeFriend(user.username);
+                await removeFriend(user.user?.username);
                 refreshUsers();
             }}
         >
@@ -29,7 +29,7 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
     ) : user?.thisPersonSentSelfAFriendRequest ? (
         <Button
             onClick={async () => {
-                await addFriend(user.username);
+                await addFriend(user.user?.username);
                 refreshUsers();
             }}
             variant="success"
@@ -39,7 +39,7 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
     ) : (
         <Button
             onClick={async () => {
-                await addFriend(user.username);
+                await addFriend(user.user?.username);
                 refreshUsers();
             }}
         >
@@ -56,7 +56,6 @@ const SocialButtons = ({ addFriend, user, selfUsername, removeFriend, refreshUse
 };
 
 const stateToProps = (state) => ({
-    selfUsername: authSelectors.getUsername(state),
 });
 
 const dispatchToProps = {

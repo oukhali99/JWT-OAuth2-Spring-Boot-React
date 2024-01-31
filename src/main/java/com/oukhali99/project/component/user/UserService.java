@@ -5,6 +5,7 @@ import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
+import com.oukhali99.project.component.user.model.OtherUser;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +57,24 @@ public class UserService implements UserDetailsService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public List<OtherUser> findAllOtherUsers(String selfUsername) throws UsernameNotFoundException {
+        User selfUser = findByEmail(selfUsername);
+        List<User> users = findAll();
+
+        List<OtherUser> otherUsers = new LinkedList<>();
+        for (User user : users) {
+            if (selfUser.equals(user)) {
+                continue;
+            }
+
+            otherUsers.add(
+                    new OtherUser(user, selfUser)
+            );
+        }
+
+        return otherUsers;
     }
 
     @Transactional

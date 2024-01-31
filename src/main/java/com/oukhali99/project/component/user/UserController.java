@@ -26,15 +26,21 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/get-all")
-    public ResponseEntity<BaseApiResponse> home() throws MyException {
-        List<User> userList = userService.findAll();
-        ObfuscatedUserListResponse obfuscatedUserListResponseBody = new ObfuscatedUserListResponse(
-                "Successfully retrieved user list",
-                userList
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAllOthers(
+            @RequestHeader(name = "Authorization") String authorization
+    ) throws MyException {
+        String selfUsername = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        return ResponseEntity.ok(
+                new ApiListResponse(
+                        userService.findAllOtherUsers(selfUsername)
+                )
         );
+    }
 
-        return ResponseEntity.ok(obfuscatedUserListResponseBody);
+    @PostMapping("/get-all")
+    public ResponseEntity<BaseApiResponse> getAll() throws MyException {
+        return ResponseEntity.ok(new ApiListResponse(userService.findAll()));
     }
 
     @PostMapping("/add-authority")

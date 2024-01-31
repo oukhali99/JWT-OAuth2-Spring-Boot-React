@@ -44,15 +44,19 @@ public class User implements UserDetails {
 
     private List<String> authorityStringList;
 
+    @JsonIgnore
     @ManyToMany
     private List<User> receivedFriendRequests;
 
+    @JsonIgnore
     @ManyToMany
     private List<User> friends;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<Listing> listings;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bid> bids;
 
