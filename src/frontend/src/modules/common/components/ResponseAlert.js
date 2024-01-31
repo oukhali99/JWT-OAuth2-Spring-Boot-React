@@ -26,10 +26,7 @@ const ResponseAlert = ({ response }) => {
         }
     }, [response]);
 
-    if (
-        response === undefined
-        || response?.data?.errorCode === "SUCCESS"
-    ) {
+    if (response === undefined || response?.data?.errorCode === "SUCCESS") {
         return <></>;
     }
 

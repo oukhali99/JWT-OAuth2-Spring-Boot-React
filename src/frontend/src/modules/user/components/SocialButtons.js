@@ -55,8 +55,7 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers }) => {
     );
 };
 
-const stateToProps = (state) => ({
-});
+const stateToProps = (state) => ({});
 
 const dispatchToProps = {
     addFriend: userActions.addFriend,

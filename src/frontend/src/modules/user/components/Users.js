@@ -7,11 +7,11 @@ import { RefreshButton, ResponseAlert } from "modules/common";
 import { Container, Table } from "react-bootstrap";
 import { SocialButtons, actions as userActions } from "..";
 
-const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGetRequest, addFriend }) => {
+const Users = ({ authToken, username, authenticatedGetRequest }) => {
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
-        setResponse(undefined)
+        setResponse(undefined);
         setResponse(await authenticatedGetRequest("/user"));
     };
 
@@ -27,11 +27,7 @@ const Users = ({ authToken, username, authenticatedPostRequest, authenticatedGet
     }, [authToken, setResponse]);
 
     if (response?.data?.errorCode !== "SUCCESS") {
-        return (
-            <Container>
-                {controls}
-            </Container>
-        );
+        return <Container className="m-4">{controls}</Container>;
     }
 
     const users = response?.data?.content || [];
@@ -79,8 +75,6 @@ const stateToProps = (state) => ({
 
 const dispatchToProps = {
     authenticatedGetRequest: apiActions.authenticatedGetRequest,
-    authenticatedPostRequest: apiActions.authenticatedPostRequest,
-    addFriend: userActions.addFriend,
 };
 
 export default connect(stateToProps, dispatchToProps)(Users);
