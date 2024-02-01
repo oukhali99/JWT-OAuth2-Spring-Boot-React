@@ -25,6 +25,7 @@ public class Listing {
 
     private String title;
 
+    @Embedded
     private Price price;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -42,6 +43,10 @@ public class Listing {
 
     public void addBid(Bid bid) {
         bids.add(bid);
+    }
+
+    public String getPriceHumanReadable() {
+        return price.toString();
     }
 
 }

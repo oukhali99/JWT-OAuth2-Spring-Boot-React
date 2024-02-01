@@ -8,7 +8,7 @@ const RefreshButton = ({ refresh }) => {
         setMessage("Refreshing...");
         await refresh();
         setMessage(undefined);
-    }
+    };
 
     return (
         <div>
