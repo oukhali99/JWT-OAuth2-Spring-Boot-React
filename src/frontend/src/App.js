@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { connect } from "react-redux";
 
 import { About, Home } from "modules/main";
-import { Account, Users } from "modules/user";
+import { Account, User, Users } from "modules/user";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
 import { ListingHome } from "modules/listing";
 
@@ -52,6 +52,7 @@ const App = ({ authToken, logout, username }) => {
                         <Route path="/users" Component={Users} />
                         <Route path="/listing" Component={ListingHome} />
                         <Route path="/account" Component={Account} />
+                        <Route path="/user/:id" Component={User} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
                 </Container>

@@ -30,9 +30,7 @@ const ListingHome = ({ authenticatedGetRequest }) => {
     const listings = response?.data?.content;
     return (
         <Container>
-            <Container className="m-4">
-                {controls}
-            </Container>
+            <Container className="m-4">{controls}</Container>
             <Table>
                 <thead>
                     <th>title</th>
@@ -46,7 +44,7 @@ const ListingHome = ({ authenticatedGetRequest }) => {
                             <td>{listing?.title}</td>
                             <td>{listing?.owner?.email}</td>
                             <td>{listing?.priceHumanReadable}</td>
-                            <td>{listing?.bids?.map(bid => JSON.stringify(bid))}</td>
+                            <td>{listing?.bids?.map((bid) => JSON.stringify(bid))}</td>
                         </tr>
                     ))}
                 </tbody>

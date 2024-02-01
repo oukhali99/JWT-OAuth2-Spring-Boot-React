@@ -6,10 +6,12 @@ import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
+import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.Price;
 import com.oukhali99.project.model.apiresponse.*;
 import com.oukhali99.project.security.JwtService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,17 @@ public class UserController {
         return ResponseEntity.ok(
                 new ApiListResponse(
                         userService.findAllOtherUsers(selfUsername)
+                )
+        );
+    }
+
+    @GetMapping("/get-by-id")
+    public ResponseEntity<ApiResponse> getUserById(
+        @RequestParam long id
+    ) throws EntityDoesNotExistException {
+        return ResponseEntity.ok(
+                new ApiObjectResponse(
+                        userService.getById(id)
                 )
         );
     }
