@@ -36,6 +36,7 @@ const ListingHome = ({ authenticatedGetRequest }) => {
             <Table>
                 <thead>
                     <th>title</th>
+                    <th>owners</th>
                     <th>price</th>
                     <th>bids</th>
                 </thead>
@@ -43,6 +44,7 @@ const ListingHome = ({ authenticatedGetRequest }) => {
                     {listings.map((listing) => (
                         <tr>
                             <td>{listing?.title}</td>
+                            <td>{listing?.owner?.email}</td>
                             <td>{listing?.priceHumanReadable}</td>
                             <td>{listing?.bids?.map(bid => JSON.stringify(bid))}</td>
                         </tr>

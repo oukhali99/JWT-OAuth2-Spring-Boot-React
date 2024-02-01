@@ -19,7 +19,6 @@ public class Listing {
     @GeneratedValue
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     private User owner;
 
