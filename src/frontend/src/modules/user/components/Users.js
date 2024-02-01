@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { RefreshButton, ResponseAlert } from "modules/common";
-import { Container, Table } from "react-bootstrap";
-import { SocialButtons, actions as userActions } from "..";
+import { Button, Container, Table } from "react-bootstrap";
+import { SocialButtons } from "..";
+
+const StyledTd = styled.td`
+    text-align: center;
+`;
+
+const StyledTh = styled.th`
+    text-align: center;
+`;
 
 const Users = ({ authToken, username, authenticatedGetRequest }) => {
+    const navigate = useNavigate();
     const [response, setResponse] = useState(undefined);
 
     const refreshUsers = async () => {
@@ -36,13 +47,13 @@ const Users = ({ authToken, username, authenticatedGetRequest }) => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
-                        <th>Authorities</th>
-                        <th>Friends</th>
-                        <th></th>
+                        <StyledTh>Email</StyledTh>
+                        <StyledTh>First Name</StyledTh>
+                        <StyledTh>Last Name</StyledTh>
+                        <StyledTh>Username</StyledTh>
+                        <StyledTh>AuStyledThorities</StyledTh>
+                        <StyledTh>Friends</StyledTh>
+                        <StyledTh>More</StyledTh>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,15 +61,19 @@ const Users = ({ authToken, username, authenticatedGetRequest }) => {
                         .filter((user) => user.username !== username)
                         .map((user) => (
                             <tr>
-                                <td>{user?.user?.id || "N/A"}</td>
-                                <td>{user?.user?.firstName || "N/A"}</td>
-                                <td>{user?.user?.lastName || "N/A"}</td>
-                                <td>{user?.user?.username || "N/A"}</td>
-                                <td>{user?.user?.authorityStringList?.join(", ") || "N/A"}</td>
-                                <td>{user?.user?.friendUsernameList?.join(", ") || "N/A"}</td>
-                                <td style={{ textAlign: "center" }}>
+                                <StyledTd>{user?.user?.email || "N/A"}</StyledTd>
+                                <StyledTd>{user?.user?.firstName || "N/A"}</StyledTd>
+                                <StyledTd>{user?.user?.lastName || "N/A"}</StyledTd>
+                                <StyledTd>{user?.user?.username || "N/A"}</StyledTd>
+                                <StyledTd>{user?.user?.authorityStringList?.join(", ") || "N/A"}</StyledTd>
+                                <StyledTd style={{ textAlign: "center" }}>
                                     <SocialButtons user={user} refreshUsers={refreshUsers} />
-                                </td>
+                                </StyledTd>
+                                <StyledTd>
+                                    <Button onClick={() => navigate(`/user/${user?.user?.id}`)}>
+                                        More
+                                    </Button>
+                                </StyledTd>
                             </tr>
                         ))}
                 </tbody>
