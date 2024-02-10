@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<ApiResponse> getAllOthers(
             @RequestHeader(name = "Authorization") String authorization
     ) throws MyException {

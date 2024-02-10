@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { actions as apiActions } from "modules/api";
 import { ResponseAlert } from "modules/common";
+import { Table } from "react-bootstrap";
 
 const User = ({ authenticatedGetRequest }) => {
     const { id } = useParams();
@@ -27,6 +28,12 @@ const User = ({ authenticatedGetRequest }) => {
     return (
         <>
             {controls}
+            {JSON.stringify(user)}
+            <Table striped bordered hover>
+                <thead>
+                    <th>E-Mail</th>
+                </thead>
+            </Table>
             {JSON.stringify(user)}
         </>
     );
