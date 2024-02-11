@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom";
 
 import { actions as apiActions } from "modules/api";
 import { RefreshButton, ResponseAlert } from "modules/common";
-import { Card, CardGroup, Container, ListGroup } from "react-bootstrap";
-import SocialButtons from "./SocialButtons";
+import { Card, CardGroup, Container } from "react-bootstrap";
+import { SocialButtons } from "modules/user";
+import { selectors as authSelectors } from "modules/auth";
 
-const User = ({ authenticatedGetRequest }) => {
+const User = ({ authenticatedGetRequest, loggerInUserId }) => {
     const { id } = useParams();
 
     const [response, setResponse] = useState();
@@ -18,7 +19,7 @@ const User = ({ authenticatedGetRequest }) => {
 
     useEffect(() => {
         refresh();
-    }, []);
+    }, [id]);
 
     const controls = (
         <>
@@ -35,6 +36,7 @@ const User = ({ authenticatedGetRequest }) => {
     const firstName = user?.firstName;
     const lastName = user?.lastName;
     const email = user?.email;
+    const isLoggedInUser = id === loggerInUserId;
     return (
         <Container className="m-4">
             <CardGroup
@@ -66,11 +68,14 @@ const User = ({ authenticatedGetRequest }) => {
                     <Card.Body>{user?.authorityStringList}</Card.Body>
                 </Card>
             </CardGroup>
+            {!isLoggedInUser && <SocialButtons style={{ marginTop: "2%" }} />}
         </Container>
     );
 };
 
-const stateToProps = (state) => ({});
+const stateToProps = (state) => ({
+    loggerInUserId: authSelectors.getId(state),
+});
 
 const dispatchToProps = {
     authenticatedGetRequest: apiActions.authenticatedGetRequest,
