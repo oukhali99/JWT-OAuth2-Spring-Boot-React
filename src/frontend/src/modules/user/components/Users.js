@@ -65,7 +65,9 @@ const Users = ({ authToken, username, authenticatedGetRequest }) => {
                                 <StyledTd>{user?.user?.firstName || "N/A"}</StyledTd>
                                 <StyledTd>{user?.user?.lastName || "N/A"}</StyledTd>
                                 <StyledTd>{user?.user?.username || "N/A"}</StyledTd>
-                                <StyledTd>{user?.user?.authorityStringList?.join(", ") || "N/A"}</StyledTd>
+                                <StyledTd>
+                                    {user?.user?.authorityStringList?.join(", ") || "N/A"}
+                                </StyledTd>
                                 <StyledTd style={{ textAlign: "center" }}>
                                     <SocialButtons user={user} refreshUsers={refreshUsers} />
                                 </StyledTd>
