@@ -10,7 +10,7 @@ import { Account, User, Users } from "modules/user";
 import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
 import { ListingHome } from "modules/listing";
 
-const App = ({ authToken, logout, username }) => {
+const App = ({ authToken, logout, username, id }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     return (
@@ -31,11 +31,11 @@ const App = ({ authToken, logout, username }) => {
                             <LinkContainer to="/listing">
                                 <Nav.Link>Listings</Nav.Link>
                             </LinkContainer>
-                            {username === undefined ? (
+                            {id === undefined ? (
                                 <Nav.Link onClick={() => setShowLoginModal(true)}>Login</Nav.Link>
                             ) : (
                                 <>
-                                    <LinkContainer to="/account">
+                                    <LinkContainer to={`/user/${id}`}>
                                         <Nav.Link>Account</Nav.Link>
                                     </LinkContainer>
                                     <Nav.Link onClick={() => logout()}>Logout</Nav.Link>
@@ -51,7 +51,6 @@ const App = ({ authToken, logout, username }) => {
                         <Route path="/about" Component={About} />
                         <Route path="/users" Component={Users} />
                         <Route path="/listing" Component={ListingHome} />
-                        <Route path="/account" Component={Account} />
                         <Route path="/user/:id" Component={User} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
@@ -64,6 +63,7 @@ const App = ({ authToken, logout, username }) => {
 const stateToProps = (state) => ({
     authToken: authSelectors.getToken(state),
     username: authSelectors.getUsername(state),
+    id: authSelectors.getId(state),
 });
 
 const dispatchToProps = {
