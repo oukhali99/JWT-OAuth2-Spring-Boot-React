@@ -2,7 +2,6 @@ package com.oukhali99.project.component.user;
 
 import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.listing.Listing;
-import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.component.user.model.OtherUser;
@@ -33,7 +32,7 @@ public class UserService implements UserDetailsService {
         return userOptional.get();
     }
 
-    public User findByEmail(String email) throws UsernameNotFoundException {
+    public User getByEmail(String email) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
         return userOptional.orElseThrow(() -> new UsernameNotFoundException(email));
     }
@@ -49,7 +48,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         try {
-            return findByEmail(username);
+            return getByEmail(username);
         } catch (MyException e) {
             return null;
         }
@@ -60,7 +59,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<OtherUser> findAllOtherUsers(String selfUsername) throws UsernameNotFoundException {
-        User selfUser = findByEmail(selfUsername);
+        User selfUser = getByEmail(selfUsername);
         List<User> users = findAll();
 
         List<OtherUser> otherUsers = new LinkedList<>();
@@ -79,13 +78,13 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void addAuthority(String username, String authorityString) throws MyException {
-        findByEmail(username).addAuthorityString(authorityString);
+        getByEmail(username).addAuthorityString(authorityString);
     }
 
     @Transactional
     public void addFriend(String username, String otherUsername) throws MyException {
-        User myUser = findByEmail(username);
-        User otherUser = findByEmail(otherUsername);
+        User myUser = getByEmail(username);
+        User otherUser = getByEmail(otherUsername);
 
         if (myUser.getReceivedFriendRequests().contains(otherUser)) {
             myUser.addFriend(otherUser);
@@ -98,8 +97,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void removeFriend(String username, String otherUsername) throws MyException {
-        User myUser = findByEmail(username);
-        User otherUser = findByEmail(otherUsername);
+        User myUser = getByEmail(username);
+        User otherUser = getByEmail(otherUsername);
 
         myUser.removeFriend(otherUser);
         otherUser.removeFriend(myUser);

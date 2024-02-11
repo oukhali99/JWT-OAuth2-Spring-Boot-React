@@ -33,7 +33,7 @@ public class BidController {
             @RequestParam long priceDollars
     ) throws MyException {
         String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        User owner = userService.findByEmail(username);
+        User owner = userService.getByEmail(username);
         Listing listing = listingService.getById(listingId);
 
         Bid bid = new Bid(owner, listing, new Price(priceDollars));

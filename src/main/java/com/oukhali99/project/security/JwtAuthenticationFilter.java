@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         UserDetails userDetails;
         try {
-            userDetails = userService.findByEmail(username);
+            userDetails = userService.getByEmail(username);
         } catch (MyException e) {
             customizeResponseWithException(response, e);
             return;

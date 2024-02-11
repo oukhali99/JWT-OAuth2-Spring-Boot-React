@@ -3,7 +3,6 @@ package com.oukhali99.project.component.listing;
 import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
-import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.Price;
 import com.oukhali99.project.model.apiresponse.ApiListResponse;
@@ -40,7 +39,7 @@ public class ListingController {
         @RequestParam long priceDollars
     ) throws MyException {
         Listing listing = listingService.getById(ownerUsername, listingId);
-        User bidder = userService.findByEmail(jwtService.extractUsernameFromAuthorizationHeader(authorization));
+        User bidder = userService.getByEmail(jwtService.extractUsernameFromAuthorizationHeader(authorization));
         listingService.addBid(
                 new Bid(bidder, listing, new Price(priceDollars))
         );
@@ -54,7 +53,7 @@ public class ListingController {
             @RequestParam long priceDollars
     ) throws MyException {
         String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        User owner = userService.findByEmail(username);
+        User owner = userService.getByEmail(username);
         return ResponseEntity.ok(new ApiObjectResponse(
                         userService.addListing(new Listing(owner, title, new Price(priceDollars)))
                 )

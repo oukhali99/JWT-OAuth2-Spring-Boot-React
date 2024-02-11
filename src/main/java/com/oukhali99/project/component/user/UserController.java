@@ -1,23 +1,14 @@
 package com.oukhali99.project.component.user;
 
-import com.oukhali99.project.component.bid.Bid;
-import com.oukhali99.project.component.listing.Listing;
-import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.OtherUser;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
-import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
-import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
-import com.oukhali99.project.model.Price;
 import com.oukhali99.project.model.apiresponse.*;
 import com.oukhali99.project.security.JwtService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -47,7 +38,7 @@ public class UserController {
         @RequestParam long id
     ) throws MyException {
         String selfUsername = jwtService.extractUsernameFromAuthorizationHeader(authorization);
-        User selfUser = userService.findByEmail(selfUsername);
+        User selfUser = userService.getByEmail(selfUsername);
         OtherUser otherUser = new OtherUser(
                 userService.getById(id),
                 selfUser
@@ -108,7 +99,7 @@ public class UserController {
         String jwtToken = authorization.substring(7);
         String myUsername = jwtService.extractUsername(jwtToken);
 
-        ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.findByEmail(myUsername));
+        ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.getByEmail(myUsername));
         return ResponseEntity.ok(new ObfuscatedSelfResponse(obfuscatedSelf));
     }
 
