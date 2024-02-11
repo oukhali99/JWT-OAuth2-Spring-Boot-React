@@ -24,7 +24,9 @@ export const authenticate = (username, password) => async (dispatch, getState) =
 
     const status = response.status;
     if (status === HttpStatusCode.Ok) {
-        dispatch(loginSuccessAction(response.data));
+        const { token, content: user } = response?.data;
+        const { username, id } = user;
+        dispatch(loginSuccessAction({ token, username, id }));
     }
 
     return response;
@@ -37,8 +39,9 @@ export const register = (username, password) => async (dispatch, getState) => {
 
     const status = response.status;
     if (status === HttpStatusCode.Ok) {
-        const { username, token } = response.data;
-        dispatch(loginSuccessAction({ token, username }));
+        const { token, content: user } = response?.data;
+        const { username, id } = user;
+        dispatch(loginSuccessAction({ token, username, id }));
     }
 
     return response;
