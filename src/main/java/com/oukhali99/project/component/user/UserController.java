@@ -4,6 +4,7 @@ import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
+import com.oukhali99.project.component.user.model.OtherUser;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedUserListResponse;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
@@ -42,11 +43,18 @@ public class UserController {
 
     @GetMapping("/get-by-id")
     public ResponseEntity<ApiResponse> getUserById(
+        @RequestHeader(name = "Authorization") String authorization,
         @RequestParam long id
-    ) throws EntityDoesNotExistException {
+    ) throws MyException {
+        String selfUsername = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        User selfUser = userService.findByEmail(selfUsername);
+        OtherUser otherUser = new OtherUser(
+                userService.getById(id),
+                selfUser
+        );
         return ResponseEntity.ok(
                 new ApiObjectResponse(
-                        userService.getById(id)
+                        otherUser
                 )
         );
     }
