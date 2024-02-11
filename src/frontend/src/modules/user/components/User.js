@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { actions as apiActions } from "modules/api";
 import { RefreshButton, ResponseAlert } from "modules/common";
-import { Container, ListGroup } from "react-bootstrap";
+import { Card, CardGroup, Container, ListGroup } from "react-bootstrap";
 import SocialButtons from "./SocialButtons";
 
 const User = ({ authenticatedGetRequest }) => {
@@ -34,9 +34,10 @@ const User = ({ authenticatedGetRequest }) => {
     const user = outerUser?.user;
     const firstName = user?.firstName;
     const lastName = user?.lastName;
+    const email = user?.email;
     return (
         <Container className="m-4">
-            <div
+            <CardGroup
                 style={{
                     marginTop: "2%",
                     display: "flex",
@@ -44,23 +45,27 @@ const User = ({ authenticatedGetRequest }) => {
                     alignItems: "center",
                 }}
             >
-                <ListGroup style={{ width: "75%" }}>
-                    <div style={{ marginBottom: "2%" }}>{controls}</div>
-                    {firstName && (
-                        <ListGroup.Item>
-                            <h2>First Name:</h2> {firstName}
-                        </ListGroup.Item>
-                    )}
-                    {lastName && <ListGroup.Item>Last Name: {lastName}</ListGroup.Item>}
-                    <ListGroup.Item>
-                        <h4>E-Mail</h4> {user?.email}
-                    </ListGroup.Item>
-                    <ListGroup.Item>Authorities: {user?.authorityStringList}</ListGroup.Item>
-                    <ListGroup.Item>
-                        <SocialButtons user={outerUser} refreshUsers={refresh} />
-                    </ListGroup.Item>
-                </ListGroup>
-            </div>
+                {firstName && (
+                    <Card>
+                        <Card.Header>First Name</Card.Header>
+                        <Card.Body>{firstName}</Card.Body>
+                    </Card>
+                )}
+                {lastName && (
+                    <Card>
+                        <Card.Header>Last Name</Card.Header>
+                        <Card.Body>{lastName}</Card.Body>
+                    </Card>
+                )}
+                <Card>
+                    <Card.Header>E-Mail</Card.Header>
+                    <Card.Body>{email}</Card.Body>
+                </Card>
+                <Card>
+                    <Card.Header>Authorities</Card.Header>
+                    <Card.Body>{user?.authorityStringList}</Card.Body>
+                </Card>
+            </CardGroup>
         </Container>
     );
 };
