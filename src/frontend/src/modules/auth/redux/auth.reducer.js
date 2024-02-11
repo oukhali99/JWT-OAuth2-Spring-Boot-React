@@ -6,6 +6,7 @@ import { actions as authActions } from "modules/auth";
 const initialState = {
     token: Cookies.get("jwtToken"),
     username: Cookies.get("username"),
+    id: Cookies.get("id"),
 };
 
 export default createReducer(initialState, (builder) => {
@@ -19,13 +20,15 @@ export default createReducer(initialState, (builder) => {
         Cookies.remove("jwtToken");
     });
     builder.addCase(authActions.loginSuccessAction, (state, action) => {
-        const { token, username } = action.payload;
+        const { token, username, id } = action.payload;
 
         state.token = token;
         state.username = username;
+        state.id = id;
 
         Cookies.set("jwtToken", token);
         Cookies.set("username", username);
+        Cookies.set("id", id);
     });
     builder.addCase(authActions.logoutAction, (state, action) => {
         state.token = undefined;
@@ -33,5 +36,6 @@ export default createReducer(initialState, (builder) => {
 
         Cookies.remove("jwtToken");
         Cookies.remove("username");
+        Cookies.remove("id");
     });
 });

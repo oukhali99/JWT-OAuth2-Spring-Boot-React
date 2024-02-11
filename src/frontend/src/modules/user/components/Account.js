@@ -7,7 +7,7 @@ import { actions as apiActions } from "modules/api";
 import { ResponseAlert } from "modules/common";
 import { actions as userActions } from "modules/user";
 
-const Account = ({ username, authenticatedPostRequest, addFriend, removeFriend }) => {
+const Account = ({ id, username, authenticatedPostRequest, addFriend, removeFriend }) => {
     const [response, setResponse] = useState(undefined);
 
     const refresh = async () => {
@@ -27,7 +27,8 @@ const Account = ({ username, authenticatedPostRequest, addFriend, removeFriend }
     return (
         <Container className="m-3">
             <ResponseAlert response={response} />
-            Username: {username}
+            <div>Username: {username}</div>
+            <div>Id: {id}</div>
             {friendRequestUserList?.map((friendRequestUser) => (
                 <Alert
                     variant="primary"
@@ -61,6 +62,7 @@ const Account = ({ username, authenticatedPostRequest, addFriend, removeFriend }
 
 const stateToProps = (state) => ({
     username: authSelectors.getUsername(state),
+    id: authSelectors.getId(state),
 });
 
 const dispatchToProps = {
