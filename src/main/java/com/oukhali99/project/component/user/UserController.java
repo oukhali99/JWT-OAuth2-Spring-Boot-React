@@ -98,9 +98,7 @@ public class UserController {
     ) throws MyException {
         String jwtToken = authorization.substring(7);
         String myUsername = jwtService.extractUsername(jwtToken);
-
-        ObfuscatedSelf obfuscatedSelf = new ObfuscatedSelf(userService.getByEmail(myUsername));
-        return ResponseEntity.ok(new ObfuscatedSelfResponse(obfuscatedSelf));
+        return ResponseEntity.ok(new ApiObjectResponse(userService.getByEmail(myUsername)));
     }
 
 }

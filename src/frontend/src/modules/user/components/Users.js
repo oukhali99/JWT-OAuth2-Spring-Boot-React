@@ -51,7 +51,7 @@ const Users = ({ authToken, username, authenticatedGetRequest }) => {
                         <StyledTh>First Name</StyledTh>
                         <StyledTh>Last Name</StyledTh>
                         <StyledTh>Username</StyledTh>
-                        <StyledTh>AuStyledThorities</StyledTh>
+                        <StyledTh>Authorities</StyledTh>
                         <StyledTh>Friends</StyledTh>
                         <StyledTh>More</StyledTh>
                     </tr>
