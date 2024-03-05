@@ -68,7 +68,7 @@ const User = ({ authenticatedGetRequest, loggerInUserId }) => {
                     <Card.Body>{user?.authorityStringList}</Card.Body>
                 </Card>
             </CardGroup>
-            {!isLoggedInUser && <SocialButtons style={{ marginTop: "2%" }} />}
+            {!isLoggedInUser && <SocialButtons user={outerUser} refreshUsers={refresh} style={{ marginTop: "2%" }} />}
         </Container>
     );
 };
