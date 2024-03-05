@@ -9,7 +9,8 @@ import { SocialButtons } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
 
 const User = ({ authenticatedGetRequest, loggerInUserId }) => {
-    const { id } = useParams();
+    const { id: stringId } = useParams();
+    const id = parseInt(stringId);
 
     const [response, setResponse] = useState();
 
