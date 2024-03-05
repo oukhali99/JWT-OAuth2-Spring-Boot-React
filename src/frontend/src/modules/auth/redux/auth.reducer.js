@@ -33,6 +33,7 @@ export default createReducer(initialState, (builder) => {
     builder.addCase(authActions.logoutAction, (state, action) => {
         state.token = undefined;
         state.username = undefined;
+        state.id = undefined;
 
         Cookies.remove("jwtToken");
         Cookies.remove("username");

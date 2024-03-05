@@ -38,7 +38,10 @@ const App = ({ authToken, logout, username, id }) => {
                                     <LinkContainer to={`/user/${id}`}>
                                         <Nav.Link>Account</Nav.Link>
                                     </LinkContainer>
-                                    <Nav.Link onClick={() => logout()}>Logout</Nav.Link>
+
+                                    <LinkContainer to="/">
+                                        <Nav.Link onClick={() => logout()}>Logout</Nav.Link>
+                                    </LinkContainer>
                                 </>
                             )}
                         </Nav>
