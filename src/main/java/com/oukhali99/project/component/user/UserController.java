@@ -1,5 +1,6 @@
 package com.oukhali99.project.component.user;
 
+import com.oukhali99.project.component.user.exception.TriedToAddYourselfException;
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.OtherUser;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
@@ -73,6 +74,10 @@ public class UserController {
     ) throws MyException {
         String jwtToken = authorization.substring(7);
         String myUsername = jwtService.extractUsername(jwtToken);
+
+        if (myUsername.equals(username)) {
+            throw new TriedToAddYourselfException();
+        }
 
         userService.addFriend(myUsername, username);
 
