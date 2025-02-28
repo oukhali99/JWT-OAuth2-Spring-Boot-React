@@ -7,7 +7,7 @@ import { ResponseAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 
-const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
+const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authenticatedDeleteRequest }) => {
     const [response, setResponse] = useState();
 
     const refresh = async () => {
@@ -35,6 +35,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
             {controls}
             <Table>
                 <thead>
+                    <th>ID</th>
                     <th>title</th>
                     <th>owners</th>
                     <th>price</th>
@@ -42,7 +43,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
                 </thead>
                 <tbody>
                     {listings.map((listing) => (
-                        <ListingRow listing={listing} />
+                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} refresh={refresh} />
                     ))}
                 </tbody>
             </Table>
@@ -55,6 +56,7 @@ const stateToProps = (state) => ({});
 const dispatchToProps = {
     authenticatedGetRequest: apiActions.authenticatedGetRequest,
     authenticatedPutRequest: apiActions.authenticatedPutRequest,
+    authenticatedDeleteRequest: apiActions.authenticatedDeleteRequest,
 };
 
 export default connect(stateToProps, dispatchToProps)(ListingHome);

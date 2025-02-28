@@ -39,7 +39,8 @@ public class ListingService {
     }
 
     public Listing save(Listing listing) throws EntityAlreadyExistsException {
-        if (listingRepository.findById(listing.getId()).isPresent()) {
+        Long id = listing.getId();
+        if (id != null && listingRepository.findById(listing.getId()).isPresent()) {
             throw new EntityAlreadyExistsException();
         }
 

@@ -31,6 +31,15 @@ export const putRequest = async (endpoint, body, config) => {
     }
 }
 
+export const deleteRequest = async (endpoint, config) => {
+    try {
+        const response = await axios.delete(buildUrl(endpoint), config);
+        return response;
+    } catch (e) {
+        return e.response;
+    }
+}
+
 export const authenticatedPostRequest = (endpoint, body, config) => async (dispatch, getState) => {
     const jwtToken = authSelectors.getToken(getState());
     const response = await postRequest(endpoint, body, {
@@ -81,3 +90,20 @@ export const authenticatedPutRequest = (endpoint, body, config) => async (dispat
 
     return response;
 };
+
+export const authenticatedDeleteRequest = (endpoint, config) => async (dispatch, getState) => {
+    const jwtToken = authSelectors.getToken(getState());
+    const response = await deleteRequest(endpoint, {
+        headers: {
+            Authorization: jwtToken && `Bearer ${jwtToken}`,
+        },
+        ...config,
+    });
+
+    if (response?.status !== HttpStatusCode.Ok && response?.data?.errorCode === "BAD_JWT_TOKEN") {
+        console.log("Bad JWT token, logging out");
+        dispatch(authActions.logout());
+    }
+
+    return response;
+}
