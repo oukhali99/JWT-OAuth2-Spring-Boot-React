@@ -22,6 +22,15 @@ export const postRequest = async (endpoint, body, config) => {
     }
 };
 
+export const putRequest = async (endpoint, body, config) => {
+    try {
+        const response = await axios.put(buildUrl(endpoint), body, config);
+        return response;
+    } catch (e) {
+        return e.response;
+    }
+}
+
 export const authenticatedPostRequest = (endpoint, body, config) => async (dispatch, getState) => {
     const jwtToken = authSelectors.getToken(getState());
     const response = await postRequest(endpoint, body, {
@@ -42,6 +51,23 @@ export const authenticatedPostRequest = (endpoint, body, config) => async (dispa
 export const authenticatedGetRequest = (endpoint, config) => async (dispatch, getState) => {
     const jwtToken = authSelectors.getToken(getState());
     const response = await getRequest(endpoint, {
+        headers: {
+            Authorization: jwtToken && `Bearer ${jwtToken}`,
+        },
+        ...config,
+    });
+
+    if (response?.status !== HttpStatusCode.Ok && response?.data?.errorCode === "BAD_JWT_TOKEN") {
+        console.log("Bad JWT token, logging out");
+        dispatch(authActions.logout());
+    }
+
+    return response;
+};
+
+export const authenticatedPutRequest = (endpoint, body, config) => async (dispatch, getState) => {
+    const jwtToken = authSelectors.getToken(getState());
+    const response = await putRequest(endpoint, body, {
         headers: {
             Authorization: jwtToken && `Bearer ${jwtToken}`,
         },

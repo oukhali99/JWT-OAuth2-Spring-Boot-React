@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import { actions as apiActions } from "modules/api";
-import { Container, Table } from "react-bootstrap";
-import { RefreshButton, ResponseAlert } from "modules/common";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import { ResponseAlert } from "modules/common";
+import ListingRow from "./ListingRow";
+import AddListingControl from "./AddListingControl";
 
-const ListingHome = ({ authenticatedGetRequest }) => {
+const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
     const [response, setResponse] = useState();
 
     const refresh = async () => {
@@ -17,20 +19,20 @@ const ListingHome = ({ authenticatedGetRequest }) => {
     }, []);
 
     const controls = (
-        <Container>
+        <Container className="m-4">
             <ResponseAlert response={response} />
-            <RefreshButton refresh={refresh} />
+            <AddListingControl authenticatedPutRequest={authenticatedPutRequest} refresh={refresh} />
         </Container>
     );
 
     if (response?.data?.errorCode !== "SUCCESS") {
-        return controls;
+        return <Container className="m-4">{controls}</Container>;
     }
 
     const listings = response?.data?.content;
     return (
         <Container>
-            <Container className="m-4">{controls}</Container>
+            {controls}
             <Table>
                 <thead>
                     <th>title</th>
@@ -40,12 +42,7 @@ const ListingHome = ({ authenticatedGetRequest }) => {
                 </thead>
                 <tbody>
                     {listings.map((listing) => (
-                        <tr>
-                            <td>{listing?.title}</td>
-                            <td>{listing?.owner?.email}</td>
-                            <td>{listing?.priceHumanReadable}</td>
-                            <td>{listing?.bids?.map((bid) => JSON.stringify(bid))}</td>
-                        </tr>
+                        <ListingRow listing={listing} />
                     ))}
                 </tbody>
             </Table>
@@ -57,6 +54,7 @@ const stateToProps = (state) => ({});
 
 const dispatchToProps = {
     authenticatedGetRequest: apiActions.authenticatedGetRequest,
+    authenticatedPutRequest: apiActions.authenticatedPutRequest,
 };
 
 export default connect(stateToProps, dispatchToProps)(ListingHome);
