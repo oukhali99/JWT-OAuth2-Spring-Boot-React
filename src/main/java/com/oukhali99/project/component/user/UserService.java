@@ -103,19 +103,4 @@ public class UserService implements UserDetailsService {
         myUser.removeFriend(otherUser);
         otherUser.removeFriend(myUser);
     }
-
-    @Transactional
-    public User addListing(Listing listing) throws EntityDoesNotExistException {
-        User user = getById(listing.getOwner().getId());
-        user.addListing(listing);
-        return user;
-    }
-
-    @Transactional
-    public User addBid(Bid bid) throws EntityDoesNotExistException {
-        User bidder = getById(bid.getBidder().getId());
-        bidder.addBid(bid);
-        return bidder;
-    }
-
 }

@@ -47,14 +47,12 @@ public class ListingService {
         return listing;
     }
 
-    @Transactional
-    private void addBid(Long listingId, Bid bid) throws EntityDoesNotExistException {
-        getById(listingId).addBid(bid);
+    public void deleteListing(Listing listing) {
+        listingRepository.delete(listing);
     }
 
-    @Transactional
-    public void addBid(Bid bid) throws EntityDoesNotExistException {
-        addBid(bid.getListing().getId(), bid);
+    public Listing addListing(Listing listing) throws EntityAlreadyExistsException {
+        save(listing);
+        return listing;
     }
-
 }

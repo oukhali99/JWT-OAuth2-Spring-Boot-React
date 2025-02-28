@@ -52,14 +52,6 @@ public class User implements UserDetails {
     @ManyToMany
     private List<User> friends;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Listing> listings;
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Bid> bids;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new LinkedList<>();
@@ -80,9 +72,7 @@ public class User implements UserDetails {
     }
 
     public void addFriend(User user) {
-        if (receivedFriendRequests.contains(user)) {
-            receivedFriendRequests.remove(user);
-        }
+        receivedFriendRequests.remove(user);
 
         if (!friends.contains(user)) {
             friends.add(user);
@@ -96,12 +86,8 @@ public class User implements UserDetails {
     }
 
     public void removeFriend(User user) {
-        if (friends.contains(user)) {
-            friends.remove(user);
-        }
-        if (receivedFriendRequests.contains(user)) {
-            receivedFriendRequests.remove(user);
-        }
+        friends.remove(user);
+        receivedFriendRequests.remove(user);
     }
 
     @Override
@@ -146,13 +132,5 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void addListing(Listing listing) {
-        this.listings.add(listing);
-    }
-
-    public void addBid(Bid bid) {
-        bids.add(bid);
     }
 }

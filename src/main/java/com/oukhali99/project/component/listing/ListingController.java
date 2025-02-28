@@ -1,6 +1,8 @@
 package com.oukhali99.project.component.listing;
 
 import com.oukhali99.project.component.bid.Bid;
+import com.oukhali99.project.component.bid.BidService;
+import com.oukhali99.project.component.listing.exception.YouAreNotTheListingOwnerException;
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.exception.MyException;
@@ -26,6 +28,9 @@ public class ListingController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BidService bidService;
+
     @GetMapping
     public ResponseEntity<ApiResponse> findAll() {
         return ResponseEntity.ok(new ApiListResponse(listingService.findAll()));
@@ -40,10 +45,10 @@ public class ListingController {
     ) throws MyException {
         Listing listing = listingService.getById(ownerUsername, listingId);
         User bidder = userService.getByEmail(jwtService.extractUsernameFromAuthorizationHeader(authorization));
-        listingService.addBid(
+        Bid bid = bidService.save(
                 new Bid(bidder, listing, new Price(priceDollars))
         );
-        return ResponseEntity.ok(new ApiObjectResponse("ok"));
+        return ResponseEntity.ok(new ApiObjectResponse(bid));
     }
 
     @PutMapping
@@ -55,9 +60,21 @@ public class ListingController {
         String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
         User owner = userService.getByEmail(username);
         return ResponseEntity.ok(new ApiObjectResponse(
-                        userService.addListing(new Listing(owner, title, new Price(priceDollars)))
+                    listingService.addListing(new Listing(owner, title, new Price(priceDollars)))
                 )
         );
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse> deleteListing(
+            @RequestHeader(name = "Authorization") String authorization,
+            @RequestParam long listingId
+    ) throws MyException {
+        String username = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        Listing listing = listingService.getById(listingId);
+        if (!listing.getOwner().getEmail().equals(username)) throw new YouAreNotTheListingOwnerException(listing, username);
+        listingService.deleteListing(listing);
+        return ResponseEntity.ok(new ApiObjectResponse("ok"));
     }
 
 }

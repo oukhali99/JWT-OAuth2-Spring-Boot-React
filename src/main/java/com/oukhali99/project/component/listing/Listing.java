@@ -27,9 +27,6 @@ public class Listing {
     @Embedded
     private Price price;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Bid> bids;
-
     public Listing(User owner) {
         this.owner = owner;
     }
@@ -38,10 +35,6 @@ public class Listing {
         this(owner);
         this.title = title;
         this.price = price;
-    }
-
-    public void addBid(Bid bid) {
-        bids.add(bid);
     }
 
     public String getPriceHumanReadable() {

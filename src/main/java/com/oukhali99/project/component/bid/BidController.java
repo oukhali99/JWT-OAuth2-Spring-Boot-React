@@ -26,6 +26,9 @@ public class BidController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private BidService bidService;
+
     @PutMapping
     public ResponseEntity<ApiResponse> putBid(
             @RequestHeader(name = "Authorization") String authorization,
@@ -37,10 +40,7 @@ public class BidController {
         Listing listing = listingService.getById(listingId);
 
         Bid bid = new Bid(owner, listing, new Price(priceDollars));
-        listingService.addBid(bid);
-        owner = userService.addBid(bid);
-
-        return ResponseEntity.ok(new ApiObjectResponse(owner));
+        return ResponseEntity.ok(new ApiObjectResponse(bidService.save(bid)));
     }
 
 }
