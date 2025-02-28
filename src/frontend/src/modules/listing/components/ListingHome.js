@@ -9,9 +9,11 @@ import AddListingControl from "./AddListingControl";
 
 const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authenticatedDeleteRequest }) => {
     const [response, setResponse] = useState();
+    const [rowResponse, setRowResponse] = useState();
 
     const refresh = async () => {
         setResponse(await authenticatedGetRequest("/listing"));
+        setRowResponse();
     };
 
     useEffect(() => {
@@ -33,6 +35,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authent
     return (
         <Container>
             {controls}
+            <ResponseAlert response={rowResponse} />
             <Table>
                 <thead>
                     <th>ID</th>
@@ -43,7 +46,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authent
                 </thead>
                 <tbody>
                     {listings.map((listing) => (
-                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} refresh={refresh} />
+                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} refresh={refresh} setResponse={setRowResponse} />
                     ))}
                 </tbody>
             </Table>

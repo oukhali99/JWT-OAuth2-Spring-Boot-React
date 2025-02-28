@@ -1,11 +1,20 @@
-import React from "react";
-import { Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container } from "react-bootstrap";
 
-const ListingRow = ({ listing, authenticatedDeleteRequest, refresh }) => {
+import { ResponseAlert } from "modules/common";
+
+const ListingRow = ({ listing, authenticatedDeleteRequest, refresh, setResponse }) => {
     const deleteListing = async listingId => {
-        await authenticatedDeleteRequest("/listing", { params: {listingId} });
-        refresh();
+        const response = await authenticatedDeleteRequest("/listing", { params: {listingId} });
+        setResponse(response);
+        if (response?.data?.errorCode === "SUCCESS") refresh();
     };
+
+    const controls = (
+        <Container>
+            <Button variant="danger" onClick={() => deleteListing(listing?.id)}>Delete</Button>
+        </Container>
+    );
     
     return (
         <tr key={listing?.id}>
@@ -14,7 +23,7 @@ const ListingRow = ({ listing, authenticatedDeleteRequest, refresh }) => {
             <td>{listing?.owner?.email}</td>
             <td>{listing?.priceHumanReadable}</td>
             <td>{listing?.bids?.map((bid) => JSON.stringify(bid))}</td>
-            <td><Button variant="danger" onClick={() => deleteListing(listing?.id)}>Delete</Button></td>
+            <td>{controls}</td>
         </tr>
     );
 };
