@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import { actions as apiActions } from "modules/api";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import { Container, Row, Table } from "react-bootstrap";
 import { ResponseAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
@@ -46,7 +46,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authent
                 </thead>
                 <tbody>
                     {listings.map((listing) => (
-                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} refresh={refresh} setResponse={setRowResponse} />
+                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} authenticatedPutRequest={authenticatedPutRequest} refresh={refresh} setResponse={setRowResponse} />
                     ))}
                 </tbody>
             </Table>

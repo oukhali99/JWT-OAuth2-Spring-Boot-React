@@ -10,7 +10,8 @@ public class BidService {
     private BidRepository bidRepository;
 
     public Bid save(Bid bid) throws EntityAlreadyExistsException {
-        if (bidRepository.findById(bid.getId()).isPresent()) throw new EntityAlreadyExistsException();
+        Long id = bid.getId();
+        if (id != null && bidRepository.findById(id).isPresent()) throw new EntityAlreadyExistsException();
         return bidRepository.save(bid);
     }
 }
