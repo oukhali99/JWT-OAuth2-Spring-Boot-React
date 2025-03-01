@@ -10,7 +10,6 @@ import AddListingControl from "./AddListingControl";
 const ListingHome = ({
     authenticatedGetRequest,
     authenticatedPutRequest,
-    authenticatedDeleteRequest,
 }) => {
     const [response, setResponse] = useState();
     const [rowResponse, setRowResponse] = useState();
@@ -55,8 +54,6 @@ const ListingHome = ({
                     {listings.map((listing) => (
                         <ListingRow
                             listing={listing}
-                            authenticatedDeleteRequest={authenticatedDeleteRequest}
-                            authenticatedPutRequest={authenticatedPutRequest}
                             refresh={refresh}
                             setResponse={setRowResponse}
                         />
@@ -72,7 +69,6 @@ const stateToProps = (state) => ({});
 const dispatchToProps = {
     authenticatedGetRequest: apiActions.authenticatedGetRequest,
     authenticatedPutRequest: apiActions.authenticatedPutRequest,
-    authenticatedDeleteRequest: apiActions.authenticatedDeleteRequest,
 };
 
 export default connect(stateToProps, dispatchToProps)(ListingHome);

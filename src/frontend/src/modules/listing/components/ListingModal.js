@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { connect } from "react-redux";
 
 import { ResponseAlert } from "modules/common";
-import { BidRows } from "modules/bid";
+import { BidRow } from "modules/bid";
+import { actions as apiActions } from "modules/api";
+import { selectors as authSelectors } from "modules/auth";
 
-const ListingModal = ({ show, onHide, listing, authenticatedPutRequest, authId }) => {
+const ListingModal = ({ show, onHide, listing, authenticatedPutRequest, authenticatedGetRequest, authId }) => {
     const [response, setResponse] = useState();
     const [price, setPrice] = useState();
+    const [bidsResponse, setBidsResponse] = useState();
 
     const isMyListing = authId?.toString() === listing?.owner?.id?.toString();
     const placeHolderForPriceInput = isMyListing ? "Can't bid on your own listing" : "Price";
@@ -14,9 +18,19 @@ const ListingModal = ({ show, onHide, listing, authenticatedPutRequest, authId }
     const bidOnListing = async (listingId, priceDollars) => {
         const response = await authenticatedPutRequest("/bid", undefined, { params: {listingId, priceDollars} });
         setResponse(response);
+        refreshBids();
         //if (response?.data?.errorCode === "SUCCESS") refresh();
     }
 
+    const refreshBids = async () => {
+        setBidsResponse(await authenticatedGetRequest("/bid/for-listing", { params: { listingId: listing?.id } }));
+    };
+    
+    useEffect(() => {
+        refreshBids();
+    }, []);
+    
+    const bids = bidsResponse?.data?.content;
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header>
@@ -28,7 +42,8 @@ const ListingModal = ({ show, onHide, listing, authenticatedPutRequest, authId }
                 <h4>Owner</h4>
                 <p>{listing?.owner?.email}</p>
                 <h4>Bid</h4>
-                <BidRows listingId={listing?.id} />
+                {bids && bids.map(bid => <BidRow bid={bid} />)}
+                <ResponseAlert response={bidsResponse} />
                 <Row>
                     <Col xs={10}>
                         <Form.Control type="number" placeholder={placeHolderForPriceInput} value={price} onChange={e => setPrice(e.target.value)} disabled={isMyListing} />
@@ -41,6 +56,15 @@ const ListingModal = ({ show, onHide, listing, authenticatedPutRequest, authId }
             </Modal.Body>
         </Modal>
     );
-}
+};
 
-export default ListingModal;
+const stateToProps = (state) => ({
+    authId: authSelectors.getId(state),
+});
+
+const dispatchToProps = {
+    authenticatedPutRequest: apiActions.authenticatedPutRequest,
+    authenticatedGetRequest: apiActions.authenticatedGetRequest,
+};
+
+export default connect(stateToProps, dispatchToProps)(ListingModal);

@@ -1,3 +1,3 @@
-import BidRows from "./components/BidRows";
+import BidRow from "./components/BidRow";
 
-export { BidRows };
+export { BidRow };

@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Container, Modal, Form, Row, Col } from "react-boo
 import { connect } from "react-redux";
 
 import { selectors as authSelectors } from "modules/auth";
+import { actions as apiActions } from "modules/api";
 import ListingModal from "./ListingModal";
 
 const ListingRow = ({
@@ -56,4 +57,10 @@ const stateToProps = (state) => ({
     authId: authSelectors.getId(state),
 });
 
-export default connect(stateToProps)(ListingRow);
+const dispatchToProps = {
+    authenticatedGetRequest: apiActions.authenticatedGetRequest,
+    authenticatedPutRequest: apiActions.authenticatedPutRequest,
+    authenticatedDeleteRequest: apiActions.authenticatedDeleteRequest,
+};
+
+export default connect(stateToProps, dispatchToProps)(ListingRow);
