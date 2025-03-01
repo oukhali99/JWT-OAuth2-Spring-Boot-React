@@ -7,7 +7,11 @@ import { ResponseAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 
-const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authenticatedDeleteRequest }) => {
+const ListingHome = ({
+    authenticatedGetRequest,
+    authenticatedPutRequest,
+    authenticatedDeleteRequest,
+}) => {
     const [response, setResponse] = useState();
     const [rowResponse, setRowResponse] = useState();
 
@@ -23,7 +27,10 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authent
     const controls = (
         <Container className="m-4">
             <ResponseAlert response={response} />
-            <AddListingControl authenticatedPutRequest={authenticatedPutRequest} refresh={refresh} />
+            <AddListingControl
+                authenticatedPutRequest={authenticatedPutRequest}
+                refresh={refresh}
+            />
         </Container>
     );
 
@@ -42,11 +49,17 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest, authent
                     <th>title</th>
                     <th>owners</th>
                     <th>price</th>
-                    <th>bids</th>
+                    <th>controls</th>
                 </thead>
                 <tbody>
                     {listings.map((listing) => (
-                        <ListingRow listing={listing} authenticatedDeleteRequest={authenticatedDeleteRequest} authenticatedPutRequest={authenticatedPutRequest} refresh={refresh} setResponse={setRowResponse} />
+                        <ListingRow
+                            listing={listing}
+                            authenticatedDeleteRequest={authenticatedDeleteRequest}
+                            authenticatedPutRequest={authenticatedPutRequest}
+                            refresh={refresh}
+                            setResponse={setRowResponse}
+                        />
                     ))}
                 </tbody>
             </Table>

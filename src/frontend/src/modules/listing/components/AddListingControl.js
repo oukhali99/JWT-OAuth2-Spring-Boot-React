@@ -12,7 +12,7 @@ const AddListingControl = ({ authenticatedPutRequest, refresh }) => {
         setResponse(
             await authenticatedPutRequest("/listing", undefined, {
                 params: { title, priceDollars },
-            })
+            }),
         );
         refresh();
     };
@@ -43,7 +43,9 @@ const AddListingControl = ({ authenticatedPutRequest, refresh }) => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Button className="mt-2" onClick={addListing}>Add Listing</Button>
+                <Button className="mt-2" onClick={addListing}>
+                    Add Listing
+                </Button>
             </Form>
         </Container>
     );

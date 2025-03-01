@@ -4,6 +4,8 @@ import com.oukhali99.project.exception.EntityAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BidService {
     @Autowired
@@ -13,5 +15,9 @@ public class BidService {
         Long id = bid.getId();
         if (id != null && bidRepository.findById(id).isPresent()) throw new EntityAlreadyExistsException();
         return bidRepository.save(bid);
+    }
+
+    public List<Bid> getBidsForListing(long listingId) {
+        return bidRepository.getBidsForListing(listingId);
     }
 }

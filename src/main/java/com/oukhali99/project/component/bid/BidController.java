@@ -43,4 +43,11 @@ public class BidController {
         return ResponseEntity.ok(new ApiObjectResponse(bidService.save(bid)));
     }
 
+    @GetMapping("/for-listing")
+    public ResponseEntity<ApiResponse> getBidsForListing(
+            @RequestParam long listingId
+    ) {
+        return ResponseEntity.ok(new ApiObjectResponse(bidService.getBidsForListing(listingId)));
+    }
+
 }

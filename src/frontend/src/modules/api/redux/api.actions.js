@@ -29,7 +29,7 @@ export const putRequest = async (endpoint, body, config) => {
     } catch (e) {
         return e.response;
     }
-}
+};
 
 export const deleteRequest = async (endpoint, config) => {
     try {
@@ -38,7 +38,7 @@ export const deleteRequest = async (endpoint, config) => {
     } catch (e) {
         return e.response;
     }
-}
+};
 
 export const authenticatedPostRequest = (endpoint, body, config) => async (dispatch, getState) => {
     const jwtToken = authSelectors.getToken(getState());
@@ -106,4 +106,4 @@ export const authenticatedDeleteRequest = (endpoint, config) => async (dispatch,
     }
 
     return response;
-}
+};

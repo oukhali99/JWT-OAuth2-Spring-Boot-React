@@ -19,11 +19,9 @@ public class Bid {
     @GeneratedValue
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     private Listing listing;
 
-    @JsonIgnore
     @ManyToOne
     private User bidder;
 
