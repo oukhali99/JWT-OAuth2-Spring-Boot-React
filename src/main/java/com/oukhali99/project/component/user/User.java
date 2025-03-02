@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @ManyToMany
     private List<User> friends;
 
+    @Column(columnDefinition = "BOOLEAN default 'f'")
+    private boolean signedUpWithOAuth;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new LinkedList<>();

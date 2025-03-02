@@ -32,6 +32,21 @@ export const authenticate = (username, password) => async (dispatch, getState) =
     return response;
 };
 
+export const authenticateOrRegisterWithGoogle = accessToken => async (dispatch, getState) => {
+    const response = await apiActions.postRequest("/auth/authenticate-or-register-with-google", null, {
+        params: { accessToken },
+    });
+
+    const status = response.status;
+    if (status === HttpStatusCode.Ok) {
+        const { token, content: user } = response?.data;
+        const { username, id } = user;
+        dispatch(loginSuccessAction({ token, username, id }));
+    }
+
+    return response;
+};
+
 export const register = (username, password) => async (dispatch, getState) => {
     const response = await apiActions.postRequest("/auth/register", null, {
         params: { username, password },

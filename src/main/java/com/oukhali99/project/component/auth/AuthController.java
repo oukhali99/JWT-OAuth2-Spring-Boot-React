@@ -7,6 +7,7 @@ import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.exception.MyException;
+import com.oukhali99.project.model.apiresponse.ApiResponse;
 import com.oukhali99.project.model.apiresponse.ErrorCode;
 import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
 import com.oukhali99.project.model.apiresponse.BaseApiResponse;
@@ -38,7 +39,7 @@ public class AuthController {
     public ResponseEntity<BaseApiResponse> authenticate(
             @RequestParam String username,
             @RequestParam String password
-    ) throws UsernameNotFoundException, MyAuthenticationException {
+    ) throws MyException {
         BaseApiResponse baseApiResponse = new AuthResponse(
                 authService.authenticate(username, password),
                 userService.getByEmail(username)
@@ -58,6 +59,13 @@ public class AuthController {
         );
 
         return ResponseEntity.ok(baseApiResponse);
+    }
+
+    @PostMapping("/authenticate-or-register-with-google")
+    public ResponseEntity<ApiResponse> authenticateOrRegisterWithGoogle(@RequestParam String accessToken) throws MyException {
+        User user = authService.authenticateOrRegisterWithGoogle(accessToken);
+        String jwt = jwtService.generateToken(user);
+        return ResponseEntity.ok(new AuthResponse(jwt, user));
     }
 
 }
