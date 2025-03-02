@@ -7,10 +7,7 @@ import { ResponseAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 
-const ListingHome = ({
-    authenticatedGetRequest,
-    authenticatedPutRequest,
-}) => {
+const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
     const [response, setResponse] = useState();
     const [rowResponse, setRowResponse] = useState();
 

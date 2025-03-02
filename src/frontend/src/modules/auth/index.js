@@ -6,3 +6,4 @@ export default reducer;
 
 export { actions, selectors };
 export { default as Login } from "./components/Login";
+export { default as OAuthGoogleRedirect } from "./components/OAuthGoogleRedirect";

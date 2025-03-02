@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 import { About, Home } from "modules/main";
 import { Account, User, Users } from "modules/user";
-import { selectors as authSelectors, Login, actions as authActions } from "modules/auth";
+import { selectors as authSelectors, Login, actions as authActions, OAuthGoogleRedirect } from "modules/auth";
 import { ListingHome } from "modules/listing";
 
 const App = ({ authToken, logout, username, id }) => {
@@ -55,6 +55,7 @@ const App = ({ authToken, logout, username, id }) => {
                         <Route path="/users" Component={Users} />
                         <Route path="/listing" Component={ListingHome} />
                         <Route path="/user/:id" Component={User} />
+                        <Route path="/oauth-google-redirect" Component={OAuthGoogleRedirect} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />
                 </Container>

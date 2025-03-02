@@ -5,6 +5,7 @@ import { selectors as authSelectors, actions as authActions } from "modules/auth
 import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
 import { HttpStatusCode } from "axios";
 import { ResponseAlert } from "modules/common";
+import LoginWithGoogleButton from "./LoginWithGoogleButton";
 
 const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
     const [username, setUsername] = useState("");
@@ -77,6 +78,8 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                         <ResponseAlert response={response} />
                     </Container>
                 )}
+
+                <LoginWithGoogleButton />
             </Modal.Footer>
         </Modal>
     );
