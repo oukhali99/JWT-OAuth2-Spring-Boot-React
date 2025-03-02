@@ -1,6 +1,8 @@
 # Spring Boot JWT + OAuth Bidding Platform
 Bidding app that uses a Spring Boot backend and a React Redux Frontend.
 
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012358.png)
+
 ## Features
 - Create a listing
 - Bid on a listing
