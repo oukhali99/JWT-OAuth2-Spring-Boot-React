@@ -22,6 +22,8 @@ Moreover, you can also sign up using Google. How this works:
 - Then, it checks for that email in the psql database. If not found, it creates it with a blank password. And sets the ```signedUpWithOAuth``` flag. This is important so people can't sign into an OAuth account directly.
 - Then, it generates and returns a JWT token to the frontend.
 
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012647.png)
+
 ## Running this app
 First, start the psql database
 ```
