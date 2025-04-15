@@ -29,6 +29,11 @@ What's more, a user that signed up with OAuth will not be allowed to login direc
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Authentication%20Activity.drawio.svg)
 
+There are only 3 classes:
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Backend%20Classes.drawio.svg)
+
+
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012647.png)
 
 ## Running this app
