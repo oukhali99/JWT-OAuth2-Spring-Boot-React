@@ -7,9 +7,9 @@ const OAuthGoogleRedirect = ({ authenticateOrRegisterWithGoogle, authId }) => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
 
-    const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-    const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
+    const REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
 
     const init = async () => {
         const urlParams = new URLSearchParams(window.location.search);

@@ -2,8 +2,8 @@ import React from "react";
 import { Button } from "react-bootstrap";
 
 const LoginWithGoogleButton = () => {
-    const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
     const GOOGLE_RESPONSE_TYPE = "code";
     const GOOGLE_SCOPE = "profile email";
 

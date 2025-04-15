@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from "axios";
 
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 
-const buildUrl = (endpoint) => `${process.env.REACT_APP_BACKEND_URL}${endpoint}`;
+const buildUrl = (endpoint) => `${import.meta.env.VITE_BACKEND_URL}${endpoint}`;
 
 export const getRequest = async (endpoint, config) => {
     try {
