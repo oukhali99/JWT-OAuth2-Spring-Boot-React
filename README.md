@@ -16,12 +16,18 @@ Bidding app that uses a Spring Boot backend and a React Redux Frontend.
 Yes. The usual workflow of JWT Authentication is to sign up directly with a username and a password. This application supports this.
 
 Moreover, you can also sign up using Google. How it works:
+
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/OAuth%20Authentication%20Sequence.drawio.svg)
+
 - The react frontend obtains an accessToken from Google (with your consent)
 - This token is sent to the Spring Boot backend
 - The backend verifies the token, and fetches the email with which it is associated
 - Then, it checks for that email in the psql database. If not found, it creates it with a blank password. And sets the ```signedUpWithOAuth``` flag. This is important so people can't sign into an OAuth account directly.
 - Then, it generates and returns a JWT token to the frontend.
+
+What's more, a user that signed up with OAuth will not be allowed to login directly. This makes sense because what would he even use as a password? The below flowchart shows this.
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Authentication%20Activity.drawio.svg)
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012647.png)
 
