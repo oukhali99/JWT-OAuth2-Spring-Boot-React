@@ -36,6 +36,18 @@ There are only 3 classes:
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012647.png)
 
+## Marketplace Simulator
+TODO
+
+## Social Media Features
+Authenticated users can also send, receive and accept friend requests.
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Friend%20Request%20Sequence.drawio.svg)
+
+Sending and accepting friend requests are both done through the same endpoint.
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Friend%20Request%20Activity.drawio.svg)
+
 ## Running this app
 First, start the psql database
 ```
