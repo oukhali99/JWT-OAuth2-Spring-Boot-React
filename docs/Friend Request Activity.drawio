@@ -1,0 +1,70 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2">
+  <diagram name="Page-1" id="e7e014a7-5840-1c2e-5031-d8a46d1fe8dd">
+    <mxGraphModel dx="1428" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-43" target="DeFgG17FD3ahKa7-UXKR-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-43" value="Call&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;/user/add-friend&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Jane&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="150" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-45" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="540" y="60" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-46" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="DeFgG17FD3ahKa7-UXKR-45" parent="1" target="DeFgG17FD3ahKa7-UXKR-43">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="555" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-48" target="DeFgG17FD3ahKa7-UXKR-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-55" value="Jane not found" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="DeFgG17FD3ahKa7-UXKR-52">
+          <mxGeometry x="0.0435" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-48" target="DeFgG17FD3ahKa7-UXKR-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-54" value="Jane found" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="DeFgG17FD3ahKa7-UXKR-53">
+          <mxGeometry x="-0.2281" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-48" value="Backend Checks Adam&#39;s Received&amp;nbsp;Friend Requests" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="210" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-50" target="DeFgG17FD3ahKa7-UXKR-60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-50" value="Fetch Jane&#39;s User" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="255" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-51" target="DeFgG17FD3ahKa7-UXKR-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-51" value="Delete Adam&#39;s Received&amp;nbsp;Friend Request" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="255" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="DeFgG17FD3ahKa7-UXKR-56" target="DeFgG17FD3ahKa7-UXKR-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-56" value="Add Jane to Aram&#39;s Friends List" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="353" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-58" value="Add Adam to Jane&#39;s Friend List" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="450" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-60" value="Add Adam to Jane&#39;s Received Friend Requests" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="353" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="DeFgG17FD3ahKa7-UXKR-62" value="Adam" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="60" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
