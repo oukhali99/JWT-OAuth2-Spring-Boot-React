@@ -1,16 +1,23 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Button, ButtonGroup } from "react-bootstrap";
 
 import { actions as userActions } from "modules/user";
-import { selectors as authSelectors } from "modules/auth";
+import { OtherUser } from "modules/user";
+import { useAppDispatch } from "hooks";
 
-const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest }) => {
+interface Props {
+    user: OtherUser;
+    refreshUsers: () => Promise<void>;
+};
+
+const SocialButtons = ({ user, refreshUsers, ...rest } : Props) => {
+    const dispatch = useAppDispatch();
+
     const firstButton = user?.isAFriend ? (
         <Button
             variant="danger"
             onClick={async () => {
-                await removeFriend(user?.user?.username);
+                await dispatch(userActions.removeFriend(user?.user?.username));
                 refreshUsers();
             }}
         >
@@ -20,7 +27,7 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest })
         <Button
             variant="danger"
             onClick={async () => {
-                await removeFriend(user.user?.username);
+                await dispatch(userActions.removeFriend(user.user?.username));
                 refreshUsers();
             }}
         >
@@ -29,7 +36,7 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest })
     ) : user?.thisPersonSentSelfAFriendRequest ? (
         <Button
             onClick={async () => {
-                await addFriend(user.user?.username);
+                await dispatch(userActions.addFriend(user.user?.username));
                 refreshUsers();
             }}
             variant="success"
@@ -39,7 +46,7 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest })
     ) : (
         <Button
             onClick={async () => {
-                await addFriend(user.user?.username);
+                await dispatch(userActions.addFriend(user.user?.username));
                 refreshUsers();
             }}
         >
@@ -48,18 +55,11 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest })
     );
 
     return (
-        <ButtonGroup rest>
+        <ButtonGroup {...rest}>
             {firstButton}
             <Button variant="danger">Block</Button>
         </ButtonGroup>
     );
 };
 
-const stateToProps = (state) => ({});
-
-const dispatchToProps = {
-    addFriend: userActions.addFriend,
-    removeFriend: userActions.removeFriend,
-};
-
-export default connect(stateToProps, dispatchToProps)(SocialButtons);
+export default SocialButtons;

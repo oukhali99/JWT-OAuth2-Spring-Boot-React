@@ -11,6 +11,7 @@ import { selectors as authSelectors } from "modules/auth";
 const User = ({ authenticatedGetRequest, loggerInUserId }) => {
     const { id: stringId } = useParams();
     const id = parseInt(stringId);
+    loggerInUserId = parseInt(loggerInUserId);
 
     const [response, setResponse] = useState();
 
