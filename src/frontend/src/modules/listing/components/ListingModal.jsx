@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 
-import { ResponseAlert } from "modules/common";
+import { AxiosResponseAlert } from "modules/common";
 import { BidRow } from "modules/bid";
 import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
@@ -56,7 +56,7 @@ const ListingModal = ({
                 <p>{listing?.owner?.email}</p>
                 <h4>Bid</h4>
                 {bids && bids.map((bid) => <BidRow bid={bid} />)}
-                <ResponseAlert response={bidsResponse} />
+                <AxiosResponseAlert response={bidsResponse} />
                 <Row>
                     <Col xs={10}>
                         <Form.Control
@@ -73,7 +73,7 @@ const ListingModal = ({
                         </Button>
                     </Col>
                 </Row>
-                <ResponseAlert response={response} />
+                <AxiosResponseAlert response={response} />
             </Modal.Body>
         </Modal>
     );

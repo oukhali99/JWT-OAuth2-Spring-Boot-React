@@ -4,7 +4,7 @@ import { Alert, Button, ButtonGroup, Container } from "react-bootstrap";
 
 import { selectors as authSelectors } from "modules/auth";
 import { actions as apiActions } from "modules/api";
-import { ResponseAlert } from "modules/common";
+import { AxiosResponseAlert } from "modules/common";
 import { actions as userActions } from "modules/user";
 
 const Account = ({ id, username, authenticatedPostRequest, addFriend, removeFriend }) => {
@@ -26,7 +26,7 @@ const Account = ({ id, username, authenticatedPostRequest, addFriend, removeFrie
     const friendRequestUserList = response?.data?.obfuscatedSelf?.receivedFriendRequestUsernameList;
     return (
         <Container className="m-3">
-            <ResponseAlert response={response} />
+            <AxiosResponseAlert response={response} />
             <div>Username: {username}</div>
             <div>Id: {id}</div>
             {friendRequestUserList?.map((friendRequestUser) => (

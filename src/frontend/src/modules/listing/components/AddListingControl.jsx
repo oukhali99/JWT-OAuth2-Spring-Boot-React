@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { ResponseAlert } from "modules/common";
+import { AxiosResponseAlert } from "modules/common";
 
 const AddListingControl = ({ authenticatedPutRequest, refresh }) => {
     const [response, setResponse] = useState();
@@ -19,7 +19,7 @@ const AddListingControl = ({ authenticatedPutRequest, refresh }) => {
 
     return (
         <Container className="m-4">
-            <ResponseAlert response={response} />
+            <AxiosResponseAlert response={response} />
             <Form>
                 <Row>
                     <Col>

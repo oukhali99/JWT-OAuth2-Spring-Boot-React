@@ -5,7 +5,7 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { actions as userActions } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
 
-const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, style }) => {
+const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, ...rest }) => {
     const firstButton = user?.isAFriend ? (
         <Button
             variant="danger"
@@ -48,7 +48,7 @@ const SocialButtons = ({ addFriend, user, removeFriend, refreshUsers, style }) =
     );
 
     return (
-        <ButtonGroup style={style}>
+        <ButtonGroup rest>
             {firstButton}
             <Button variant="danger">Block</Button>
         </ButtonGroup>

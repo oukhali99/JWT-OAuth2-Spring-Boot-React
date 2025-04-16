@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       'modules': path.resolve(__dirname, 'src/modules'),
+      'hooks': path.resolve(__dirname, 'src/hooks'),
     },
   },
   server: {

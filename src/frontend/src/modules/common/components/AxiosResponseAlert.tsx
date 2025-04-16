@@ -1,8 +1,14 @@
-import { HttpStatusCode } from "axios";
+import { HttpStatusCode, AxiosResponse, AxiosError } from "axios";
 import React, { useMemo } from "react";
 import { Alert, Container } from "react-bootstrap";
 
-const ResponseAlert = ({ response }) => {
+import { ApiPayloadData } from "modules/api";
+
+interface Props {
+    response: AxiosResponse<ApiPayloadData> | AxiosError<ApiPayloadData> | undefined;
+};
+
+const AxiosResponseAlert = ({ response }: Props) => {
     const variant = useMemo(() => {
         switch (response?.status) {
             case HttpStatusCode.Ok:
@@ -39,4 +45,4 @@ const ResponseAlert = ({ response }) => {
     );
 };
 
-export default ResponseAlert;
+export default AxiosResponseAlert;

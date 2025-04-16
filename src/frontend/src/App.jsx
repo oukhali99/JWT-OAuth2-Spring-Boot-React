@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { connect } from "react-redux";
 
 import { About, Home } from "modules/main";
-import { Account, User, Users } from "modules/user";
+import { Account, UserHome, SpecificUser } from "modules/user";
 import { selectors as authSelectors, Login, actions as authActions, OAuthGoogleRedirect } from "modules/auth";
 import { ListingHome } from "modules/listing";
 
@@ -39,9 +39,9 @@ const App = ({ authToken, logout, username, id }) => {
                     <Routes>
                         <Route path="/" Component={Home} />
                         <Route path="/about" Component={About} />
-                        <Route path="/users" Component={Users} />
+                        <Route path="/users" Component={UserHome} />
                         <Route path="/listing" Component={ListingHome} />
-                        <Route path="/user/:id" Component={User} />
+                        <Route path="/user/:id" Component={SpecificUser} />
                         <Route path="/oauth-google-redirect" Component={OAuthGoogleRedirect} />
                     </Routes>
                     <Login showModal={showLoginModal} onHide={() => setShowLoginModal(false)} />

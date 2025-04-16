@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { actions as apiActions } from "modules/api";
 import { Container, Row, Table } from "react-bootstrap";
-import { ResponseAlert } from "modules/common";
+import { AxiosResponseAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 
@@ -22,7 +22,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
 
     const controls = (
         <Container className="m-4">
-            <ResponseAlert response={response} />
+            <AxiosResponseAlert response={response} />
             <AddListingControl
                 authenticatedPutRequest={authenticatedPutRequest}
                 refresh={refresh}
@@ -38,14 +38,16 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
     return (
         <Container>
             {controls}
-            <ResponseAlert response={rowResponse} />
+            <AxiosResponseAlert response={rowResponse} />
             <Table>
                 <thead>
-                    <th>ID</th>
-                    <th>title</th>
-                    <th>owners</th>
-                    <th>price</th>
-                    <th>controls</th>
+                    <tr>
+                        <th>ID</th>
+                        <th>title</th>
+                        <th>owners</th>
+                        <th>price</th>
+                        <th>controls</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {listings.map((listing) => (

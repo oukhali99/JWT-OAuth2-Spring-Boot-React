@@ -13,3 +13,4 @@ export type AppStore = typeof store
 export type RootState = ReturnType<AppStore['getState']>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = AppStore['dispatch']
+export type AppGetState = AppStore['getState']

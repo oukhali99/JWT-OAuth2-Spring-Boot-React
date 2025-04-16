@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { actions as apiActions } from "modules/api";
-import { RefreshButton, ResponseAlert } from "modules/common";
+import { RefreshButton, AxiosResponseAlert } from "modules/common";
 import { Card, CardGroup, Container } from "react-bootstrap";
 import { SocialButtons } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
@@ -25,7 +25,7 @@ const User = ({ authenticatedGetRequest, loggerInUserId }) => {
     const controls = (
         <>
             <RefreshButton refresh={refresh} />
-            <ResponseAlert response={response} />
+            <AxiosResponseAlert response={response} />
         </>
     );
     if (response?.data?.errorCode !== "SUCCESS") {

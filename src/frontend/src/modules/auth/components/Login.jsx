@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
 import { HttpStatusCode } from "axios";
-import { ResponseAlert } from "modules/common";
+import { AxiosResponseAlert } from "modules/common";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
 
 const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
@@ -75,7 +75,7 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
 
                 {response && (
                     <Container>
-                        <ResponseAlert response={response} />
+                        <AxiosResponseAlert response={response} />
                     </Container>
                 )}
 

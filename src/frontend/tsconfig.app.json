@@ -22,7 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": "./src"
   },
   "include": ["src"]
 }
