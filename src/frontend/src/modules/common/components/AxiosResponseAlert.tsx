@@ -5,7 +5,7 @@ import { Alert, Container } from "react-bootstrap";
 import { ApiPayloadData } from "modules/api";
 
 interface Props {
-    response: AxiosResponse<ApiPayloadData> | AxiosError<ApiPayloadData> | undefined;
+    response: AxiosResponse<ApiPayloadData> | undefined;
 };
 
 const AxiosResponseAlert = ({ response }: Props) => {

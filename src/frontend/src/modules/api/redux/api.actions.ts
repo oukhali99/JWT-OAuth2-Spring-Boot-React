@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, HttpStatusCode } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, HttpStatusCode } from "axios";
 
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 import { AppDispatch, AppGetState } from "store";
@@ -7,51 +7,23 @@ import { ApiPayloadData } from "modules/api";
 const buildUrl = (endpoint: string): string => `${import.meta.env.VITE_BACKEND_URL}${endpoint}`;
 
 export const getRequest = async (endpoint: string, config: AxiosRequestConfig) => {
-    try {
-        const response = await axios.get(buildUrl(endpoint), config);
-        return response as AxiosResponse<ApiPayloadData>;
-    }
-    catch (error: any) {
-        if (!(error instanceof AxiosError)) throw error;
-        if (!error.response) throw error;
-        return error.response as AxiosResponse<ApiPayloadData>;
-    }
+    const response = await axios.get(buildUrl(endpoint), config);
+    return response as AxiosResponse<ApiPayloadData>;
 };
 
 export const postRequest = async (endpoint: string, body: object, config: AxiosRequestConfig) => {
-    try {
-        const response = await axios.post(buildUrl(endpoint), body, config);
-        return response as AxiosResponse<ApiPayloadData>;
-    }
-    catch (error: any) {
-        if (!(error instanceof AxiosError)) throw error;
-        if (!error.response) throw error;
-        return error.response as AxiosResponse<ApiPayloadData>;
-    }
+    const response = await axios.post(buildUrl(endpoint), body, config);
+    return response as AxiosResponse<ApiPayloadData>;
 };
 
 export const putRequest = async (endpoint: string, body: object, config: AxiosRequestConfig) => {
-    try {
-        const response = await axios.put(buildUrl(endpoint), body, config);
-        return response as AxiosResponse<ApiPayloadData>;
-    }
-    catch (error: any) {
-        if (!(error instanceof AxiosError)) throw error;
-        if (!error.response) throw error;
-        return error.response as AxiosResponse<ApiPayloadData>;
-    }
+    const response = await axios.put(buildUrl(endpoint), body, config);
+    return response as AxiosResponse<ApiPayloadData>;
 };
 
 export const deleteRequest = async (endpoint: string, config: AxiosRequestConfig) => {
-    try {
-        const response = await axios.delete(buildUrl(endpoint), config);
-        return response as AxiosResponse<ApiPayloadData>;
-    }
-    catch (error: any) {
-        if (!(error instanceof AxiosError)) throw error;
-        if (!error.response) throw error;
-        return error.response as AxiosResponse<ApiPayloadData>;
-    }
+    const response = await axios.delete(buildUrl(endpoint), config);
+    return response as AxiosResponse<ApiPayloadData>;
 };
 
 export const authenticatedPostRequest = (endpoint: string, body: object, config: AxiosRequestConfig) => async (dispatch: AppDispatch, getState: AppGetState) => {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { AxiosResponse } from "axios";
 
-import { AxiosResponseAlert } from "modules/common";
+import { AxiosResponseAlert, ErrorAlert } from "modules/common";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { useAppDispatch } from "hooks";
 
@@ -15,21 +15,28 @@ const AddListingControl = ({ refresh }: Props) => {
     const dispatch = useAppDispatch();
 
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
+    const [error, setError] = useState<unknown>();
     const [priceDollars, setPriceDollars] = useState<string>();
     const [title, setTitle] = useState<string>();
 
     const addListing = async () => {
-        setResponse(
-            await dispatch(apiActions.authenticatedPutRequest("/listing", {}, {
-                params: { title, priceDollars },
-            })),
-        );
-        refresh();
+        try {
+            setResponse(
+                await dispatch(apiActions.authenticatedPutRequest("/listing", {}, {
+                    params: { title, priceDollars },
+                })),
+            );
+            refresh();
+        }
+        catch (err) {
+            setError(err);
+        }
     };
 
     return (
         <Container className="m-4">
             <AxiosResponseAlert response={response} />
+            <ErrorAlert error={error} />
             <Form>
                 <Row>
                     <Col>

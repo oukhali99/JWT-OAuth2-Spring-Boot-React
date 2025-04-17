@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { AxiosResponse, HttpStatusCode } from "axios";
+import { AxiosResponse } from "axios";
 
-import { selectors as authSelectors, actions as authActions } from "modules/auth";
-import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
-import { AxiosResponseAlert } from "modules/common";
+import { actions as authActions } from "modules/auth";
+import { Button, Modal, ButtonGroup, Container, Form } from "react-bootstrap";
+import { ErrorAlert, AxiosResponseAlert } from "modules/common";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
 import { useAppDispatch } from "hooks";
 import { ApiPayloadData } from "modules/api";
@@ -20,6 +20,7 @@ const Login = ({ showModal, onHide }: Props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
+    const [error, setError] = useState<unknown>();
 
     const onHideWrapper = () => {
         setUsername("");
@@ -60,10 +61,13 @@ const Login = ({ showModal, onHide }: Props) => {
                 <ButtonGroup>
                     <Button
                         onClick={async () => {
-                            const response = await dispatch(authActions.authenticate(username, password));
-                            setResponse(response);
-                            if (response.status === HttpStatusCode.Ok) {
+                            try {
+                                const response = await dispatch(authActions.authenticate(username, password));
+                                setResponse(response);
                                 onHideWrapper();
+                            }
+                            catch (error: unknown) {
+                                setError(error);
                             }
                         }}
                     >
@@ -71,10 +75,13 @@ const Login = ({ showModal, onHide }: Props) => {
                     </Button>
                     <Button
                         onClick={async () => {
-                            const response = await dispatch(authActions.register(username, password));
-                            setResponse(response);
-                            if (response.status === HttpStatusCode.Ok) {
+                            try {
+                                const response = await dispatch(authActions.register(username, password));
+                                setResponse(response);
                                 onHideWrapper();
+                            }
+                            catch (error: unknown) {
+                                setError(error);
                             }
                         }}
                     >
@@ -82,13 +89,12 @@ const Login = ({ showModal, onHide }: Props) => {
                     </Button>
                 </ButtonGroup>
 
-                {response && (
-                    <Container>
-                        <AxiosResponseAlert response={response} />
-                    </Container>
-                )}
-
                 <LoginWithGoogleButton />
+
+                <Container>
+                    <AxiosResponseAlert response={response} />
+                    <ErrorAlert error={error} />
+                </Container>
             </Modal.Footer>
         </Modal>
     );
