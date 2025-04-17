@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { actions as authActions, selectors as authSelectors } from "modules/auth";
-import { useAppStore, useAppDispatch } from "hooks";
+import { useAppSelector, useAppDispatch } from "hooks";
 
 interface UserInfo {
     name: string;
@@ -12,6 +12,7 @@ interface UserInfo {
 
 const OAuthGoogleRedirect = () => {
     const dispatch = useAppDispatch();
+    const authId = useAppSelector(authSelectors.getId);
 
     const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
     const [error, setError] = useState<string | undefined>(undefined);
@@ -25,7 +26,7 @@ const OAuthGoogleRedirect = () => {
         const code = urlParams.get("code");
         
         if (!code) return;
-        if (authSelectors.getId(useAppStore().getState())) return;
+        if (authId) return;
 
         const accessToken = await fetchAccessToken(code);
         if (!accessToken) return;

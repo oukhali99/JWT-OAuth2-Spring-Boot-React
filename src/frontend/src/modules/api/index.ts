@@ -1,5 +1,2 @@
-import * as actions from "./redux/api.actions";
-
-export { actions };
-
+export * as actions from "./redux/api.actions";
 export * from "./models/ApiPayloadData";

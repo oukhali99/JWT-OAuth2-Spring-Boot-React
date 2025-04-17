@@ -2,20 +2,20 @@ package com.oukhali99.project.component.auth.model.responsebody;
 
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.model.apiresponse.ApiObjectResponse;
-import com.oukhali99.project.model.apiresponse.ErrorCode;
-import com.oukhali99.project.model.apiresponse.ApiMessageResponse;
+import lombok.Builder;
+import lombok.Data;
 
 public class AuthResponse extends ApiObjectResponse {
 
-    private String token;
-
     public AuthResponse(String token, User user) {
-        super(user);
-        this.token = token;
+        super(UserAndToken.builder().token(token).user(user).build());
     }
 
-    public String getToken() {
-        return token;
+    @Data
+    @Builder
+    private static class UserAndToken {
+        private String token;
+        private User user;
     }
 
 }

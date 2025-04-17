@@ -8,7 +8,7 @@ export enum ApiErrorCode {
 export class ApiPayloadData<T = any> {
     constructor(
         public errorCode: ApiErrorCode,
-        public content?: T
+        public content: T
     ) {}
     
     isSuccess(): boolean {
