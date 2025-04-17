@@ -24,7 +24,6 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
         <Container className="m-4">
             <AxiosResponseAlert response={response} />
             <AddListingControl
-                authenticatedPutRequest={authenticatedPutRequest}
                 refresh={refresh}
             />
         </Container>

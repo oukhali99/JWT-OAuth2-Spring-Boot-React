@@ -1,18 +1,28 @@
 import React from "react";
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { AxiosResponseAlert } from "modules/common";
+import { AxiosResponse } from "axios";
 
-const AddListingControl = ({ authenticatedPutRequest, refresh }) => {
-    const [response, setResponse] = useState();
-    const [priceDollars, setPriceDollars] = useState();
-    const [title, setTitle] = useState();
+import { AxiosResponseAlert } from "modules/common";
+import { actions as apiActions, ApiPayloadData } from "modules/api";
+import { useAppDispatch } from "hooks";
+
+interface Props {
+    refresh: () => void;
+};
+
+const AddListingControl = ({ refresh }: Props) => {
+    const dispatch = useAppDispatch();
+
+    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
+    const [priceDollars, setPriceDollars] = useState<string>();
+    const [title, setTitle] = useState<string>();
 
     const addListing = async () => {
         setResponse(
-            await authenticatedPutRequest("/listing", undefined, {
+            await dispatch(apiActions.authenticatedPutRequest("/listing", {}, {
                 params: { title, priceDollars },
-            }),
+            })),
         );
         refresh();
     };

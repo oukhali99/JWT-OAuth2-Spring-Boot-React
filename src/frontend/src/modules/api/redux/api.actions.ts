@@ -21,7 +21,7 @@ export const getRequest = async (endpoint: string, config: AxiosRequestConfig) =
 export const postRequest = async (endpoint: string, body: object, config: AxiosRequestConfig) => {
     try {
         const response = await axios.post(buildUrl(endpoint), body, config);
-        return response;
+        return response as AxiosResponse<ApiPayloadData>;
     }
     catch (error: any) {
         if (!(error instanceof AxiosError)) throw error;
@@ -33,7 +33,7 @@ export const postRequest = async (endpoint: string, body: object, config: AxiosR
 export const putRequest = async (endpoint: string, body: object, config: AxiosRequestConfig) => {
     try {
         const response = await axios.put(buildUrl(endpoint), body, config);
-        return response;
+        return response as AxiosResponse<ApiPayloadData>;
     }
     catch (error: any) {
         if (!(error instanceof AxiosError)) throw error;
@@ -45,7 +45,7 @@ export const putRequest = async (endpoint: string, body: object, config: AxiosRe
 export const deleteRequest = async (endpoint: string, config: AxiosRequestConfig) => {
     try {
         const response = await axios.delete(buildUrl(endpoint), config);
-        return response;
+        return response as AxiosResponse<ApiPayloadData>;
     }
     catch (error: any) {
         if (!(error instanceof AxiosError)) throw error;
