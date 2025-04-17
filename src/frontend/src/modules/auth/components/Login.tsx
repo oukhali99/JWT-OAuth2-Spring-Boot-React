@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { AxiosResponse, HttpStatusCode } from "axios";
 
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 import { Button, Modal, ButtonGroup, Container, Form, Alert } from "react-bootstrap";
-import { HttpStatusCode } from "axios";
 import { AxiosResponseAlert } from "modules/common";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
+import { useAppDispatch } from "hooks";
+import { ApiPayloadData } from "modules/api";
 
-const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
+interface Props {
+    showModal: boolean;
+    onHide: () => void;
+};
+
+const Login = ({ showModal, onHide }: Props) => {
+    const dispatch = useAppDispatch();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [response, setResponse] = useState(undefined);
+    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
 
     const onHideWrapper = () => {
         setUsername("");
@@ -51,7 +60,7 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                 <ButtonGroup>
                     <Button
                         onClick={async () => {
-                            const response = await authenticate(username, password);
+                            const response = await dispatch(authActions.authenticate(username, password));
                             setResponse(response);
                             if (response.status === HttpStatusCode.Ok) {
                                 onHideWrapper();
@@ -62,7 +71,7 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
                     </Button>
                     <Button
                         onClick={async () => {
-                            const response = await register(username, password);
+                            const response = await dispatch(authActions.register(username, password));
                             setResponse(response);
                             if (response.status === HttpStatusCode.Ok) {
                                 onHideWrapper();
@@ -85,13 +94,4 @@ const Login = ({ authToken, authenticate, register, showModal, onHide }) => {
     );
 };
 
-const stateToProps = (state) => ({
-    authToken: authSelectors.getToken(state),
-});
-
-const dispatchToProps = {
-    authenticate: authActions.authenticate,
-    register: authActions.register,
-};
-
-export default connect(stateToProps, dispatchToProps)(Login);
+export default Login;
