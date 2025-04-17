@@ -8,9 +8,10 @@ import { useAppDispatch } from "hooks";
 interface Props {
     user: OtherUser;
     refreshUsers: () => Promise<void>;
+    style: object;
 };
 
-const SocialButtons = ({ user, refreshUsers, ...rest } : Props) => {
+const SocialButtons = ({ user, refreshUsers, style } : Props) => {
     const dispatch = useAppDispatch();
 
     const firstButton = user?.isAFriend ? (
@@ -55,7 +56,7 @@ const SocialButtons = ({ user, refreshUsers, ...rest } : Props) => {
     );
 
     return (
-        <ButtonGroup {...rest}>
+        <ButtonGroup style={style}>
             {firstButton}
             <Button variant="danger">Block</Button>
         </ButtonGroup>

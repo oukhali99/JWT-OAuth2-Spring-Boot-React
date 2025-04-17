@@ -5,6 +5,5 @@ import reducer from "./redux/main.reducer";
 export { actions, selectors };
 export default reducer;
 
-export { default as CounterButton } from "./components/CounterButton";
 export { default as Home } from "./components/Home";
 export { default as About } from "./components/About";

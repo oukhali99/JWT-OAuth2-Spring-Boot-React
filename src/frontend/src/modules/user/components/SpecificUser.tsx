@@ -2,21 +2,32 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { actions as apiActions } from "modules/api";
-import { RefreshButton, AxiosResponseAlert } from "modules/common";
+import { actions as apiActions, ApiPayloadData } from "modules/api";
+import { RefreshButton, ErrorAlert } from "modules/common";
 import { Card, CardGroup, Container } from "react-bootstrap";
-import { SocialButtons } from "modules/user";
+import { SocialButtons, OtherUser } from "modules/user";
 import { selectors as authSelectors } from "modules/auth";
+import { useAppDispatch, useAppSelector } from "hooks";
+import { AxiosResponse } from "axios";
 
-const User = ({ authenticatedGetRequest, loggerInUserId }) => {
+const SpecificUser = () => {
+    const dispatch = useAppDispatch();
+    const loggerInUserId = useAppSelector(authSelectors.getId);
+
     const { id: stringId } = useParams();
+    if (!stringId) return undefined;
     const id = parseInt(stringId);
-    loggerInUserId = parseInt(loggerInUserId);
 
-    const [response, setResponse] = useState();
+    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<OtherUser>>>();
+    const [error, setError] = useState<unknown>();
 
     const refresh = async () => {
-        setResponse(await authenticatedGetRequest("/user/get-by-id", { params: { id } }));
+        try {
+            setResponse(await dispatch(apiActions.authenticatedGetRequest("/user/get-by-id", { params: { id } })));
+        }
+        catch (error) {
+            setError(error);
+        }
     };
 
     useEffect(() => {
@@ -26,18 +37,18 @@ const User = ({ authenticatedGetRequest, loggerInUserId }) => {
     const controls = (
         <>
             <RefreshButton refresh={refresh} />
-            <AxiosResponseAlert response={response} />
+            <ErrorAlert error={error} />
         </>
     );
     if (response?.data?.errorCode !== "SUCCESS") {
         return controls;
     }
 
-    const outerUser = response?.data?.content;
-    const user = outerUser?.user;
-    const firstName = user?.firstName;
-    const lastName = user?.lastName;
-    const email = user?.email;
+    const outerUser = response.data.content;
+    const user = outerUser.user;
+    const firstName = user.firstName;
+    const lastName = user.lastName;
+    const email = user.email;
     const isLoggedInUser = id === loggerInUserId;
     return (
         <Container className="m-4">
@@ -81,12 +92,4 @@ const User = ({ authenticatedGetRequest, loggerInUserId }) => {
     );
 };
 
-const stateToProps = (state) => ({
-    loggerInUserId: authSelectors.getId(state),
-});
-
-const dispatchToProps = {
-    authenticatedGetRequest: apiActions.authenticatedGetRequest,
-};
-
-export default connect(stateToProps, dispatchToProps)(User);
+export default SpecificUser;

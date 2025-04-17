@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 
-import { actions as apiActions } from "modules/api";
-import { Container, Row, Table } from "react-bootstrap";
-import { AxiosResponseAlert } from "modules/common";
+import { actions as apiActions, ApiPayloadData } from "modules/api";
+import { Container, Table } from "react-bootstrap";
+import { ErrorAlert } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
+import { useAppDispatch } from "hooks";
+import { AxiosResponse } from "axios";
+import { Listing } from "../models/Listing";
 
-const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
-    const [response, setResponse] = useState();
-    const [rowResponse, setRowResponse] = useState();
+const ListingHome = () => {
+    const dispatch = useAppDispatch();
+
+    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Listing[]>>>();
+    const [error, setError] = useState<unknown>();
+    const [rowError, setRowError] = useState<unknown>();
 
     const refresh = async () => {
-        setResponse(await authenticatedGetRequest("/listing"));
-        setRowResponse();
+        try {
+            setResponse(await dispatch(apiActions.authenticatedGetRequest("/listing")));
+            setRowError(undefined);
+        }
+        catch (error) {
+            setError(error);
+        }
     };
 
     useEffect(() => {
@@ -22,7 +32,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
 
     const controls = (
         <Container className="m-4">
-            <AxiosResponseAlert response={response} />
+            <ErrorAlert error={error} />
             <AddListingControl
                 refresh={refresh}
             />
@@ -37,7 +47,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
     return (
         <Container>
             {controls}
-            <AxiosResponseAlert response={rowResponse} />
+            <ErrorAlert error={rowError} />
             <Table>
                 <thead>
                     <tr>
@@ -53,7 +63,7 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
                         <ListingRow
                             listing={listing}
                             refresh={refresh}
-                            setResponse={setRowResponse}
+                            setError={setRowError}
                         />
                     ))}
                 </tbody>
@@ -62,11 +72,4 @@ const ListingHome = ({ authenticatedGetRequest, authenticatedPutRequest }) => {
     );
 };
 
-const stateToProps = (state) => ({});
-
-const dispatchToProps = {
-    authenticatedGetRequest: apiActions.authenticatedGetRequest,
-    authenticatedPutRequest: apiActions.authenticatedPutRequest,
-};
-
-export default connect(stateToProps, dispatchToProps)(ListingHome);
+export default ListingHome;
