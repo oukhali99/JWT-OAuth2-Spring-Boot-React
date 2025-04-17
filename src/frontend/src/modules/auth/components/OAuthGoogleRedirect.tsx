@@ -2,10 +2,19 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { actions as authActions, selectors as authSelectors } from "modules/auth";
+import { useAppStore, useAppDispatch } from "hooks";
 
-const OAuthGoogleRedirect = ({ authenticateOrRegisterWithGoogle, authId }) => {
-    const [userInfo, setUserInfo] = useState(null);
-    const [error, setError] = useState(null);
+interface UserInfo {
+    name: string;
+    email: string;
+    picture: string;
+}
+
+const OAuthGoogleRedirect = () => {
+    const dispatch = useAppDispatch();
+
+    const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
@@ -16,20 +25,20 @@ const OAuthGoogleRedirect = ({ authenticateOrRegisterWithGoogle, authId }) => {
         const code = urlParams.get("code");
         
         if (!code) return;
-        if (authId) return;
+        if (authSelectors.getId(useAppStore().getState())) return;
 
         const accessToken = await fetchAccessToken(code);
         if (!accessToken) return;
 
         setUserInfo(await fetchUserInfo(accessToken));
-        authenticateOrRegisterWithGoogle(accessToken);
+        await dispatch(authActions.authenticateOrRegisterWithGoogle(accessToken));
     }
 
     useEffect(() => {
         init();
     }, []);
 
-    const fetchAccessToken = async (code) => {
+    const fetchAccessToken = async (code: string) => {
         try {
             const params = new URLSearchParams();
             params.append("code", code);
@@ -60,7 +69,7 @@ const OAuthGoogleRedirect = ({ authenticateOrRegisterWithGoogle, authId }) => {
         return undefined;
     };
 
-    const fetchUserInfo = async (accessToken) => {
+    const fetchUserInfo = async (accessToken: string) => {
         try {
             const userInfoResponse = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
                 headers: {
@@ -94,12 +103,4 @@ const OAuthGoogleRedirect = ({ authenticateOrRegisterWithGoogle, authId }) => {
     return <div>Loading...</div>;
 };
 
-const stateToProps = (state) => ({
-    authId: authSelectors.getId(state)
-});
-
-const dispatchToProps = {
-    authenticateOrRegisterWithGoogle: authActions.authenticateOrRegisterWithGoogle
-};
-
-export default connect(stateToProps, dispatchToProps)(OAuthGoogleRedirect);
+export default OAuthGoogleRedirect;
