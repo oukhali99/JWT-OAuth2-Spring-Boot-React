@@ -7,68 +7,75 @@ import { actions as apiActions } from "modules/api";
 import { AxiosResponseAlert } from "modules/common";
 import { actions as userActions } from "modules/user";
 
-const Account = ({ id, username, authenticatedPostRequest, addFriend, removeFriend }) => {
-    const [response, setResponse] = useState(undefined);
+const Account = ({
+  id,
+  username,
+  authenticatedPostRequest,
+  addFriend,
+  removeFriend,
+}) => {
+  const [response, setResponse] = useState(undefined);
 
-    const refresh = async () => {
-        const response = await authenticatedPostRequest("/user/get-self");
-        setResponse(response);
-    };
+  const refresh = async () => {
+    const response = await authenticatedPostRequest("/user/get-self");
+    setResponse(response);
+  };
 
-    useEffect(() => {
-        refresh();
-    }, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
-    if (!response) {
-        return undefined;
-    }
+  if (!response) {
+    return undefined;
+  }
 
-    const friendRequestUserList = response?.data?.obfuscatedSelf?.receivedFriendRequestUsernameList;
-    return (
-        <Container className="m-3">
-            <AxiosResponseAlert response={response} />
-            <div>Username: {username}</div>
-            <div>Id: {id}</div>
-            {friendRequestUserList?.map((friendRequestUser) => (
-                <Alert
-                    variant="primary"
-                    className="d-flex justify-content-between align-items-center"
-                >
-                    Request from: {friendRequestUser}
-                    <ButtonGroup>
-                        <Button
-                            onClick={async () => {
-                                await addFriend(friendRequestUser);
-                                refresh();
-                            }}
-                        >
-                            Accept
-                        </Button>
-                        <Button
-                            variant="danger"
-                            onClick={async () => {
-                                await removeFriend(friendRequestUser);
-                                refresh();
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    </ButtonGroup>
-                </Alert>
-            ))}
-        </Container>
-    );
+  const friendRequestUserList =
+    response?.data?.obfuscatedSelf?.receivedFriendRequestUsernameList;
+  return (
+    <Container className="m-3">
+      <AxiosResponseAlert response={response} />
+      <div>Username: {username}</div>
+      <div>Id: {id}</div>
+      {friendRequestUserList?.map((friendRequestUser) => (
+        <Alert
+          variant="primary"
+          className="d-flex justify-content-between align-items-center"
+        >
+          Request from: {friendRequestUser}
+          <ButtonGroup>
+            <Button
+              onClick={async () => {
+                await addFriend(friendRequestUser);
+                refresh();
+              }}
+            >
+              Accept
+            </Button>
+            <Button
+              variant="danger"
+              onClick={async () => {
+                await removeFriend(friendRequestUser);
+                refresh();
+              }}
+            >
+              Delete
+            </Button>
+          </ButtonGroup>
+        </Alert>
+      ))}
+    </Container>
+  );
 };
 
 const stateToProps = (state) => ({
-    username: authSelectors.getUsername(state),
-    id: authSelectors.getId(state),
+  username: authSelectors.getUsername(state),
+  id: authSelectors.getId(state),
 });
 
 const dispatchToProps = {
-    authenticatedPostRequest: apiActions.authenticatedPostRequest,
-    addFriend: userActions.addFriend,
-    removeFriend: userActions.removeFriend,
+  authenticatedPostRequest: apiActions.authenticatedPostRequest,
+  addFriend: userActions.addFriend,
+  removeFriend: userActions.removeFriend,
 };
 
 export default connect(stateToProps, dispatchToProps)(Account);
