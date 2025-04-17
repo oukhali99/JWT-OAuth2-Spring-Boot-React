@@ -9,9 +9,9 @@ if (!documentRoot) throw new Error("Root element not found");
 
 const root = ReactDOM.createRoot(documentRoot);
 root.render(
-  <ReduxProvider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </ReduxProvider>,
+    <ReduxProvider store={store}>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </ReduxProvider>,
 );

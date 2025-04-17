@@ -1,4 +1,4 @@
 export interface Price {
-  dollars: number;
-  cents: number;
+    dollars: number;
+    cents: number;
 }

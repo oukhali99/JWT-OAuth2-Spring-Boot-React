@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import modules from "./modules";
 
 const store = configureStore({
-  reducer: modules,
+    reducer: modules,
 });
 export default store;
 
