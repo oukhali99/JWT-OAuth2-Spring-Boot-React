@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Col, Container, Form, Row } from "react-bootstrap";
 import { AxiosResponse } from "axios";
 
-import { AxiosResponseAlert, ErrorAlert } from "modules/common";
+import { AxiosResponseAlert, ErrorAlert, LoadingButton } from "modules/common";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { useAppDispatch } from "hooks";
 
@@ -60,9 +60,9 @@ const AddListingControl = ({ refresh }: Props) => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Button className="mt-2" onClick={addListing}>
+                <LoadingButton className="mt-2" onClick={addListing}>
                     Add Listing
-                </Button>
+                </LoadingButton>
             </Form>
         </Container>
     );
