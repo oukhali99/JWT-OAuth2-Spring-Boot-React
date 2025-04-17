@@ -49,9 +49,7 @@ const UserHome = () => {
         refreshUsers();
     }, [authToken, setResponse]);
 
-    if (response?.data?.errorCode !== "SUCCESS") {
-        return <Container className="m-4">{controls}</Container>;
-    }
+    if (error || !response) return <Container className="m-4">{controls}</Container>;
 
     const otherUsers = response.data.content;
     return (

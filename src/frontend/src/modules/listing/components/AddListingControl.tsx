@@ -39,7 +39,7 @@ const AddListingControl = ({ refresh }: Props) => {
     };
 
     return (
-        <Container className="m-4">
+        <Container>
             <ErrorAlert error={error} />
             <Form>
                 <Row>

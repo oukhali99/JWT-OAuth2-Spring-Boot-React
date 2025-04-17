@@ -1,7 +1,8 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 
 const About = () => {
-    return <>About</>;
+    return <Container className="m-4">About</Container>;
 };
 
 export default About;

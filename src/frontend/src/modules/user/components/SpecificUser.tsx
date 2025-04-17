@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { actions as apiActions, ApiPayloadData } from "modules/api";
@@ -40,14 +39,14 @@ const SpecificUser = () => {
     }, [id]);
 
     const controls = (
-        <>
+        <Container className="m-4">
             <RefreshButton refresh={refresh} />
             <ErrorAlert error={error} />
-        </>
+        </Container>
     );
-    if (response?.data?.errorCode !== "SUCCESS") {
-        return controls;
-    }
+
+    if (error) return controls;
+    if (!response) return controls;
 
     const outerUser = response.data.content;
     const user = outerUser.user;

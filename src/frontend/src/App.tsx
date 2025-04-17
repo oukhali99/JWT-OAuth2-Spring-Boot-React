@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { BrowserRouter, Link, Routes, Route, Router, NavLink } from "react-router-dom";
+import { BrowserRouter,  Routes, Route, NavLink } from "react-router-dom";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { connect } from "react-redux";
 
 import { About, Home } from "modules/main";
 import { UserHome, SpecificUser } from "modules/user";
@@ -14,8 +12,12 @@ import {
     OAuthGoogleRedirect,
 } from "modules/auth";
 import { ListingHome } from "modules/listing";
+import { useAppSelector, useAppDispatch } from "hooks";
 
-const App = ({ authToken, logout, username, id }) => {
+const App = () => {
+    const dispatch = useAppDispatch();
+    const id = useAppSelector(authSelectors.getId);
+
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     return (
@@ -52,7 +54,7 @@ const App = ({ authToken, logout, username, id }) => {
                                     <NavLink
                                         to="/"
                                         className="navbar-brand"
-                                        onClick={() => logout()}
+                                        onClick={() => dispatch(authActions.logout())}
                                     >
                                         Logout
                                     </NavLink>
@@ -78,15 +80,4 @@ const App = ({ authToken, logout, username, id }) => {
     );
 };
 
-const stateToProps = (state) => ({
-    authToken: authSelectors.getToken(state),
-    username: authSelectors.getUsername(state),
-    id: authSelectors.getId(state),
-});
-
-const dispatchToProps = {
-    setToken: authActions.setToken,
-    logout: authActions.logout,
-};
-
-export default connect(stateToProps, dispatchToProps)(App);
+export default App;
