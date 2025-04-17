@@ -8,7 +8,7 @@ import { useAppDispatch } from "hooks";
 interface Props {
   user: OtherUser;
   refreshUsers: () => Promise<void>;
-  style: object;
+  style?: object;
 }
 
 const SocialButtons = ({ user, refreshUsers, style }: Props) => {

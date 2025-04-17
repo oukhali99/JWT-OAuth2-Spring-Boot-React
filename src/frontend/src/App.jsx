@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { connect } from "react-redux";
 
 import { About, Home } from "modules/main";
-import { Account, UserHome, SpecificUser } from "modules/user";
+import { UserHome, SpecificUser } from "modules/user";
 import {
   selectors as authSelectors,
   Login,

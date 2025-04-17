@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 
 import { actions as authActions } from "modules/auth";
 import { Button, Modal, ButtonGroup, Container, Form } from "react-bootstrap";
-import { ErrorAlert, AxiosResponseAlert } from "modules/common";
+import { ErrorAlert } from "modules/common";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
 import { useAppDispatch } from "hooks";
 import { ApiPayloadData } from "modules/api";
@@ -94,7 +94,6 @@ const Login = ({ showModal, onHide }: Props) => {
         <LoginWithGoogleButton />
 
         <Container>
-          <AxiosResponseAlert response={response} />
           <ErrorAlert error={error} />
         </Container>
       </Modal.Footer>

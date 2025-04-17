@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { AxiosResponse } from "axios";
 
-import { AxiosResponseAlert, ErrorAlert, LoadingButton } from "modules/common";
+import { ErrorAlert, LoadingButton } from "modules/common";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { useAppDispatch } from "hooks";
 
@@ -40,7 +40,6 @@ const AddListingControl = ({ refresh }: Props) => {
 
   return (
     <Container className="m-4">
-      <AxiosResponseAlert response={response} />
       <ErrorAlert error={error} />
       <Form>
         <Row>

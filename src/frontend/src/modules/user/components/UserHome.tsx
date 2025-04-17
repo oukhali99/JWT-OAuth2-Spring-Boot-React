@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -8,13 +6,11 @@ import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import {
   RefreshButton,
-  AxiosErrorAlert,
-  AxiosResponseAlert,
+  ErrorAlert
 } from "modules/common";
 import { Button, Container, Table } from "react-bootstrap";
 import { SocialButtons, OtherUser } from "..";
-import { RootState } from "store";
-import { useAppDispatch } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { ApiPayloadData } from "modules/api";
 
 const StyledTd = styled.td`
@@ -25,19 +21,16 @@ const StyledTh = styled.th`
   text-align: center;
 `;
 
-interface Props {
-  authToken: string;
-  username: string;
-}
-
-const Users = ({ authToken, username }: Props) => {
-  const dispatch = useAppDispatch();
+const UserHome = () => {
+  const dispatch = useAppDispatch();  
+  const authToken = useAppSelector(authSelectors.getToken);
+  const username = useAppSelector(authSelectors.getUsername);
 
   //const navigate = useNavigate();
   const [response, setResponse] = useState<
     AxiosResponse<ApiPayloadData<OtherUser[]>> | undefined
   >();
-  const [error, setError] = useState<AxiosError | undefined>(undefined);
+  const [error, setError] = useState<AxiosError>();
 
   const refreshUsers = async () => {
     try {
@@ -50,8 +43,7 @@ const Users = ({ authToken, username }: Props) => {
 
   const controls = (
     <Container className="mb-4">
-      <AxiosResponseAlert response={response} />
-      <AxiosErrorAlert axiosError={error} />
+      <ErrorAlert error={error} />
       <RefreshButton refresh={refreshUsers} />
     </Container>
   );
@@ -64,7 +56,7 @@ const Users = ({ authToken, username }: Props) => {
     return <Container className="m-4">{controls}</Container>;
   }
 
-  const otherUsers = response?.data?.content || [];
+  const otherUsers = response.data.content;
   return (
     <Container className="m-4">
       {controls}
@@ -109,13 +101,4 @@ const Users = ({ authToken, username }: Props) => {
   );
 };
 
-const stateToProps = (state: RootState) => ({
-  authToken: authSelectors.getToken(state),
-  username: authSelectors.getUsername(state),
-});
-
-const dispatchToProps = {
-  authenticatedGetRequest: apiActions.authenticatedGetRequest,
-};
-
-export default connect(stateToProps, dispatchToProps)(Users);
+export default UserHome;
