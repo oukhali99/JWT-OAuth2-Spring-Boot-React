@@ -1,14 +1,18 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { AxiosError, HttpStatusCode } from "axios";
 import { Alert } from "react-bootstrap";
 
-import { ApiPayloadData } from "modules/api";
+import { ApiErrorCode, ApiPayloadData } from "modules/api";
+import { actions as authActions } from "modules/auth";
+import { useAppDispatch } from "hooks";
 
 interface Props {
     axiosError: AxiosError<ApiPayloadData> | undefined;
 }
 
 export default ({ axiosError }: Props) => {
+    const dispatch = useAppDispatch();
+
     if (!axiosError) return undefined;
 
     const variant = useMemo(() => {
@@ -43,6 +47,11 @@ export default ({ axiosError }: Props) => {
     const message = useMemo(() => {
         if (!axiosError.response) return `${axiosError.code}: ${axiosError.message}`;
         return `${axiosError.response?.data.errorCode}: ${axiosError.response?.data.content}`;
+    }, [axiosError]);
+
+    useEffect(() => {
+        if (!axiosError.response) return;
+        if (axiosError.response?.data.errorCode === ApiErrorCode.BAD_JWT_TOKEN) dispatch(authActions.logout());
     }, [axiosError]);
 
     return (

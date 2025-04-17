@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, HttpStatusCode } from "axios"
 
 import { selectors as authSelectors, actions as authActions } from "modules/auth";
 import { AppDispatch, AppGetState } from "store";
-import { ApiPayloadData } from "modules/api";
+import { ApiErrorCode, ApiPayloadData } from "modules/api";
 
 const buildUrl = (endpoint: string): string => `${import.meta.env.VITE_BACKEND_URL}${endpoint}`;
 
@@ -28,88 +28,48 @@ export const deleteRequest = async (endpoint: string, config: AxiosRequestConfig
 
 export const authenticatedPostRequest =
     (endpoint: string, body: object, config: AxiosRequestConfig) =>
-    async (dispatch: AppDispatch, getState: AppGetState) => {
+    async (_dispatch: AppDispatch, getState: AppGetState) => {
         const jwtToken = authSelectors.getToken(getState());
-        const response = await postRequest(endpoint, body, {
+        return await postRequest(endpoint, body, {
             headers: {
                 Authorization: jwtToken && `Bearer ${jwtToken}`,
             },
             ...config,
         });
-
-        if (
-            response?.status !== HttpStatusCode.Ok &&
-            response?.data?.errorCode === "BAD_JWT_TOKEN"
-        ) {
-            console.log("Bad JWT token, logging out");
-            dispatch(authActions.logout());
-        }
-
-        return response;
     };
 
 export const authenticatedGetRequest =
     (endpoint: string, config: AxiosRequestConfig = {}) =>
-    async (dispatch: AppDispatch, getState: AppGetState) => {
+    async (_dispatch: AppDispatch, getState: AppGetState) => {
         const jwtToken = authSelectors.getToken(getState());
-        const response = await getRequest(endpoint, {
+        return await getRequest(endpoint, {
             headers: {
                 Authorization: jwtToken && `Bearer ${jwtToken}`,
             },
             ...config,
         });
-
-        if (
-            response?.status !== HttpStatusCode.Ok &&
-            response?.data?.errorCode === "BAD_JWT_TOKEN"
-        ) {
-            console.log("Bad JWT token, logging out");
-            dispatch(authActions.logout());
-        }
-
-        return response;
     };
 
 export const authenticatedPutRequest =
     (endpoint: string, body: object, config: AxiosRequestConfig) =>
-    async (dispatch: AppDispatch, getState: AppGetState) => {
+    async (_dispatch: AppDispatch, getState: AppGetState) => {
         const jwtToken = authSelectors.getToken(getState());
-        const response = await putRequest(endpoint, body, {
+        return await putRequest(endpoint, body, {
             headers: {
                 Authorization: jwtToken && `Bearer ${jwtToken}`,
             },
             ...config,
         });
-
-        if (
-            response?.status !== HttpStatusCode.Ok &&
-            response?.data?.errorCode === "BAD_JWT_TOKEN"
-        ) {
-            console.log("Bad JWT token, logging out");
-            dispatch(authActions.logout());
-        }
-
-        return response;
     };
 
 export const authenticatedDeleteRequest =
     (endpoint: string, config: AxiosRequestConfig) =>
-    async (dispatch: AppDispatch, getState: AppGetState) => {
+    async (_dispatch: AppDispatch, getState: AppGetState) => {
         const jwtToken = authSelectors.getToken(getState());
-        const response = await deleteRequest(endpoint, {
+        return await deleteRequest(endpoint, {
             headers: {
                 Authorization: jwtToken && `Bearer ${jwtToken}`,
             },
             ...config,
         });
-
-        if (
-            response?.status !== HttpStatusCode.Ok &&
-            response?.data?.errorCode === "BAD_JWT_TOKEN"
-        ) {
-            console.log("Bad JWT token, logging out");
-            dispatch(authActions.logout());
-        }
-
-        return response;
     };
