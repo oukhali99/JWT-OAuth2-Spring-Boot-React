@@ -1,7 +1,13 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-const BidRow = ({ bid }) => {
+import { Bid } from "..";
+
+interface Props {
+    bid: Bid
+}
+
+const BidRow = ({ bid }: Props) => {
     return (
         <Table>
             <thead>
@@ -11,11 +17,11 @@ const BidRow = ({ bid }) => {
             </thead>
             <tbody>
                 <tr>
-                    <td>{bid?.id}</td>
+                    <td>{bid.id}</td>
                     <td>
-                        ${bid?.price?.dollars}.{bid?.price?.cents}
+                        ${bid.price.dollars}.{bid.price.cents}
                     </td>
-                    <td>{bid?.bidder?.username}</td>
+                    <td>{bid.bidder.username}</td>
                 </tr>
             </tbody>
         </Table>
