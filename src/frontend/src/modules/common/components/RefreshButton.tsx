@@ -1,8 +1,12 @@
 import { Button } from "react-bootstrap";
 import React, { useState } from "react";
 
-const RefreshButton = ({ refresh }) => {
-    const [message, setMessage] = useState();
+interface Props {
+    refresh: () => Promise<void>;
+};
+
+const RefreshButton = ({ refresh }: Props) => {
+    const [message, setMessage] = useState<string>();
 
     const onClick = async () => {
         setMessage("Refreshing...");
