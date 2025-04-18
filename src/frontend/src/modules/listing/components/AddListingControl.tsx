@@ -8,10 +8,10 @@ import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { useAppDispatch } from "hooks";
 
 interface Props {
-    refresh: () => void;
+    onAddListing: () => void;
 }
 
-const AddListingControl = ({ refresh }: Props) => {
+const AddListingControl = ({ onAddListing }: Props) => {
     const dispatch = useAppDispatch();
 
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
@@ -32,7 +32,7 @@ const AddListingControl = ({ refresh }: Props) => {
                     ),
                 ),
             );
-            refresh();
+            onAddListing();
         } catch (err) {
             setError(err);
         }

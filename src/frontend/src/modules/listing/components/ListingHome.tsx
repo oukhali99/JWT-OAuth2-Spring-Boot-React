@@ -17,6 +17,7 @@ const ListingHome = () => {
     const [error, setError] = useState<unknown>();
     const [rowError, setRowError] = useState<unknown>();
     const [showFiltersModal, setShowFiltersModal] = useState(false);
+    const [showAddListingModal, setShowAddListingModal] = useState(false);
 
     const refresh = async () => {
         try {
@@ -38,7 +39,7 @@ const ListingHome = () => {
 
     useEffect(() => {
         refresh();
-    }, [showFiltersModal]);
+    }, [showFiltersModal, showAddListingModal]);
 
     const controls = (
         <Col>
@@ -58,8 +59,36 @@ const ListingHome = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Row>
-                <AddListingControl refresh={refresh} />
+            <Modal show={showAddListingModal} onHide={() => setShowAddListingModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add Listing</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <AddListingControl onAddListing={() => { refresh(); setShowAddListingModal(false) }} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowAddListingModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Row className="mt-4">
+                <Stack direction="horizontal" gap={2}>
+                    <ButtonGroup>
+                        <Button variant="primary" onClick={() => setShowFiltersModal(true)}>
+                            Filter
+                        </Button>
+                        <LoadingButton onClick={refresh}>Refresh</LoadingButton>
+                    </ButtonGroup>
+                    <Button
+                        variant="primary"
+                        onClick={() => setShowAddListingModal(true)}
+                    >
+                        Add Listing
+                    </Button>
+                </Stack>
+            </Row>
+            <Row className="mt-4">
                 <ErrorAlert error={error} />
             </Row>
         </Col>
@@ -73,14 +102,6 @@ const ListingHome = () => {
             <Row>{controls}</Row>
             <Row>
                 <ErrorAlert error={rowError} />
-            </Row>
-            <Row className="mt-4">
-                <ButtonGroup className="d-inline-block">
-                    <Button variant="primary" onClick={() => setShowFiltersModal(true)}>
-                        Filter
-                    </Button>
-                    <LoadingButton onClick={refresh}>Refresh</LoadingButton>
-                </ButtonGroup>
             </Row>
             <Row className="mt-2">
                 <Table>
