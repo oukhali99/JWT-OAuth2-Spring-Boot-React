@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Form } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
 import { PriceRangeSearchForm, StringSearchForm, PriceRangeSearchQuery, StringSearchQuery } from "modules/common";
 import { ListingSearchQuery } from "modules/listing";
 
 interface Props {
+    listingSearchQuery?: ListingSearchQuery;
     setListingSearchQuery: (listingSearchQuery?: ListingSearchQuery) => void;
 };
 
-const ListingSearchForm = ({ setListingSearchQuery }: Props) => {
-    const [priceRangeSearchQuery, setPriceRangeSearchQuery] = useState<PriceRangeSearchQuery>();
-    const [stringSearchQuery, setStringSearchQuery] = useState<StringSearchQuery>();
+const ListingSearchForm = ({ listingSearchQuery, setListingSearchQuery }: Props) => {
+    const [priceRangeSearchQuery, setPriceRangeSearchQuery] = useState(listingSearchQuery?.priceRangeSearchQuery);
+    const [stringSearchQuery, setStringSearchQuery] = useState(listingSearchQuery?.titleSearchQuery);
 
     useEffect(() => {
         setListingSearchQuery({ priceRangeSearchQuery: priceRangeSearchQuery, titleSearchQuery: stringSearchQuery });
@@ -18,14 +18,8 @@ const ListingSearchForm = ({ setListingSearchQuery }: Props) => {
 
     return (
         <div>
-            <Form.Group className="mb-3" controlId="searchString">
-                <Form.Label>Search</Form.Label>
-                <StringSearchForm setStringSearchQuery={setStringSearchQuery} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="priceRange">
-                <Form.Label>Price Range</Form.Label>
-                <PriceRangeSearchForm setPriceRangeSearchQuery={setPriceRangeSearchQuery} />
-            </Form.Group>
+            <StringSearchForm stringSearchQuery={stringSearchQuery} setStringSearchQuery={setStringSearchQuery} />
+            <PriceRangeSearchForm priceRangeSearchQuery={priceRangeSearchQuery} setPriceRangeSearchQuery={setPriceRangeSearchQuery} />
         </div>
     );
 };

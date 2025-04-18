@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { AxiosResponse } from "axios";
 
 import { ErrorAlert, LoadingButton } from "modules/common";
@@ -39,7 +39,7 @@ const AddListingControl = ({ refresh }: Props) => {
     };
 
     return (
-        <Container>
+        <div>
             <ErrorAlert error={error} />
             <Form>
                 <Row>
@@ -68,7 +68,7 @@ const AddListingControl = ({ refresh }: Props) => {
                     Add Listing
                 </LoadingButton>
             </Form>
-        </Container>
+        </div>
     );
 };
 

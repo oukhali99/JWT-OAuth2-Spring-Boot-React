@@ -4,11 +4,12 @@ import { Form } from "react-bootstrap";
 import { StringSearchQuery } from "modules/common";
 
 interface Props {
+    stringSearchQuery?: StringSearchQuery;
     setStringSearchQuery: (searchStringQuery?: StringSearchQuery) => void;
 };
 
-const StringSearchForm = ({ setStringSearchQuery }: Props) => {
-    const [searchString, setSearchString] = useState<string>();
+const StringSearchForm = ({ stringSearchQuery, setStringSearchQuery }: Props) => {
+    const [searchString, setSearchString] = useState(stringSearchQuery?.searchString);
 
     useEffect(() => {
         if (!searchString) {

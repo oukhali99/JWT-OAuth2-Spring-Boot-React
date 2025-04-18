@@ -1,62 +1,31 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 
-import { PriceRangeSearchQuery, Price } from "modules/common";
+import { PriceRangeSearchQuery, Price, PriceForm } from "modules/common";
 
 interface Props {
+    priceRangeSearchQuery?: PriceRangeSearchQuery;
     setPriceRangeSearchQuery: (priceRangeSearchQuery?: PriceRangeSearchQuery) => void;
 };
 
-const PriceRangeSearchForm = ({ setPriceRangeSearchQuery }: Props) => {
-    const [minDollars, setMinDollars] = React.useState<number>();
-    const [maxDollars, setMaxDollars] = React.useState<number>();
-    const [minCents, setMinCents] = React.useState<number>();
-    const [maxCents, setMaxCents] = React.useState<number>();
+const PriceRangeSearchForm = ({ priceRangeSearchQuery, setPriceRangeSearchQuery }: Props) => {
+    const [minPrice, setMinPrice] = useState(priceRangeSearchQuery?.min);
+    const [maxPrice, setMaxPrice] = useState(priceRangeSearchQuery?.max);
 
     useEffect(() => {
-        if (minDollars === undefined || maxDollars === undefined || minCents === undefined || maxCents === undefined) {
-            setPriceRangeSearchQuery(undefined);
-            return;
-        }
-        const minPrice: Price = { dollars: minDollars, cents: minCents };
-        const maxPrice: Price = { dollars: maxDollars, cents: maxCents };
         setPriceRangeSearchQuery({ min: minPrice, max: maxPrice });
-    }, [minDollars, minCents, maxDollars, maxCents]);
+    }, [minPrice, maxPrice]);
 
 
     return (
         <div>
-            <Form.Group controlId="minDollars">
-                <Form.Label>Min Dollars</Form.Label>
-                <Form.Control
-                    type="number"
-                    value={minDollars}
-                    onChange={(e) => setMinDollars(Number(e.target.value))}
-                />
+            <Form.Group>
+                <Form.Label>Min Price</Form.Label>
+                <PriceForm price={minPrice} setPrice={setMinPrice} />
             </Form.Group>
-            <Form.Group controlId="minCents">
-                <Form.Label>Min Cents</Form.Label>
-                <Form.Control
-                    type="number"
-                    value={minCents}
-                    onChange={(e) => setMinCents(Number(e.target.value))}
-                />
-            </Form.Group>
-            <Form.Group controlId="maxDollars">
-                <Form.Label>Max Dollars</Form.Label>
-                <Form.Control
-                    type="number"
-                    value={maxDollars}
-                    onChange={(e) => setMaxDollars(Number(e.target.value))}
-                />
-            </Form.Group>
-            <Form.Group controlId="maxCents">
-                <Form.Label>Max Cents</Form.Label>
-                <Form.Control
-                    type="number"
-                    value={maxCents}
-                    onChange={(e) => setMaxCents(Number(e.target.value))}
-                />
+            <Form.Group>
+                <Form.Label>Max Price</Form.Label>
+                <PriceForm price={maxPrice} setPrice={setMaxPrice} />
             </Form.Group>
         </div>
     );

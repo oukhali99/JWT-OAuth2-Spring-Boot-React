@@ -18,7 +18,6 @@ public class Price implements Comparable<Price> {
     public Price(Long dollars, int cents) {
         this.dollars = dollars + cents / 100;
         this.cents = cents % 100;
-
     }
 
     public Price(Long dollars) {

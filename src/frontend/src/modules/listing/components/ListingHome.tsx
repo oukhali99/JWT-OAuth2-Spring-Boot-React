@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { Container, Table } from "react-bootstrap";
-import { ErrorAlert, RefreshButton } from "modules/common";
+import { ErrorAlert, LoadingButton } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 import { useAppDispatch } from "hooks";
@@ -36,19 +36,19 @@ const ListingHome = () => {
     }, []);
 
     const controls = (
-        <Container className="m-4">
-            <ListingSearchForm setListingSearchQuery={setListingSearchQuery} />
-            <RefreshButton refresh={refresh} />
+        <div>
+            <ListingSearchForm listingSearchQuery={listingSearchQuery} setListingSearchQuery={setListingSearchQuery} />
+            <LoadingButton className="mt-2" onClick={refresh}>Refresh</LoadingButton>
             <AddListingControl refresh={refresh} />
             <ErrorAlert error={error} />
-        </Container>
+        </div>
     );
 
     if (error || !response) return <Container className="m-4">{controls}</Container>;
 
     const listings = response.data.content;
     return (
-        <Container>
+        <Container className="m-4">
             {controls}
             <ErrorAlert error={rowError} />
             <Table>
