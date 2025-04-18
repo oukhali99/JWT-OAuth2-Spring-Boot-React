@@ -37,7 +37,7 @@ export default ({ axiosError }: Props) => {
                     case AxiosError.ERR_BAD_REQUEST:
                     case AxiosError.ERR_BAD_RESPONSE:
                     case AxiosError.ERR_CANCELED:
-                        return "info";
+                        return "danger";
                     default:
                         return "";
                 };
@@ -45,7 +45,7 @@ export default ({ axiosError }: Props) => {
     }, [axiosError]);
 
     const message = useMemo(() => {
-        if (!axiosError.response) return `${axiosError.code}: ${axiosError.message}`;
+        if (!axiosError.response?.data.errorCode) return `${axiosError.code}: ${axiosError.message}`;
         return `${axiosError.response?.data.errorCode}: ${axiosError.response?.data.content}`;
     }, [axiosError]);
 

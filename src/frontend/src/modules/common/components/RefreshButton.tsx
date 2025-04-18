@@ -1,5 +1,6 @@
-import { Button } from "react-bootstrap";
 import React, { useState } from "react";
+
+import { LoadingButton } from "modules/common";
 
 interface Props {
     refresh: () => Promise<void>;
@@ -16,7 +17,7 @@ const RefreshButton = ({ refresh }: Props) => {
 
     return (
         <div>
-            <Button onClick={onClick}>Refresh</Button>
+            <LoadingButton onClick={onClick}>Refresh</LoadingButton>
             {message}
         </div>
     );

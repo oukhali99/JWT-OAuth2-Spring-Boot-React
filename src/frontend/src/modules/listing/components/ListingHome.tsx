@@ -2,23 +2,29 @@ import React, { useEffect, useState } from "react";
 
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { Container, Table } from "react-bootstrap";
-import { ErrorAlert, SearchForm } from "modules/common";
+import { ErrorAlert, RefreshButton } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
 import { useAppDispatch } from "hooks";
 import { AxiosResponse } from "axios";
-import { Listing } from "../models/Listing";
+import { ListingSearchForm, Listing, ListingSearchQuery } from "..";
 
 const ListingHome = () => {
     const dispatch = useAppDispatch();
 
+    const [listingSearchQuery, setListingSearchQuery] = useState<ListingSearchQuery>();
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Listing[]>>>();
     const [error, setError] = useState<unknown>();
     const [rowError, setRowError] = useState<unknown>();
 
     const refresh = async () => {
         try {
-            setResponse(await dispatch(apiActions.authenticatedGetRequest("/listing")));
+            setError(undefined);
+            setResponse(
+                await dispatch(
+                    apiActions.authenticatedPostRequest("/listing/search", listingSearchQuery || {}, {}),
+                ),
+            );
             setRowError(undefined);
         } catch (error) {
             setError(error);
@@ -31,16 +37,16 @@ const ListingHome = () => {
 
     const controls = (
         <Container className="m-4">
-            <ErrorAlert error={error} />
+            <ListingSearchForm setListingSearchQuery={setListingSearchQuery} />
+            <RefreshButton refresh={refresh} />
             <AddListingControl refresh={refresh} />
+            <ErrorAlert error={error} />
         </Container>
     );
 
-    if (response?.data?.errorCode !== "SUCCESS") {
-        return <Container className="m-4">{controls}</Container>;
-    }
+    if (error || !response) return <Container className="m-4">{controls}</Container>;
 
-    const listings = response?.data?.content;
+    const listings = response.data.content;
     return (
         <Container>
             {controls}

@@ -1,11 +1,19 @@
 import React from "react";
+import { Form } from "react-bootstrap";
 
-const SearchForm = () => {
+import { SearchQuery } from "modules/common";
+
+interface Props {
+    performQuery: (searchQuery: SearchQuery) => Promise<void>;
+};
+
+const SearchForm = ({ performQuery }: Props) => {
+    const [searchQuery, setSearchQuery] = React.useState<SearchQuery>();
+
     return (
-        <form className="search-form">
-        <input type="text" placeholder="Search..." />
-        <button type="submit">Search</button>
-        </form>
+        <Form>
+            Nothing here yet
+        </Form>
     );
 };
 
