@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { actions as apiActions, ApiPayloadData } from "modules/api";
-import { Container, Table } from "react-bootstrap";
+import { Container, Table, Modal, Button, ButtonGroup, Col, Row, Stack } from "react-bootstrap";
 import { ErrorAlert, LoadingButton } from "modules/common";
 import ListingRow from "./ListingRow";
 import AddListingControl from "./AddListingControl";
@@ -16,13 +16,18 @@ const ListingHome = () => {
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Listing[]>>>();
     const [error, setError] = useState<unknown>();
     const [rowError, setRowError] = useState<unknown>();
+    const [showFiltersModal, setShowFiltersModal] = useState(false);
 
     const refresh = async () => {
         try {
             setError(undefined);
             setResponse(
                 await dispatch(
-                    apiActions.authenticatedPostRequest("/listing/search", listingSearchQuery || {}, {}),
+                    apiActions.authenticatedPostRequest(
+                        "/listing/search",
+                        listingSearchQuery || {},
+                        {},
+                    ),
                 ),
             );
             setRowError(undefined);
@@ -33,15 +38,31 @@ const ListingHome = () => {
 
     useEffect(() => {
         refresh();
-    }, []);
+    }, [showFiltersModal]);
 
     const controls = (
-        <div>
-            <ListingSearchForm listingSearchQuery={listingSearchQuery} setListingSearchQuery={setListingSearchQuery} />
-            <LoadingButton className="mt-2" onClick={refresh}>Refresh</LoadingButton>
-            <AddListingControl refresh={refresh} />
-            <ErrorAlert error={error} />
-        </div>
+        <Col>
+            <Modal show={showFiltersModal} onHide={() => setShowFiltersModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Filter Listings</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ListingSearchForm
+                        listingSearchQuery={listingSearchQuery}
+                        setListingSearchQuery={setListingSearchQuery}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowFiltersModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Row>
+                <AddListingControl refresh={refresh} />
+                <ErrorAlert error={error} />
+            </Row>
+        </Col>
     );
 
     if (error || !response) return <Container className="m-4">{controls}</Container>;
@@ -49,24 +70,40 @@ const ListingHome = () => {
     const listings = response.data.content;
     return (
         <Container className="m-4">
-            {controls}
-            <ErrorAlert error={rowError} />
-            <Table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>title</th>
-                        <th>owners</th>
-                        <th>price</th>
-                        <th>controls</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listings.map((listing) => (
-                        <ListingRow listing={listing} refresh={refresh} setError={setRowError} />
-                    ))}
-                </tbody>
-            </Table>
+            <Row>{controls}</Row>
+            <Row>
+                <ErrorAlert error={rowError} />
+            </Row>
+            <Row className="mt-4">
+                <ButtonGroup className="d-inline-block">
+                    <Button variant="primary" onClick={() => setShowFiltersModal(true)}>
+                        Filter
+                    </Button>
+                    <LoadingButton onClick={refresh}>Refresh</LoadingButton>
+                </ButtonGroup>
+            </Row>
+            <Row className="mt-2">
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>title</th>
+                            <th>owners</th>
+                            <th>price</th>
+                            <th>controls</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listings.map((listing) => (
+                            <ListingRow
+                                listing={listing}
+                                refresh={refresh}
+                                setError={setRowError}
+                            />
+                        ))}
+                    </tbody>
+                </Table>
+            </Row>
         </Container>
     );
 };
