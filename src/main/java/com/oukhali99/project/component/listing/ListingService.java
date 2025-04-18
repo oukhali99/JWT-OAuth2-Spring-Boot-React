@@ -1,6 +1,7 @@
 package com.oukhali99.project.component.listing;
 
 import com.oukhali99.project.component.bid.Bid;
+import com.oukhali99.project.component.listing.model.search.ListingSearchQuery;
 import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.exception.EntityAlreadyExistsException;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
@@ -55,5 +56,9 @@ public class ListingService {
     public Listing addListing(Listing listing) throws EntityAlreadyExistsException {
         save(listing);
         return listing;
+    }
+
+    public List<Listing> search(ListingSearchQuery listingSearchQuery) {
+        return findAll().stream().filter(listingSearchQuery::match).toList();
     }
 }

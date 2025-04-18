@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 @Data
-public class Price {
+public class Price implements Comparable<Price> {
 
     private Long dollars;
 
@@ -39,5 +39,24 @@ public class Price {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Price o) {
+        if (this.dollars == null || this.cents == null) return -1;
+        if (o.dollars == null || o.cents == null) return 1;
+
+        if (this.equals(o)) return 0;
+        if (this.dollars > o.dollars) return 1;
+        if (this.dollars.equals(o.dollars) && this.cents > o.cents) return 1;
+
+        return -1;
+    }
+
+    public boolean equals(Price o) {
+        if (this.dollars == null || this.cents == null) return false;
+        if (o.dollars == null || o.cents == null) return false;
+
+        return this.dollars.equals(o.dollars) && this.cents.equals(o.cents);
     }
 }

@@ -3,6 +3,7 @@ package com.oukhali99.project.component.listing;
 import com.oukhali99.project.component.bid.Bid;
 import com.oukhali99.project.component.bid.BidService;
 import com.oukhali99.project.component.listing.exception.YouAreNotTheListingOwnerException;
+import com.oukhali99.project.component.listing.model.search.ListingSearchQuery;
 import com.oukhali99.project.component.user.User;
 import com.oukhali99.project.component.user.UserService;
 import com.oukhali99.project.exception.MyException;
@@ -34,6 +35,11 @@ public class ListingController {
     @GetMapping
     public ResponseEntity<ApiResponse> findAll() {
         return ResponseEntity.ok(new ApiListResponse(listingService.findAll()));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse> search(@RequestBody ListingSearchQuery listingSearchQuery) {
+        return ResponseEntity.ok(new ApiListResponse(listingService.search(listingSearchQuery)));
     }
 
     @PostMapping("/bid")
