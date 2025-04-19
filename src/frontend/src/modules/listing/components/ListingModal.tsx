@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
-import { connect } from "react-redux";
-import { AxiosResponse } from "axios";
+import { Button, Modal, Row } from "react-bootstrap";
 
-import { AxiosErrorAlert, ErrorAlert, Price } from "modules/common";
-import { BidRow, Bid, BidHome } from "modules/bid";
-import { actions as apiActions, ApiPayloadData } from "modules/api";
-import { selectors as authSelectors } from "modules/auth";
-import { useAppDispatch, useAppSelector } from "hooks";
+import { BidHome } from "modules/bid";
 import { Listing } from "..";
 
 interface Props {
@@ -17,32 +10,6 @@ interface Props {
 }
 
 const ListingModal = ({ show, onHide, listing }: Props) => {
-    const dispatch = useAppDispatch();
-    const authId = useAppSelector(authSelectors.getId);
-
-    const [error, setError] = useState<unknown>();
-    const [price, setPrice] = useState<number>();
-
-    const isMyListing = authId?.toString() === listing.owner.id.toString();
-    const placeHolderForPriceInput = isMyListing ? "Can't bid on your own listing" : "Price";
-
-    const bidOnListing = async (listingId: number, priceDollars?: number) => {
-        try {
-            await dispatch(
-                apiActions.authenticatedPutRequest(
-                    "/bid",
-                    {},
-                    {
-                        params: { listingId, priceDollars },
-                    },
-                ),
-            );
-            //if (response?.data?.errorCode === "SUCCESS") refresh();
-        } catch (error) {
-            setError(error);
-        }
-    };
-
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
@@ -54,27 +21,8 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
                 <h4>Owner</h4>
                 <p>{listing.owner.email}</p>
                 <h4>Bid</h4>
-                <Row>
-                    <Col xs={10}>
-                        <Form.Control
-                            type="number"
-                            placeholder={placeHolderForPriceInput}
-                            value={price}
-                            onChange={(e) => setPrice(parseInt(e.target.value))}
-                            disabled={isMyListing}
-                        />
-                    </Col>
-                    <Col xs={1}>
-                        <Button onClick={() => bidOnListing(listing.id, price)} disabled={!price}>
-                            Bid
-                        </Button>
-                    </Col>
-                </Row>
                 <Row className="mt-3">
-                    <ErrorAlert error={error} />
-                </Row>
-                <Row className="mt-3">
-                    <BidHome listingId={listing.id} />
+                    <BidHome listing={listing} />
                 </Row>
             </Modal.Body>
             <Modal.Footer>

@@ -4,36 +4,52 @@ import { AxiosResponse } from "axios";
 import { useAppDispatch } from "hooks";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { Bid, BidRow, BidSearchForm, BidSearchQuery } from "..";
-import { Button, ButtonGroup, Col, Container, Modal, Row, Stack, Table } from "react-bootstrap";
+import {
+    Button,
+    ButtonGroup,
+    Col,
+    Container,
+    Modal,
+    Row,
+    Stack,
+    Table,
+} from "react-bootstrap";
 import { ErrorAlert, LoadingButton } from "modules/common";
+import AddBidControl from "./AddBidControl";
+import { Listing } from "modules/listing";
 
 interface Props {
-    listingId?: number;
+    listing?: Listing;
 }
 
-const BidHome = ({ listingId }: Props) => {
+const BidHome = ({ listing }: Props) => {
     const dispatch = useAppDispatch();
+    const listingId = listing?.id;
 
-    const [bidSearchQuery, setBidSearchQuery] = useState<BidSearchQuery>({ listingIdRangeSearchQuery: { min: listingId, max: listingId } });
+    const [bidSearchQuery, setBidSearchQuery] = useState<BidSearchQuery | undefined>({
+        listingIdRangeSearchQuery: { min: listingId, max: listingId },
+    });
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Bid[]>>>();
     const [error, setError] = useState<unknown>();
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [showAddBidModal, setShowAddBidModal] = useState(false);
 
     const refresh = async () => {
         try {
             setError(undefined);
             setResponse(
-                await dispatch(apiActions.authenticatedPostRequest("/bid/search", bidSearchQuery || {}, {}))
+                await dispatch(
+                    apiActions.authenticatedPostRequest("/bid/search", bidSearchQuery || {}, {}),
+                ),
             );
-        }
-        catch (error: any) {
+        } catch (error: any) {
             setError(error);
         }
     };
 
     useEffect(() => {
         refresh();
-    }, [showFilterModal]);
+    }, [showFilterModal, showAddBidModal]);
 
     const controls = (
         <Col>
@@ -42,7 +58,10 @@ const BidHome = ({ listingId }: Props) => {
                     <Modal.Title>Bid Search</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <BidSearchForm bidSearchQuery={bidSearchQuery} setBidSearchQuery={setBidSearchQuery} />
+                    <BidSearchForm
+                        bidSearchQuery={bidSearchQuery}
+                        setBidSearchQuery={setBidSearchQuery}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowFilterModal(false)}>
@@ -50,12 +69,32 @@ const BidHome = ({ listingId }: Props) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            {listing && (
+                <Modal show={showAddBidModal} onHide={() => setShowAddBidModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Bid</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <AddBidControl listing={listing} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowAddBidModal(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
             <Row>
                 <Stack direction="horizontal" gap={2}>
                     <ButtonGroup>
                         <Button onClick={() => setShowFilterModal(!showFilterModal)}>Filter</Button>
                         <LoadingButton onClick={refresh}>Refresh</LoadingButton>
                     </ButtonGroup>
+                    {listing && (
+                        <Button onClick={() => setShowAddBidModal(!showAddBidModal)}>
+                            Add Bid
+                        </Button>
+                    )}
                 </Stack>
             </Row>
             <Row className="mt-2">
@@ -64,7 +103,8 @@ const BidHome = ({ listingId }: Props) => {
         </Col>
     );
 
-    if (error || !response) return <Container className={listingId !== undefined ? "" : "m-4"}>{controls}</Container>;
+    if (error || !response)
+        return <Container className={listingId !== undefined ? "" : "m-4"}>{controls}</Container>;
 
     const bids = response.data.content;
     return (
@@ -79,7 +119,9 @@ const BidHome = ({ listingId }: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {bids.map((bid) => <BidRow key={bid.id} bid={bid} />)}
+                    {bids.map((bid) => (
+                        <BidRow key={bid.id} bid={bid} />
+                    ))}
                 </tbody>
             </Table>
         </Container>
