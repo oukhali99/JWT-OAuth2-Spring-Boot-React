@@ -22,9 +22,9 @@ const UserSearchForm = ({ userSearchQuery, setUserSearchQuery }: Props) => {
 
     return (
         <div>
-            <StringSearchForm stringSearchQuery={firstNameSearchQuery} setStringSearchQuery={setFirstNameSearchQuery} />
-            <StringSearchForm stringSearchQuery={lastNameSearchQuery} setStringSearchQuery={setLastNameSearchQuery} />
-            <StringSearchForm stringSearchQuery={emailSearchQuery} setStringSearchQuery={setEmailSearchQuery} />
+            <StringSearchForm stringSearchQuery={firstNameSearchQuery} setStringSearchQuery={setFirstNameSearchQuery} name={"First Name"} />
+            <StringSearchForm stringSearchQuery={lastNameSearchQuery} setStringSearchQuery={setLastNameSearchQuery} name={"Last Name"} />
+            <StringSearchForm stringSearchQuery={emailSearchQuery} setStringSearchQuery={setEmailSearchQuery} name={"E-Mail"} />
         </div>
     );
 };

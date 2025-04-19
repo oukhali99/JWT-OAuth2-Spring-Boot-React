@@ -6,9 +6,10 @@ import { StringSearchQuery } from "modules/common";
 interface Props {
     stringSearchQuery?: StringSearchQuery;
     setStringSearchQuery: (searchStringQuery?: StringSearchQuery) => void;
+    name?: string;
 };
 
-const StringSearchForm = ({ stringSearchQuery, setStringSearchQuery }: Props) => {
+const StringSearchForm = ({ stringSearchQuery, setStringSearchQuery, name }: Props) => {
     const [searchString, setSearchString] = useState(stringSearchQuery?.searchString);
 
     useEffect(() => {
@@ -22,10 +23,9 @@ const StringSearchForm = ({ stringSearchQuery, setStringSearchQuery }: Props) =>
     return (
         <div>
             <Form.Group className="mb-3" controlId="searchString">
-                <Form.Label>Search</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Enter search string"
+                    placeholder={name}
                     value={searchString}
                     onChange={(e) => {
                         setSearchString(e.target.value);

@@ -18,7 +18,7 @@ const ListingSearchForm = ({ listingSearchQuery, setListingSearchQuery }: Props)
 
     return (
         <div>
-            <StringSearchForm stringSearchQuery={stringSearchQuery} setStringSearchQuery={setStringSearchQuery} />
+            <StringSearchForm stringSearchQuery={stringSearchQuery} setStringSearchQuery={setStringSearchQuery} name={"Title"} />
             <PriceRangeSearchForm priceRangeSearchQuery={priceRangeSearchQuery} setPriceRangeSearchQuery={setPriceRangeSearchQuery} />
         </div>
     );
