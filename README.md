@@ -1,16 +1,26 @@
 # Spring Boot JWT + OAuth Bidding Platform
-Bidding app that uses a Spring Boot backend and a React Redux Frontend.
+Bidding app that uses a Spring Boot backend and a Typescript ViteJS React Redux Frontend.
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012358.png)
 
 ## Features
-- Create a listing
-- Bid on a listing
+- Create and bid on listings
+- Composition based search queries
 - JWT token authentication
 - Register/Login directly on the website with username + password
 - Register/Login using OAuth2
 - Users registered using OAuth2 cannot be used to login directly
 - Send and accept friend requests
+
+## POWERFUL Search Feature with Maximal Code Reuse
+The Frontend sends SearchQuery objects to the backend in the POST body when making a search request. Each entity has it's own SearchQuery object. And we build more complex SearchQuery objects using simpler ones.
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Search.drawio.svg)
+
+Similarly, the React Frontend has SearchQuery classes. But on top of that, the Frontend also has SearchQueryForm React components. These components are also built from other simpler SearchQueryForm components. This way, the component that takes input for say, searching a user by First Name, is also used in searching for Listings by name.
+
+The entire thing is written to have ZERO code duplication, maximizing code reuse.
+
 
 ## Wait... JWT and OAuth2 at the same time?
 Yes. The usual workflow of JWT Authentication is to sign up directly with a username and a password. This application supports this.
@@ -29,15 +39,14 @@ What's more, a user that signed up with OAuth will not be allowed to login direc
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Authentication%20Activity.drawio.svg)
 
-There are only 3 classes:
+There are only 3 database entities:
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Backend%20Classes.drawio.svg)
 
-
-![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/Screenshot_20250302_012647.png)
-
 ## Marketplace Simulator
-TODO
+This app has a basic bidding marketplace. This diagram shows roughly how it works:
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/Marketplace%20Sequence.drawio.svg)
 
 ## Social Media Features
 Authenticated users can also send, receive and accept friend requests.
