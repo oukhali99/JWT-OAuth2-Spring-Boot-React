@@ -9,9 +9,10 @@ import { Listing } from "modules/listing";
 
 interface Props {
     listing: Listing;
+    onAdd?: () => void;
 }
 
-const AddBidControl = ({ listing }: Props) => {
+const AddBidControl = ({ listing, onAdd }: Props) => {
     const dispatch = useAppDispatch();
     const authId = useAppSelector(authSelectors.getId);
 
@@ -32,6 +33,7 @@ const AddBidControl = ({ listing }: Props) => {
                     },
                 ),
             );
+            if (onAdd) onAdd();
             //if (response?.data?.errorCode === "SUCCESS") refresh();
         } catch (error) {
             setError(error);

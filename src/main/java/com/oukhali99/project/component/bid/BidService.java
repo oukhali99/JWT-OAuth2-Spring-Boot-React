@@ -2,6 +2,7 @@ package com.oukhali99.project.component.bid;
 
 import com.oukhali99.project.component.bid.model.search.BidSearchQuery;
 import com.oukhali99.project.exception.EntityAlreadyExistsException;
+import com.oukhali99.project.exception.EntityDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,14 @@ public class BidService {
 
     public List<Bid> search(BidSearchQuery bidSearchQuery) {
         return findAll().stream().filter(bidSearchQuery::match).toList();
+    }
+
+    public void deleteById(long id) throws EntityDoesNotExistException {
+        if (!bidRepository.existsById(id)) throw new EntityDoesNotExistException();
+        bidRepository.deleteById(id);
+    }
+
+    public Bid getById(long id) throws EntityDoesNotExistException {
+        return bidRepository.findById(id).orElseThrow(EntityDoesNotExistException::new);
     }
 }

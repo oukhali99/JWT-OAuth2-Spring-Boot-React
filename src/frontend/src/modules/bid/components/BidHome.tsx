@@ -17,6 +17,7 @@ import {
 import { ErrorAlert, LoadingButton } from "modules/common";
 import AddBidControl from "./AddBidControl";
 import { Listing } from "modules/listing";
+import BidTable from "./BidTable";
 
 interface Props {
     listing?: Listing;
@@ -75,7 +76,7 @@ const BidHome = ({ listing }: Props) => {
                         <Modal.Title>Add Bid</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <AddBidControl listing={listing} />
+                        <AddBidControl listing={listing} onAdd={() => setShowAddBidModal(false)} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => setShowAddBidModal(false)}>
@@ -110,20 +111,7 @@ const BidHome = ({ listing }: Props) => {
     return (
         <Container className={listingId !== undefined ? "" : "m-4"}>
             {controls}
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Bid ID</th>
-                        <th>Bid Amount</th>
-                        <th>Bidder Username</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bids.map((bid) => (
-                        <BidRow key={bid.id} bid={bid} />
-                    ))}
-                </tbody>
-            </Table>
+            <BidTable refresh={refresh} bids={bids} />
         </Container>
     );
 };
