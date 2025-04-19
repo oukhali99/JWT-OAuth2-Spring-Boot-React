@@ -11,3 +11,4 @@ export * from "./models/Price";
 export * from "./models/SearchQuery/PriceRangeSearchQuery";
 export * from "./models/SearchQuery/StringSearchQuery";
 export * from "./models/SearchQuery/SearchQuery";
+export * from "./models/SearchQuery/BooleanSearchQuery";

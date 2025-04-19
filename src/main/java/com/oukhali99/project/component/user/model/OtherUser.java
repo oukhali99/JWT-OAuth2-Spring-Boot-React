@@ -2,9 +2,11 @@ package com.oukhali99.project.component.user.model;
 
 import com.oukhali99.project.component.user.User;
 import lombok.Data;
+import lombok.Getter;
 
 public class OtherUser {
 
+    @Getter
     private User user;
 
     private User selfUser;
@@ -24,10 +26,6 @@ public class OtherUser {
 
     public boolean getThisPersonSentSelfAFriendRequest() {
         return selfUser.getReceivedFriendRequests().contains(user);
-    }
-
-    public User getUser() {
-        return user;
     }
 
 }

@@ -8,3 +8,6 @@ export { actions };
 
 export * from "./models/User";
 export * from "./models/OtherUser";
+export * from "./models/SearchQuery/OtherUserSearchQuery";
+export * from "./models/SearchQuery/UserSearchQuery";
+export * from "./models/SearchQuery/OtherUserSearchQuery";

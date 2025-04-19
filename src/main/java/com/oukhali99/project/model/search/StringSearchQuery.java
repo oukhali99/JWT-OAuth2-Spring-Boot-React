@@ -9,6 +9,7 @@ public class StringSearchQuery implements SearchQuery<String> {
     @Override
     public boolean match(String entity) {
         if (searchString == null) return true;
+        if (entity == null) return false;
         return entity.contains(searchString);
     }
 }

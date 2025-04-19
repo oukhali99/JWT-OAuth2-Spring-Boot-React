@@ -4,6 +4,7 @@ import com.oukhali99.project.component.user.exception.TriedToAddYourselfExceptio
 import com.oukhali99.project.component.user.model.ObfuscatedSelf;
 import com.oukhali99.project.component.user.model.OtherUser;
 import com.oukhali99.project.component.user.model.responsebody.ObfuscatedSelfResponse;
+import com.oukhali99.project.component.user.model.search.OtherUserSearchQuery;
 import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.model.apiresponse.*;
 import com.oukhali99.project.security.JwtService;
@@ -29,6 +30,19 @@ public class UserController {
         return ResponseEntity.ok(
                 new ApiListResponse(
                         userService.findAllOtherUsers(selfUsername)
+                )
+        );
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse> search(
+            @RequestHeader(name = "Authorization") String authorization,
+            @RequestBody OtherUserSearchQuery otherUserSearchQuery
+    ) throws MyException {
+        String selfUsername = jwtService.extractUsernameFromAuthorizationHeader(authorization);
+        return ResponseEntity.ok(
+                new ApiListResponse(
+                        userService.search(selfUsername, otherUserSearchQuery)
                 )
         );
     }

@@ -4,11 +4,12 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
-import { RefreshButton, ErrorAlert } from "modules/common";
-import { Button, Container, Table } from "react-bootstrap";
-import { SocialButtons, OtherUser } from "..";
+import { RefreshButton, ErrorAlert, LoadingButton } from "modules/common";
+import { Button, ButtonGroup, Col, Container, Modal, Row, Stack, Table } from "react-bootstrap";
+import { SocialButtons, OtherUser, OtherUserSearchQuery } from "..";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { ApiPayloadData } from "modules/api";
+import OtherUserSearchForm from "./SearchForm/OtherUserSearchForm";
 
 const StyledTd = styled.td`
     text-align: center;
@@ -28,10 +29,13 @@ const UserHome = () => {
         AxiosResponse<ApiPayloadData<OtherUser[]>> | undefined
     >();
     const [error, setError] = useState<AxiosError>();
+    const [otherUserSearchQuery, setOtherUserSearchQuery] = useState<OtherUserSearchQuery>();
+    const [showFiltersModal, setShowFiltersModal] = useState(false);
 
     const refreshUsers = async () => {
         try {
-            setResponse(await dispatch(apiActions.authenticatedGetRequest("/user")));
+            setError(undefined);
+            setResponse(await dispatch(apiActions.authenticatedPostRequest("/user/search", otherUserSearchQuery || {}, {})));
         } catch (error: any) {
             if (!(error instanceof AxiosError)) throw error;
             setError(error);
@@ -39,15 +43,43 @@ const UserHome = () => {
     };
 
     const controls = (
-        <Container className="mb-4">
-            <ErrorAlert error={error} />
-            <RefreshButton refresh={refreshUsers} />
-        </Container>
+        <Col>
+            <Modal show={showFiltersModal} onHide={() => setShowFiltersModal(false)}>
+                <Modal.Header>
+                    <Modal.Title>Filter Users</Modal.Title>
+                    <Button variant="close" onClick={() => setShowFiltersModal(false)} />
+                </Modal.Header>
+                <Modal.Body>
+                    <OtherUserSearchForm
+                        otherUserSearchQuery={otherUserSearchQuery}
+                        setOtherUserSearchQuery={setOtherUserSearchQuery}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowFiltersModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Row>
+                <ErrorAlert error={error} />
+            </Row>
+            <Row className="mt-2">
+                <Stack direction="horizontal" gap={2}>
+                    <ButtonGroup>
+                        <Button onClick={() => setShowFiltersModal(!showFiltersModal)}>
+                            Filter
+                        </Button>
+                        <LoadingButton onClick={refreshUsers}>Refresh</LoadingButton>
+                    </ButtonGroup>
+                </Stack>
+            </Row>
+        </Col>
     );
 
     useEffect(() => {
         refreshUsers();
-    }, [authToken, setResponse]);
+    }, [authToken, setResponse, showFiltersModal]);
 
     if (error || !response) return <Container className="m-4">{controls}</Container>;
 
@@ -55,7 +87,7 @@ const UserHome = () => {
     return (
         <Container className="m-4">
             {controls}
-            <Table striped bordered hover>
+            <Table striped bordered hover className="mt-2">
                 <thead>
                     <tr>
                         <StyledTh>Email</StyledTh>

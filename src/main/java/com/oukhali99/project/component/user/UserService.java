@@ -5,6 +5,7 @@ import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.user.exception.UserWithThatEmailAlreadyExists;
 import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.component.user.model.OtherUser;
+import com.oukhali99.project.component.user.model.search.OtherUserSearchQuery;
 import com.oukhali99.project.exception.EntityDoesNotExistException;
 import com.oukhali99.project.exception.MyException;
 import jakarta.transaction.Transactional;
@@ -102,5 +103,9 @@ public class UserService implements UserDetailsService {
 
         myUser.removeFriend(otherUser);
         otherUser.removeFriend(myUser);
+    }
+
+    public List<OtherUser> search(String selfUsername, OtherUserSearchQuery otherUserSearchQuery) throws UsernameNotFoundException {
+        return findAllOtherUsers(selfUsername).stream().filter(otherUserSearchQuery::match).toList();
     }
 }
