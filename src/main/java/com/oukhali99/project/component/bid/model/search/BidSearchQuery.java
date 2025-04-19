@@ -9,10 +9,12 @@ import lombok.Data;
 @Data
 public class BidSearchQuery implements SearchQuery<Bid> {
     private RangeSearchQuery<Price> priceRangeSearchQuery;
+    private RangeSearchQuery<Long> listingIdRangeSearchQuery;
 
     @Override
     public boolean match(Bid entity) {
         if (priceRangeSearchQuery != null && !priceRangeSearchQuery.match(entity.getPrice())) return false;
+        if (listingIdRangeSearchQuery != null && !listingIdRangeSearchQuery.match(entity.getListing().getId())) return false;
 
         return true;
     }

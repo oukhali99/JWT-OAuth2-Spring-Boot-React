@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { AxiosResponse } from "axios";
 
 import { AxiosErrorAlert, ErrorAlert, Price } from "modules/common";
-import { BidRow, Bid } from "modules/bid";
+import { BidRow, Bid, BidHome } from "modules/bid";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
 import { useAppDispatch, useAppSelector } from "hooks";
@@ -22,8 +22,6 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
 
     const [error, setError] = useState<unknown>();
     const [price, setPrice] = useState<number>();
-    const [bidsResponse, setBidsResponse] = useState<AxiosResponse<ApiPayloadData<Bid[]>>>();
-    const [bidsError, setBidsError] = useState<unknown>();
 
     const isMyListing = authId?.toString() === listing.owner.id.toString();
     const placeHolderForPriceInput = isMyListing ? "Can't bid on your own listing" : "Price";
@@ -39,35 +37,15 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
                     },
                 ),
             );
-            refreshBids();
             //if (response?.data?.errorCode === "SUCCESS") refresh();
         } catch (error) {
             setError(error);
         }
     };
 
-    const refreshBids = async () => {
-        try {
-            setBidsResponse(
-                await dispatch(
-                    apiActions.authenticatedGetRequest("/bid/for-listing", {
-                        params: { listingId: listing?.id },
-                    }),
-                ),
-            );
-        } catch (error) {
-            setBidsError(error);
-        }
-    };
-
-    useEffect(() => {
-        refreshBids();
-    }, []);
-
-    const bids = bidsResponse?.data?.content;
     return (
         <Modal show={show} onHide={onHide}>
-            <Modal.Header>
+            <Modal.Header closeButton>
                 <Modal.Title>{listing?.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -76,17 +54,6 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
                 <h4>Owner</h4>
                 <p>{listing.owner.email}</p>
                 <h4>Bid</h4>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Bid ID</th>
-                            <th>Price</th>
-                            <th>Bidder</th>
-                        </tr>
-                    </thead>
-                    {bids && bids.map((bid) => <BidRow bid={bid} />)}
-                </Table>
-                <ErrorAlert error={bidsError} />
                 <Row>
                     <Col xs={10}>
                         <Form.Control
@@ -103,8 +70,18 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
                         </Button>
                     </Col>
                 </Row>
-                <ErrorAlert error={error} />
+                <Row className="mt-3">
+                    <ErrorAlert error={error} />
+                </Row>
+                <Row className="mt-3">
+                    <BidHome listingId={listing.id} />
+                </Row>
             </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onHide}>
+                    Close
+                </Button>
+            </Modal.Footer>
         </Modal>
     );
 };

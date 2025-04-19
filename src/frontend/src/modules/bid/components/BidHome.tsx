@@ -7,10 +7,14 @@ import { Bid, BidRow, BidSearchForm, BidSearchQuery } from "..";
 import { Button, ButtonGroup, Col, Container, Modal, Row, Stack, Table } from "react-bootstrap";
 import { ErrorAlert, LoadingButton } from "modules/common";
 
-const BidHome = () => {
+interface Props {
+    listingId?: number;
+}
+
+const BidHome = ({ listingId }: Props) => {
     const dispatch = useAppDispatch();
 
-    const [bidSearchQuery, setBidSearchQuery] = useState<BidSearchQuery>();
+    const [bidSearchQuery, setBidSearchQuery] = useState<BidSearchQuery>({ listingIdRangeSearchQuery: { min: listingId, max: listingId } });
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Bid[]>>>();
     const [error, setError] = useState<unknown>();
     const [showFilterModal, setShowFilterModal] = useState(false);
@@ -60,11 +64,11 @@ const BidHome = () => {
         </Col>
     );
 
-    if (error || !response) return <Container className="m-4">{controls}</Container>;
+    if (error || !response) return <Container className={listingId !== undefined ? "" : "m-4"}>{controls}</Container>;
 
     const bids = response.data.content;
     return (
-        <Container className="m-4">
+        <Container className={listingId !== undefined ? "" : "m-4"}>
             {controls}
             <Table>
                 <thead>

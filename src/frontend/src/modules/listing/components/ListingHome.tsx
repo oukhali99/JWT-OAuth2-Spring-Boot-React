@@ -72,7 +72,7 @@ const ListingHome = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Row className="mt-4">
+            <Row>
                 <Stack direction="horizontal" gap={2}>
                     <ButtonGroup>
                         <Button variant="primary" onClick={() => setShowFiltersModal(true)}>

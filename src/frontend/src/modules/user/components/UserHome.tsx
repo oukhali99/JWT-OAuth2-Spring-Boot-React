@@ -61,9 +61,6 @@ const UserHome = () => {
                 </Modal.Footer>
             </Modal>
             <Row>
-                <ErrorAlert error={error} />
-            </Row>
-            <Row className="mt-2">
                 <Stack direction="horizontal" gap={2}>
                     <ButtonGroup>
                         <Button onClick={() => setShowFiltersModal(!showFiltersModal)}>
@@ -72,6 +69,9 @@ const UserHome = () => {
                         <LoadingButton onClick={refreshUsers}>Refresh</LoadingButton>
                     </ButtonGroup>
                 </Stack>
+            </Row>
+            <Row className="mt-2">
+                <ErrorAlert error={error} />
             </Row>
         </Col>
     );
