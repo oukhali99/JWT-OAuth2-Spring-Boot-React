@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 import { useAppDispatch } from "hooks";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
 import { Bid, BidRow, BidSearchForm, BidSearchQuery } from "..";
-import { Col, Container, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Modal, Row, Stack, Table } from "react-bootstrap";
 import { ErrorAlert, LoadingButton } from "modules/common";
 
 const BidHome = () => {
@@ -13,6 +13,7 @@ const BidHome = () => {
     const [bidSearchQuery, setBidSearchQuery] = useState<BidSearchQuery>();
     const [response, setResponse] = useState<AxiosResponse<ApiPayloadData<Bid[]>>>();
     const [error, setError] = useState<unknown>();
+    const [showFilterModal, setShowFilterModal] = useState(false);
 
     const refresh = async () => {
         try {
@@ -28,13 +29,34 @@ const BidHome = () => {
 
     useEffect(() => {
         refresh();
-    }, []);
+    }, [showFilterModal]);
 
     const controls = (
         <Col>
-            <BidSearchForm bidSearchQuery={bidSearchQuery} setBidSearchQuery={setBidSearchQuery} />
-            <LoadingButton onClick={refresh}>Refresh</LoadingButton>
-            <ErrorAlert error={error} />
+            <Modal show={showFilterModal} onHide={() => setShowFilterModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Bid Search</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <BidSearchForm bidSearchQuery={bidSearchQuery} setBidSearchQuery={setBidSearchQuery} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowFilterModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Row>
+                <Stack direction="horizontal" gap={2}>
+                    <ButtonGroup>
+                        <Button onClick={() => setShowFilterModal(!showFilterModal)}>Filter</Button>
+                        <LoadingButton onClick={refresh}>Refresh</LoadingButton>
+                    </ButtonGroup>
+                </Stack>
+            </Row>
+            <Row className="mt-2">
+                <ErrorAlert error={error} />
+            </Row>
         </Col>
     );
 
