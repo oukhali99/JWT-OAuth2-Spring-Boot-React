@@ -9,22 +9,13 @@ interface Props {
 
 const BidRow = ({ bid }: Props) => {
     return (
-        <Table>
-            <thead>
-                <th>ID</th>
-                <th>price</th>
-                <th>owner</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{bid.id}</td>
-                    <td>
-                        ${bid.price.dollars}.{bid.price.cents}
-                    </td>
-                    <td>{bid.bidder.username}</td>
-                </tr>
-            </tbody>
-        </Table>
+        <tr>
+            <td>{bid.id}</td>
+            <td>
+                ${bid.price.dollars}.{bid.price.cents}
+            </td>
+            <td>{bid.bidder.username}</td>
+        </tr>
     );
 };
 

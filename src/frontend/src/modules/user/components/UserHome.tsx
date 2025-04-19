@@ -37,7 +37,6 @@ const UserHome = () => {
             setError(undefined);
             setResponse(await dispatch(apiActions.authenticatedPostRequest("/user/search", otherUserSearchQuery || {}, {})));
         } catch (error: any) {
-            if (!(error instanceof AxiosError)) throw error;
             setError(error);
         }
     };

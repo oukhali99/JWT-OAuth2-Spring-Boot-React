@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
 import { connect } from "react-redux";
 import { AxiosResponse } from "axios";
 
@@ -76,7 +76,16 @@ const ListingModal = ({ show, onHide, listing }: Props) => {
                 <h4>Owner</h4>
                 <p>{listing.owner.email}</p>
                 <h4>Bid</h4>
-                {bids && bids.map((bid) => <BidRow bid={bid} />)}
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>Bid ID</th>
+                            <th>Price</th>
+                            <th>Bidder</th>
+                        </tr>
+                    </thead>
+                    {bids && bids.map((bid) => <BidRow bid={bid} />)}
+                </Table>
                 <ErrorAlert error={bidsError} />
                 <Row>
                     <Col xs={10}>

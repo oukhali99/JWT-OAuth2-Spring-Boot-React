@@ -1,5 +1,6 @@
 package com.oukhali99.project.component.bid;
 
+import com.oukhali99.project.component.bid.model.search.BidSearchQuery;
 import com.oukhali99.project.component.listing.Listing;
 import com.oukhali99.project.component.listing.ListingService;
 import com.oukhali99.project.component.user.User;
@@ -28,6 +29,11 @@ public class BidController {
 
     @Autowired
     private BidService bidService;
+
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse> search(@RequestBody BidSearchQuery bidSearchQuery) {
+        return ResponseEntity.ok(new ApiObjectResponse(bidService.search(bidSearchQuery)));
+    }
 
     @PutMapping
     public ResponseEntity<ApiResponse> putBid(

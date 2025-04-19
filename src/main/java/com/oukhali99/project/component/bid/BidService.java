@@ -1,5 +1,6 @@
 package com.oukhali99.project.component.bid;
 
+import com.oukhali99.project.component.bid.model.search.BidSearchQuery;
 import com.oukhali99.project.exception.EntityAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,13 @@ public class BidService {
 
     public List<Bid> getBidsForListing(long listingId) {
         return bidRepository.getBidsForListing(listingId);
+    }
+
+    public List<Bid> findAll() {
+        return bidRepository.findAll();
+    }
+
+    public List<Bid> search(BidSearchQuery bidSearchQuery) {
+        return findAll().stream().filter(bidSearchQuery::match).toList();
     }
 }

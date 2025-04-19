@@ -13,6 +13,7 @@ import {
 } from "modules/auth";
 import { ListingHome } from "modules/listing";
 import { useAppSelector, useAppDispatch } from "hooks";
+import { BidHome } from "modules/bid";
 
 const App = () => {
     const dispatch = useAppDispatch();
@@ -37,6 +38,9 @@ const App = () => {
                             </NavLink>
                             <NavLink to="/listing" className="navbar-brand">
                                 Listings
+                            </NavLink>
+                            <NavLink to="/bid" className="navbar-brand">
+                                Bids
                             </NavLink>
                             {id === undefined ? (
                                 <NavLink
@@ -70,6 +74,7 @@ const App = () => {
                         <Route path="/about" Component={About} />
                         <Route path="/users" Component={UserHome} />
                         <Route path="/listing" Component={ListingHome} />
+                        <Route path="/bid" Component={BidHome} />
                         <Route path="/user/:id" Component={SpecificUser} />
                         <Route path="/oauth-google-redirect" Component={OAuthGoogleRedirect} />
                     </Routes>
