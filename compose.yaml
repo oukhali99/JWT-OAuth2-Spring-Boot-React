@@ -1,5 +1,20 @@
  
 services:
+  backend:
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - 8081:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{
+            "spring.datasource.url": "jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}?client_encoding=utf8",
+            "spring.datasource.username": "${POSTGRES_USER}",
+            "spring.datasource.password": "${POSTGRES_PASSWORD}",
+            "spring.security.secret-key": "${SPRING_SECURITY_SECRET_KEY}"
+            }'
+      env_file: .env
+      depends_on: postgresdb
   postgresdb:
     image: postgres
     restart: on-failure

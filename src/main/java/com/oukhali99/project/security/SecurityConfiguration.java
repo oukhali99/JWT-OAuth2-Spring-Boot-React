@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                         CorsConfiguration configuration = new CorsConfiguration();
                         configuration.setAllowedOrigins(List.of(
                                 "http://localhost",
-                                "http://localhost:3000"
+                                "http://localhost:3000",
+                                "https://d2555ptbtl3d6b.cloudfront.net"
                         ));
                         configuration.addAllowedMethod("*");
                         configuration.addAllowedHeader("*");
