@@ -7,14 +7,14 @@ services:
     ports:
       - 8081:8080
     environment:
-      SPRING_APPLICATION_JSON: '{
-            "spring.datasource.url": "jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}?client_encoding=utf8",
-            "spring.datasource.username": "${POSTGRES_USER}",
-            "spring.datasource.password": "${POSTGRES_PASSWORD}",
-            "spring.security.secret-key": "${SPRING_SECURITY_SECRET_KEY}"
-            }'
-      env_file: .env
-      depends_on: postgresdb
+        - POSTGRES_HOST=${POSTGRES_HOST}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - SPRING_SECURITY_SECRET_KEY=${SPRING_SECURITY_SECRET_KEY}
+        - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+        - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+        - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
   postgresdb:
     image: postgres
     restart: on-failure
@@ -25,4 +25,4 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
     ports:
-      - 5433:5432
+      - 5432:5432

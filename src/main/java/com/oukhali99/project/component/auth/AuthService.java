@@ -11,16 +11,29 @@ import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.exception.MyMessageException;
 import com.oukhali99.project.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AuthService {
+
+    @Value("${spring.google.client-id}")
+    private String googleClientId;
+
+    @Value("${spring.google.client-secret}")
+    private String googleClientSecret;
+
+    @Value("${spring.google.redirect-uri}")
+    private String googleRedirectUri;
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -73,10 +86,46 @@ public class AuthService {
         return register(username, password, false);
     }
 
-    public User authenticateOrRegisterWithGoogle(String token) throws MyException {
+    private String getAccessTokenFromCode(String code) throws MyMessageException {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Set up parameters
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", googleClientId);
+        params.add("client_secret", googleClientSecret);
+        params.add("redirect_uri", googleRedirectUri);
+        params.add("grant_type", "authorization_code");
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+
+        HttpEntity<MultiValueMap<String,String>> entity =
+                new HttpEntity<MultiValueMap<String, String>>(params, headers);
+
+        // Make the request
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "https://oauth2.googleapis.com/token",
+                entity,
+                String.class
+        );
+
+        // Check if the request was successful
+        if (!response.getStatusCode().is2xxSuccessful()) throw new MyMessageException("Google code is invalid");
+
+        String responseBody = response.getBody();
+        if (responseBody == null) throw new MyMessageException("Google response is null");
+
+        JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+        if (!jsonObject.has("access_token")) throw new MyMessageException("Google response doesn't contain access_token");
+
+        return jsonObject.get("access_token").getAsString();
+    }
+
+    public User authenticateOrRegisterWithGoogle(String code) throws MyException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=" + token,
+                "https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=" + getAccessTokenFromCode(code),
                 String.class
         );
 

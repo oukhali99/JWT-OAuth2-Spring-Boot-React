@@ -44,7 +44,7 @@ public class SecurityConfiguration {
                         configuration.setAllowedOrigins(List.of(
                                 "http://localhost",
                                 "http://localhost:3000",
-                                "https://d2555ptbtl3d6b.cloudfront.net"
+                                "https://dyqxllut1ee88.cloudfront.net"
                         ));
                         configuration.addAllowedMethod("*");
                         configuration.addAllowedHeader("*");

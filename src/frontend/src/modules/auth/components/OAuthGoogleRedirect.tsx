@@ -13,12 +13,8 @@ const OAuthGoogleRedirect = () => {
     const dispatch = useAppDispatch();
     const authId = useAppSelector(authSelectors.getId);
 
-    const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
-    const [error, setError] = useState<string | undefined>(undefined);
-
-    const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
-    const REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+    const [userInfo, _setUserInfo] = useState<UserInfo | undefined>(undefined);
+    const [error, _setError] = useState<string | undefined>(undefined);
 
     const init = async () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -27,48 +23,15 @@ const OAuthGoogleRedirect = () => {
         if (!code) return;
         if (authId) return;
 
-        const accessToken = await fetchAccessToken(code);
-        if (!accessToken) return;
-
-        setUserInfo(await fetchUserInfo(accessToken));
-        await dispatch(authActions.authenticateOrRegisterWithGoogle(accessToken));
+        await dispatch(authActions.authenticateOrRegisterWithGoogle(code));
+        //setUserInfo(await fetchUserInfo(accessToken));
     };
 
     useEffect(() => {
         init();
     }, []);
 
-    const fetchAccessToken = async (code: string) => {
-        try {
-            const params = new URLSearchParams();
-            params.append("code", code);
-            params.append("client_id", CLIENT_ID);
-            params.append("client_secret", CLIENT_SECRET);
-            params.append("redirect_uri", REDIRECT_URI);
-            params.append("grant_type", "authorization_code");
-            const response = await fetch("https://oauth2.googleapis.com/token", {
-                method: "POST",
-                body: params,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            });
-
-            const data = await response.json();
-            if (data.error) {
-                throw new Error(data.error_description || "Failed to fetch access token");
-            }
-
-            // Step 4: Use the access token to fetch user info from Google
-            const { access_token } = data;
-            return access_token;
-        } catch (err) {
-            setError("Failed to exchange authorization code for access token.");
-            console.error(err);
-        }
-        return undefined;
-    };
-
+    /*
     const fetchUserInfo = async (accessToken: string) => {
         try {
             const userInfoResponse = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -85,6 +48,7 @@ const OAuthGoogleRedirect = () => {
         }
         return undefined;
     };
+    */
 
     if (error) {
         return <div>{error}</div>;

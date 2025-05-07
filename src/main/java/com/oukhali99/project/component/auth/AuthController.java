@@ -62,8 +62,8 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate-or-register-with-google")
-    public ResponseEntity<ApiResponse> authenticateOrRegisterWithGoogle(@RequestParam String accessToken) throws MyException {
-        User user = authService.authenticateOrRegisterWithGoogle(accessToken);
+    public ResponseEntity<ApiResponse> authenticateOrRegisterWithGoogle(@RequestParam String code) throws MyException {
+        User user = authService.authenticateOrRegisterWithGoogle(code);
         String jwt = jwtService.generateToken(user);
         return ResponseEntity.ok(new AuthResponse(jwt, user));
     }

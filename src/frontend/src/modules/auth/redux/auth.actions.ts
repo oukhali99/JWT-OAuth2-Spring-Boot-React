@@ -44,12 +44,12 @@ export const authenticate =
     };
 
 export const authenticateOrRegisterWithGoogle =
-    (accessToken: string) => async (dispatch: AppDispatch) => {
+    (code: string) => async (dispatch: AppDispatch) => {
         const response = (await apiActions.postRequest(
             "/auth/authenticate-or-register-with-google",
             {},
             {
-                params: { accessToken },
+                params: { code },
             },
         )) as AxiosResponse<ApiAuthResponse>;
 
