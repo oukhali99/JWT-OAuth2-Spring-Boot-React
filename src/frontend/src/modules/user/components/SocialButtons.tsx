@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
 
 import { actions as userActions } from "modules/user";

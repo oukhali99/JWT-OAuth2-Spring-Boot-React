@@ -3,7 +3,7 @@ import { AxiosResponse } from "axios";
 
 import { useAppDispatch } from "hooks";
 import { actions as apiActions, ApiPayloadData } from "modules/api";
-import { Bid, BidRow, BidSearchForm, BidSearchQuery } from "..";
+import { Bid, BidSearchForm, BidSearchQuery } from "..";
 import {
     Button,
     ButtonGroup,
@@ -11,8 +11,7 @@ import {
     Container,
     Modal,
     Row,
-    Stack,
-    Table,
+    Stack
 } from "react-bootstrap";
 import { ErrorAlert, LoadingButton } from "modules/common";
 import AddBidControl from "./AddBidControl";

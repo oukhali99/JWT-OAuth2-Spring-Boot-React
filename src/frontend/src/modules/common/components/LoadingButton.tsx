@@ -9,7 +9,7 @@ interface Props {
 const LoadingButton = ({ onClick, ...rest }: Props) => {
     const [loading, setLoading] = useState(false);
 
-    const onClickWrapper = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const onClickWrapper = async (_e: React.MouseEvent<HTMLButtonElement>) => {
         //e.preventDefault();
         //e.stopPropagation();
         setLoading(true);

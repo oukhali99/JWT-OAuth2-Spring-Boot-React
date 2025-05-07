@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Col, Form, Stack } from "react-bootstrap";
+import { Form, Stack } from "react-bootstrap";
 
 import { ErrorAlert, LoadingButton } from "modules/common";
 import { useAppDispatch, useAppSelector } from "hooks";

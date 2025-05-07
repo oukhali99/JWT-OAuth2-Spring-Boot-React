@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import { useState } from "react";
 import { AxiosResponse } from "axios";
 
 import { actions as authActions } from "modules/auth";
@@ -19,7 +18,7 @@ const Login = ({ showModal, onHide }: Props) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
+    const [_response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
     const [error, setError] = useState<unknown>();
 
     const onHideWrapper = () => {

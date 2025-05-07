@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { PriceRangeSearchForm, StringSearchForm, PriceRangeSearchQuery, StringSearchQuery } from "modules/common";
+import { PriceRangeSearchForm, StringSearchForm } from "modules/common";
 import { ListingSearchQuery } from "modules/listing";
 
 interface Props {

@@ -1,5 +1,3 @@
-import { createAction } from "@reduxjs/toolkit";
-
 import { actions as apiActions } from "modules/api";
 import { AppDispatch } from "store";
 

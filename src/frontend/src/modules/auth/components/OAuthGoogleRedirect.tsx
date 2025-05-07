@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { useState, useEffect } from "react";
 
 import { actions as authActions, selectors as authSelectors } from "modules/auth";
 import { useAppSelector, useAppDispatch } from "hooks";

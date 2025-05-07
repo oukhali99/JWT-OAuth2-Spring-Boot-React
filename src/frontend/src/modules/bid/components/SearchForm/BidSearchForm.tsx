@@ -1,7 +1,5 @@
-import { useState } from "react";
-
 import { BidSearchQuery } from "modules/bid/models/SearchQuery/BidSearchQuery";
-import { PriceRangeSearchForm, PriceRangeSearchQuery } from "modules/common";
+import { PriceRangeSearchForm } from "modules/common";
 
 interface Props {
     bidSearchQuery?: BidSearchQuery;

@@ -3,12 +3,8 @@ import { Form } from "react-bootstrap";
 
 import { SearchQuery } from "modules/common";
 
-interface Props {
-    performQuery: (searchQuery: SearchQuery) => Promise<void>;
-};
-
-const SearchForm = ({ performQuery }: Props) => {
-    const [searchQuery, setSearchQuery] = React.useState<SearchQuery>();
+const SearchForm = () => {
+    const [_searchQuery, _setSearchQuery] = React.useState<SearchQuery>();
 
     return (
         <Form>

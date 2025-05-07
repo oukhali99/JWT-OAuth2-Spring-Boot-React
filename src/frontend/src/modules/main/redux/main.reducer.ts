@@ -6,11 +6,11 @@ const initialState = {
 };
 
 export default createReducer(initialState, (builder) => {
-    builder.addCase(mainActions.setAppStateAction, (state, action) => {
+    builder.addCase(mainActions.setAppStateAction, (_state, _action) => {
         console.log("Do nothing");
     });
 
-    builder.addCase(mainActions.incrementCounterAction, (state, action) => {
+    builder.addCase(mainActions.incrementCounterAction, (state, _action) => {
         state.counter++;
     });
 });

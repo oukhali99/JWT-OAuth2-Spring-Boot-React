@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, ButtonGroup, Container } from "react-bootstrap";
 
 import { selectors as authSelectors } from "modules/auth";

@@ -12,7 +12,7 @@ interface Props {
 const BooleanSearchForm = ({ booleanSearchQuery, setBooleanSearchQuery, label }: Props) => {
     const [_checked, setChecked] = useState(booleanSearchQuery?.value !== undefined);
 
-    const innerSetBooleanSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const innerSetBooleanSearchQuery = (_e: React.ChangeEvent<HTMLInputElement>) => {
         if (_checked) {
             if (booleanSearchQuery?.value === true) {
                 setChecked(true);

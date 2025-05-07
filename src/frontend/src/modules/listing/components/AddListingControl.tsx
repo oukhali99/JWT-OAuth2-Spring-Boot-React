@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { AxiosResponse } from "axios";
@@ -14,7 +13,7 @@ interface Props {
 const AddListingControl = ({ onAddListing }: Props) => {
     const dispatch = useAppDispatch();
 
-    const [response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
+    const [_response, setResponse] = useState<AxiosResponse<ApiPayloadData>>();
     const [error, setError] = useState<unknown>();
     const [priceDollars, setPriceDollars] = useState<string>();
     const [title, setTitle] = useState<string>();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 
-import { PriceRangeSearchQuery, Price, PriceForm } from "modules/common";
+import { PriceRangeSearchQuery, PriceForm } from "modules/common";
 
 interface Props {
     priceRangeSearchQuery?: PriceRangeSearchQuery;

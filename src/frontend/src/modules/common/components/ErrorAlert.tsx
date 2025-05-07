@@ -1,4 +1,3 @@
-import React from "react";
 import { AxiosError } from "axios";
 
 import { AxiosErrorAlert } from "modules/common";

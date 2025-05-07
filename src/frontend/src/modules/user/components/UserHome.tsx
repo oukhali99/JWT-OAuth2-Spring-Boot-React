@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { actions as apiActions } from "modules/api";
 import { selectors as authSelectors } from "modules/auth";
-import { RefreshButton, ErrorAlert, LoadingButton } from "modules/common";
+import { ErrorAlert, LoadingButton } from "modules/common";
 import { Button, ButtonGroup, Col, Container, Modal, Row, Stack, Table } from "react-bootstrap";
 import { SocialButtons, OtherUser, OtherUserSearchQuery } from "..";
 import { useAppDispatch, useAppSelector } from "hooks";

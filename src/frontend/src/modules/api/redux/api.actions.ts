@@ -1,8 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse, HttpStatusCode } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { selectors as authSelectors, actions as authActions } from "modules/auth";
+import { selectors as authSelectors } from "modules/auth";
 import { AppDispatch, AppGetState } from "store";
-import { ApiErrorCode, ApiPayloadData } from "modules/api";
+import { ApiPayloadData } from "modules/api";
 
 const buildUrl = (endpoint: string): string => `${import.meta.env.VITE_BACKEND_URL}${endpoint}`;
 
