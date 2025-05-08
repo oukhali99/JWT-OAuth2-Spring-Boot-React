@@ -64,7 +64,9 @@ const OAuthGoogleRedirect = () => {
         );
     }
 
-    return <div>Loading...</div>;
+    //return <div>Loading...</div>;
+
+    return <div>Login Success</div>;
 };
 
 export default OAuthGoogleRedirect;

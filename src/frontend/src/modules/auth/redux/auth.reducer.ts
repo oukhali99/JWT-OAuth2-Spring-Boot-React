@@ -12,17 +12,7 @@ interface StateType {
 const initialState = {
     token: Cookies.get("jwtToken"),
     username: Cookies.get("username"),
-    id: (() => {
-        try {
-            const cookies = Cookies.get("id");
-            if (!cookies) return undefined;
-            const value = parseInt(cookies);
-            if (isNaN(value)) return undefined;
-        }
-        catch (e) {
-            return undefined;
-        }
-    })(),
+    id: parseInt(Cookies.get("id") || "") || undefined,
 } as StateType;
 
 export default createReducer(initialState, (builder) => {
