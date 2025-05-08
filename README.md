@@ -12,6 +12,11 @@ Bidding app that uses a Spring Boot backend and a Typescript ViteJS React Redux 
 - Users registered using OAuth2 cannot be used to login directly
 - Send and accept friend requests
 
+## Hosted on AWS
+This demo is hosted [here](https://dyqxllut1ee88.cloudfront.net/users)
+
+![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/AWS%20Architecture.drawio.svg)
+
 ## POWERFUL Search Feature with Maximal Code Reuse
 The Frontend sends SearchQuery objects to the backend in the POST body when making a search request. Each entity has it's own SearchQuery object. And we build more complex SearchQuery objects using simpler ones.
 
