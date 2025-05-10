@@ -49,6 +49,10 @@ Parameters:
     NoEcho: true
     Description: Spring Security Secret Key
 
+  FrontendUrl:
+    Type: String
+    Description: Frontend URL
+
 Resources:
   # VPC and Network Configuration
   VPC:
@@ -242,6 +246,9 @@ Resources:
         - Namespace: aws:elasticbeanstalk:application:environment
           OptionName: GOOGLE_REDIRECT_URI
           Value: !Ref GoogleRedirectUri
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: FRONTEND_URL
+          Value: !Ref FrontendUrl
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Ref ElasticBeanstalkInstanceProfile

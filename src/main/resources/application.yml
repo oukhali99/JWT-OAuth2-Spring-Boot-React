@@ -1,4 +1,6 @@
 spring:
+    frontend-url: ${FRONTEND_URL}
+
     datasource:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?client_encoding=utf8

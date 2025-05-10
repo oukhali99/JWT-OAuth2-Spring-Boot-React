@@ -1,6 +1,7 @@
 package com.oukhali99.project.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,6 +25,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Value("${spring.frontend-url:http://localhost:3000}")
+    private String frontendUrl;
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -42,9 +46,7 @@ public class SecurityConfiguration {
                     public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
                         CorsConfiguration configuration = new CorsConfiguration();
                         configuration.setAllowedOrigins(List.of(
-                                "http://localhost",
-                                "http://localhost:3000",
-                                "https://dyqxllut1ee88.cloudfront.net"
+                                frontendUrl
                         ));
                         configuration.addAllowedMethod("*");
                         configuration.addAllowedHeader("*");
