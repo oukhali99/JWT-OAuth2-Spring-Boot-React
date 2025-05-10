@@ -59,7 +59,7 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-vpc
+          Value: !Sub ${Environment}-vpc-${AWS::StackName}
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -70,7 +70,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-public-subnet-1
+          Value: !Sub ${Environment}-public-subnet-1-${AWS::StackName}
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -81,7 +81,7 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-private-subnet-1
+          Value: !Sub ${Environment}-private-subnet-1-${AWS::StackName}
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -92,14 +92,14 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-private-subnet-2
+          Value: !Sub ${Environment}-private-subnet-2-${AWS::StackName}
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-igw
+          Value: !Sub ${Environment}-igw-${AWS::StackName}
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -111,6 +111,9 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment}-public-route-table-${AWS::StackName}
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -143,7 +146,7 @@ Resources:
         - !Ref DBSecurityGroup
       Tags:
         - Key: Name
-          Value: !Sub ${Environment}-db-instance
+          Value: !Sub ${Environment}-db-instance-${AWS::StackName}
 
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
@@ -152,6 +155,9 @@ Resources:
       SubnetIds:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment}-db-subnet-group-${AWS::StackName}
 
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -163,6 +169,9 @@ Resources:
           FromPort: 5432
           ToPort: 5432
           SourceSecurityGroupId: !Ref BackendSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment}-db-security-group-${AWS::StackName}
 
   BackendSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -174,12 +183,15 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${Environment}-backend-security-group-${AWS::StackName}
 
   # Elastic Beanstalk Application
   ElasticBeanstalkApplication:
     Type: AWS::ElasticBeanstalk::Application
     Properties:
-      ApplicationName: !Sub ${Environment}-jwt-oauth2-app
+      ApplicationName: !Sub ${Environment}-jwt-oauth2-app-${AWS::StackName}
       Description: JWT OAuth2 Spring Boot React Application
 
   # Elastic Beanstalk Environment
@@ -187,7 +199,7 @@ Resources:
     Type: AWS::ElasticBeanstalk::Environment
     Properties:
       ApplicationName: !Ref ElasticBeanstalkApplication
-      EnvironmentName: !Sub ${Environment}-env
+      EnvironmentName: !Sub ${Environment}-env-${AWS::StackName}
       SolutionStackName: 64bit Amazon Linux 2023 v4.5.1 running Corretto 21
       OptionSettings:
         # VPC and Subnet Configuration
