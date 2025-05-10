@@ -13,7 +13,7 @@ Bidding app that uses a Spring Boot backend and a Typescript ViteJS React Redux 
 - Send and accept friend requests
 
 ## Hosted on AWS
-This demo is hosted [here](https://dyqxllut1ee88.cloudfront.net/users)
+This demo is hosted [here](https://jwt-oauth-frontend.oussamakhalifeh.com)
 
 ![alt text](https://raw.githubusercontent.com/oukhali99/JWT-OAuth2-Spring-Boot-React/refs/heads/main/docs/AWS%20Architecture.drawio.svg)
 
