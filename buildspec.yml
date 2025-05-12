@@ -6,3 +6,9 @@ phases:
       - echo "Starting maven build"
       - mvn -B package --file pom.xml
       - echo "Completed maven build successfully!"
+
+artifacts:
+  files:
+    - target/*.jar
+  discard-paths: yes
+  base-directory: target
