@@ -69,7 +69,7 @@ Resources:
         - Key: Name
           Value: !Sub vpc-${AWS::StackName}-${Environment}
 
-  PublicSubnet1:
+  SubnetPublic1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -80,7 +80,7 @@ Resources:
         - Key: Name
           Value: !Sub public-subnet-1-${AWS::StackName}-${Environment}
 
-  PrivateSubnet1:
+  SubnetPrivate1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -91,7 +91,7 @@ Resources:
         - Key: Name
           Value: !Sub private-subnet-1-${AWS::StackName}-${Environment}
 
-  PrivateSubnet2:
+  SubnetPrivate2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -115,7 +115,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
-  PublicRouteTable:
+  RouteTablePublic:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
@@ -123,18 +123,18 @@ Resources:
         - Key: Name
           Value: !Sub public-route-table-${AWS::StackName}-${Environment}
 
-  PublicRoute:
+  RoutePublic:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref PublicRouteTable
+      RouteTableId: !Ref RouteTablePublic
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  PublicSubnetRouteTableAssociation:
+  SubnetRouteTableAssociationPublic:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet1
-      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref SubnetPublic1
+      RouteTableId: !Ref RouteTablePublic
 
   # RDS Instance
   DBInstance:
@@ -161,8 +161,8 @@ Resources:
     Properties:
       DBSubnetGroupDescription: Subnet group for RDS instance
       SubnetIds:
-        - !Ref PrivateSubnet1
-        - !Ref PrivateSubnet2
+        - !Ref SubnetPrivate1
+        - !Ref SubnetPrivate2
       Tags:
         - Key: Name
           Value: !Sub db-subnet-group-${AWS::StackName}-${Environment}
@@ -216,7 +216,7 @@ Resources:
           Value: !Ref VPC
         - Namespace: aws:ec2:vpc
           OptionName: Subnets
-          Value: !Ref PublicSubnet1
+          Value: !Ref SubnetPublic1
         - Namespace: aws:ec2:vpc
           OptionName: AssociatePublicIpAddress
           Value: true
@@ -294,33 +294,150 @@ Resources:
         - arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
 
-  PipelineRole:
+  IAMRoleCodeConnectionsAction:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
-          - Effect: Allow
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS: !GetAtt IAMRolePipeline.Arn
+          - Action: sts:AssumeRole
+            Effect: Allow
             Principal:
               Service: codepipeline.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess
-        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
-        - arn:aws:iam::aws:policy/AdministratorAccess-AWSElasticBeanstalk
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-        - arn:aws:iam::aws:policy/AWSCodeStarFullAccess
       Policies:
-        - PolicyName: CodeBuildPolicy
+        - PolicyName: CodeConnectionsActionPolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
                 Action:
-                  - "codestar-connections:UseConnection"
+                  - codestar-connections:UseConnection
                 Resource: !Ref GitHubConnectionArn
+              - Effect: Allow
+                Action:
+                  - s3:Abort*
+                  - s3:DeleteObject*
+                  - s3:GetBucket*
+                  - s3:GetObject*
+                  - s3:List*
+                  - s3:PutObject
+                  - s3:PutObjectLegalHold
+                  - s3:PutObjectRetention
+                  - s3:PutObjectTagging
+                  - s3:PutObjectVersionTagging
+                Resource:
+                  - !GetAtt S3BucketPipelineArtifacts.Arn
+                  - !Sub ${S3BucketPipelineArtifacts.Arn}/*
+              - Effect: Allow
+                Action:
+                  - s3:PutObjectAcl
+                  - s3:PutObjectVersionAcl
+                Resource:
+                  - !Sub ${S3BucketPipelineArtifacts.Arn}/*
 
-  PipelineArtifactsBucket:
+  IAMRoleCodeBuildAction:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS: !GetAtt IAMRolePipeline.Arn
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+      Policies:
+        - PolicyName: CodeBuildActionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                  - codebuild:StopBuild
+                Resource: !GetAtt CodeBuildProject.Arn
+              - Effect: Allow
+                Action:
+                  - s3:Abort*
+                  - s3:DeleteObject*
+                  - s3:GetBucket*
+                  - s3:GetObject*
+                  - s3:List*
+                  - s3:PutObject
+                  - s3:PutObjectLegalHold
+                  - s3:PutObjectRetention
+                  - s3:PutObjectTagging
+                  - s3:PutObjectVersionTagging
+                Resource:
+                  - !GetAtt S3BucketPipelineArtifacts.Arn
+                  - !Sub ${S3BucketPipelineArtifacts.Arn}/*
+
+  IAMRolePipeline:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub role-pipeline-${AWS::StackName}-${Environment}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+  IAMPipelinePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: PipelinePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:Abort*
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+            Resource:
+              - !GetAtt S3BucketPipelineArtifacts.Arn
+              - !Sub ${S3BucketPipelineArtifacts.Arn}/*
+          #- Effect: Allow
+          #  Action:
+          #    - sts:AssumeRole
+          #  Resource:
+          #    - !GetAtt IAMRoleCodeBuildAction.Arn
+          #    - !GetAtt IAMRoleCodeConnectionsAction.Arn
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - inspector-scan:ScanSbom
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - elasticbeanstalk:CreateApplicationVersion
+              - elasticbeanstalk:UpdateEnvironment
+            Resource: "*"
+      Roles:
+        - !Ref IAMRolePipeline
+
+  S3BucketPipelineArtifacts:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub pipeline-artifacts-jwt-oauth2-spring-boot-react-${Environment}
@@ -332,7 +449,7 @@ Resources:
       Description: "Builds the application"
       Artifacts:
         Type: S3
-        Location: !Ref PipelineArtifactsBucket
+        Location: !Ref S3BucketPipelineArtifacts
       Environment:
         Type: LINUX_CONTAINER
         Image: aws/codebuild/amazonlinux2-x86_64-standard:5.0
@@ -341,11 +458,13 @@ Resources:
         Type: GITHUB
         Location: https://github.com/oukhali99/JWT-OAuth2-Spring-Boot-React
         GitCloneDepth: 1
-      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+        BuildSpec: buildspec.yml
+      ServiceRole: !GetAtt IAMRoleCodeBuildService.Arn
 
-  CodeBuildServiceRole:
+  IAMRoleCodeBuildService:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub role-codebuild-service-${AWS::StackName}-${Environment}
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -353,33 +472,54 @@ Resources:
             Action: "sts:AssumeRole"
             Principal:
               Service: "codebuild.amazonaws.com"
-      Policies:
-        - PolicyName: "CodeBuildPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                  - codebuild:BatchPutCodeCoverages
-                  - codebuild:BatchPutTestCases
-                  - codebuild:CreateReport
-                  - codebuild:CreateReportGroup
-                  - codebuild:UpdateReport
-                  - s3:GetBucket*
-                  - s3:GetObject*
-                  - s3:List*
-                Resource: "*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+  IAMCodeBuildServicePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CodeBuildServicePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - s3:Abort*
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+            Resource:
+              - !GetAtt S3BucketPipelineArtifacts.Arn
+              - !Sub ${S3BucketPipelineArtifacts.Arn}/*
+          - Effect: Allow
+            Action:
+              - codebuild:BatchPutCodeCoverages
+              - codebuild:BatchPutTestCases
+              - codebuild:CreateReport
+              - codebuild:CreateReportGroup
+              - codebuild:UpdateReport
+            Resource: "*"
+      Roles:
+        - !Ref IAMRoleCodeBuildService
 
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
-      RoleArn: !GetAtt PipelineRole.Arn
+      RoleArn: !GetAtt IAMRolePipeline.Arn
       ArtifactStore:
         Type: S3
-        Location: !Ref PipelineArtifactsBucket
+        Location: !Ref S3BucketPipelineArtifacts
       Stages:
         - Name: Source
           Actions:
@@ -397,6 +537,7 @@ Resources:
                 BranchName: main
                 DetectChanges: true
               RunOrder: 1
+              RoleArn: !GetAtt IAMRoleCodeConnectionsAction.Arn
 
         - Name: Build
           Actions:
@@ -413,6 +554,7 @@ Resources:
               Configuration:
                 ProjectName: !Ref CodeBuildProject
               RunOrder: 1
+              RoleArn: !GetAtt IAMRoleCodeBuildAction.Arn
 
         - Name: Deploy
           Actions:
