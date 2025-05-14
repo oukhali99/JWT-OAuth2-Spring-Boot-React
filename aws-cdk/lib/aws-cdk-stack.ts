@@ -301,10 +301,6 @@ export class AwsCdkStack extends cdk.Stack {
         privileged: true,
         computeType: codebuild.ComputeType.SMALL
       },
-      source: codebuild.Source.gitHub({
-        owner: 'oukhali99',
-        repo: 'JWT-OAuth2-Spring-Boot-React'
-      }),
       artifacts: codebuild.Artifacts.s3({
         bucket: artifactsBucket,
         name: 'artifacts.zip',
@@ -342,10 +338,6 @@ export class AwsCdkStack extends cdk.Stack {
         privileged: true,
         computeType: codebuild.ComputeType.SMALL
       },
-      source: codebuild.Source.gitHub({
-        owner: 'oukhali99',
-        repo: 'JWT-OAuth2-Spring-Boot-React'
-      }),
       buildSpec: buildSpecFrontend
     });
     
