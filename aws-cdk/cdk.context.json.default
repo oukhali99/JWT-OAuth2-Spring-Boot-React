@@ -1,0 +1,26 @@
+{
+  "databaseName": "jwt_oauth2",
+  "databaseUsername": "admin",
+  "googleClientId": "changeme",
+  "googleClientSecret": "changeme",
+  "githubConnectionArn": "changeme",
+  "springSecuritySecretKey": "changeme",
+  "dev": {
+    "googleRedirectUri": "changeme",
+    "frontendUrl": "changeme",
+    "s3BucketFrontend": "changeme",
+    "backendUrl": "changeme",
+    "multiAz": false,
+    "allocatedStorage": 20,
+    "maxAzs": 2
+  },
+  "prod": {
+    "googleRedirectUri": "changeme",
+    "frontendUrl": "changeme",
+    "s3BucketFrontend": "changeme",
+    "backendUrl": "changeme",
+    "maxAzs": 2,
+    "allocatedStorage": 20,
+    "multiAz": false
+  }
+}

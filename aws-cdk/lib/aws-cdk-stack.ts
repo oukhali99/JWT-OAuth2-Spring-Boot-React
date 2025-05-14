@@ -13,43 +13,50 @@ import * as dotenv from 'dotenv';
 // Load environment variables from .env file
 dotenv.config();
 
+interface EnvironmentConfig {
+  googleRedirectUri: string;
+  frontendUrl: string;
+  s3BucketFrontend: string;
+  backendUrl: string;
+  maxAzs: number;
+  allocatedStorage: number;
+  multiAz: boolean;
+}
+
 export class AwsCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Parameters
-    const environment = process.env.ENVIRONMENT;
-    if (!environment) throw new Error('ENVIRONMENT is not set');
+    // Get the environment from context
+    const environment = this.node.tryGetContext('environment');
+    if (!environment) throw new Error('Environment not found in context');
 
-    const databaseName = process.env.DATABASE_NAME;
-    if (!databaseName) throw new Error('DATABASE_NAME is not set');
+    // Get root-level configuration
+    const databaseName = this.node.tryGetContext('databaseName');
+    const databaseUsername = this.node.tryGetContext('databaseUsername');
+    const googleClientId = this.node.tryGetContext('googleClientId');
+    const googleClientSecret = this.node.tryGetContext('googleClientSecret');
+    const githubConnectionArn = this.node.tryGetContext('githubConnectionArn');
+    const springSecuritySecretKey = this.node.tryGetContext('springSecuritySecretKey');
 
-    const databaseUsername = process.env.DATABASE_USERNAME;
-    if (!databaseUsername) throw new Error('DATABASE_USERNAME is not set');
+    // Get environment-specific configuration
+    const envConfig = this.node.tryGetContext(environment) as EnvironmentConfig;
+    if (!envConfig) throw new Error(`Environment configuration for '${environment}' not found in context`);
 
-    const googleClientId = process.env.GOOGLE_CLIENT_ID;
-    if (!googleClientId) throw new Error('GOOGLE_CLIENT_ID is not set');
-
-    const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    if (!googleClientSecret) throw new Error('GOOGLE_CLIENT_SECRET is not set');
-
-    const googleRedirectUri = process.env.GOOGLE_REDIRECT_URI;
-    if (!googleRedirectUri) throw new Error('GOOGLE_REDIRECT_URI is not set');
-
-    const frontendUrl = process.env.FRONTEND_URL;
-    if (!frontendUrl) throw new Error('FRONTEND_URL is not set');
-
-    const githubConnectionArn = process.env.GITHUB_CONNECTION_ARN;
-    if (!githubConnectionArn) throw new Error('GITHUB_CONNECTION_ARN is not set');
-
-    const s3BucketFrontend = process.env.S3_BUCKET_FRONTEND;
-    if (!s3BucketFrontend) throw new Error('S3_BUCKET_FRONTEND is not set');
-
-    const springSecuritySecretKey = process.env.SPRING_SECURITY_SECRET_KEY;
-    if (!springSecuritySecretKey) throw new Error('SPRING_SECURITY_SECRET_KEY is not set');
-
-    const backendUrl = process.env.BACKEND_URL;
-    if (!backendUrl) throw new Error('BACKEND_URL is not set');
+    // Validate required configuration
+    if (!databaseName) throw new Error('databaseName not found in context');
+    if (!databaseUsername) throw new Error('databaseUsername not found in context');
+    if (!googleClientId) throw new Error('googleClientId not found in context');
+    if (!googleClientSecret) throw new Error('googleClientSecret not found in context');
+    if (!githubConnectionArn) throw new Error('githubConnectionArn not found in context');
+    if (!springSecuritySecretKey) throw new Error('springSecuritySecretKey not found in context');
+    if (!envConfig.googleRedirectUri) throw new Error('googleRedirectUri not found in environment configuration');
+    if (!envConfig.frontendUrl) throw new Error('frontendUrl not found in environment configuration');
+    if (!envConfig.s3BucketFrontend) throw new Error('s3BucketFrontend not found in environment configuration');
+    if (!envConfig.backendUrl) throw new Error('backendUrl not found in environment configuration');
+    if (typeof envConfig.maxAzs !== 'number') throw new Error('maxAzs not found in environment configuration');
+    if (typeof envConfig.allocatedStorage !== 'number') throw new Error('allocatedStorage not found in environment configuration');
+    if (typeof envConfig.multiAz !== 'boolean') throw new Error('multiAz not found in environment configuration');
 
     const dbCredentials = rds.Credentials.fromGeneratedSecret(databaseUsername, {
       secretName: `${this.stackName}-${environment}-db-credentials`
@@ -59,7 +66,7 @@ export class AwsCdkStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'VPC', {
       vpcName: `${this.stackName}-${environment}-vpc`,
       ipAddresses: ec2.IpAddresses.cidr('172.30.0.0/16'),
-      maxAzs: 3,
+      maxAzs: envConfig.maxAzs,
       subnetConfiguration: [
         {
           name: 'Public',
@@ -111,9 +118,9 @@ export class AwsCdkStack extends cdk.Stack {
       securityGroups: [dbSecurityGroup],
       databaseName: databaseName,
       credentials: dbCredentials,
-      allocatedStorage: 20,
+      allocatedStorage: envConfig.allocatedStorage,
       storageType: rds.StorageType.GP2,
-      multiAz: false,
+      multiAz: envConfig.multiAz,
       publiclyAccessible: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -209,12 +216,12 @@ export class AwsCdkStack extends cdk.Stack {
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'GOOGLE_REDIRECT_URI',
-          value: googleRedirectUri
+          value: envConfig.googleRedirectUri
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'FRONTEND_URL',
-          value: frontendUrl
+          value: envConfig.frontendUrl
         },
         {
           namespace: 'aws:autoscaling:launchconfiguration',
@@ -325,10 +332,10 @@ export class AwsCdkStack extends cdk.Stack {
             value: 'profile email'
           },
           VITE_BACKEND_URL: {
-            value: backendUrl
+            value: envConfig.backendUrl
           },
           VITE_GOOGLE_REDIRECT_URI: {
-            value: googleRedirectUri
+            value: envConfig.googleRedirectUri
           }
         }
       },
@@ -383,7 +390,7 @@ export class AwsCdkStack extends cdk.Stack {
 
     const deployFrontendAction = new codepipeline_actions.S3DeployAction({
       actionName: 'Deploy-Frontend',
-      bucket: s3.Bucket.fromBucketName(this, 'FrontendBucket', s3BucketFrontend),
+      bucket: s3.Bucket.fromBucketName(this, 'FrontendBucket', envConfig.s3BucketFrontend),
       input: buildFrontendOutput
     });
 
