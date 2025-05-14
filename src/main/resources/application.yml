@@ -22,8 +22,10 @@ spring:
         secret-key: ${SPRING_SECURITY_SECRET_KEY}
 
     google:
-        client-id: ${GOOGLE_CLIENT_ID}
-        client-secret: ${GOOGLE_CLIENT_SECRET}
+        client-id: ${GOOGLE_CLIENT_ID:}
+        client-secret:
+            value: ${GOOGLE_CLIENT_SECRET:}
+            aws-secret-arn: ${AWS_SECRET_GOOGLE_CLIENT_SECRET_ARN:}
         redirect-uri: ${GOOGLE_REDIRECT_URI}
 
 aws:

@@ -10,6 +10,8 @@ import com.oukhali99.project.component.user.exception.UsernameNotFoundException;
 import com.oukhali99.project.exception.MyException;
 import com.oukhali99.project.exception.MyMessageException;
 import com.oukhali99.project.security.JwtService;
+
+import com.oukhali99.project.util.GoogleSecretRetriever;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,9 +31,6 @@ public class AuthService {
     @Value("${spring.google.client-id}")
     private String googleClientId;
 
-    @Value("${spring.google.client-secret}")
-    private String googleClientSecret;
-
     @Value("${spring.google.redirect-uri}")
     private String googleRedirectUri;
 
@@ -46,6 +45,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private GoogleSecretRetriever googleSecretRetriever;
 
     public String authenticate(String username, String password) throws MyException {
         try {
@@ -86,14 +88,14 @@ public class AuthService {
         return register(username, password, false);
     }
 
-    private String getAccessTokenFromCode(String code) throws MyMessageException {
+    private String getAccessTokenFromCode(String code) throws MyException {
         RestTemplate restTemplate = new RestTemplate();
 
         // Set up parameters
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("client_id", googleClientId);
-        params.add("client_secret", googleClientSecret);
+        params.add("client_secret", googleSecretRetriever.getGoogleClientSecret());
         params.add("redirect_uri", googleRedirectUri);
         params.add("grant_type", "authorization_code");
 

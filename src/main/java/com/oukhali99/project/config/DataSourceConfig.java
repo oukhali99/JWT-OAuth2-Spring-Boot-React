@@ -2,6 +2,7 @@ package com.oukhali99.project.config;
 
 import javax.sql.DataSource;
 
+import com.oukhali99.project.exception.MyExceptionWrapper;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
@@ -14,8 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Optional;
+import com.oukhali99.project.util.AWSSecretRetriever;
 
 @Configuration
 public class DataSourceConfig {
@@ -42,10 +42,11 @@ public class DataSourceConfig {
     private String awsRegion;
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource() throws MyExceptionWrapper {
         String password = this.password;
         if (password.isEmpty()) {
-            password = getPasswordFromAwsSecret(awsDbSecretArn);
+            AWSSecretRetriever awsSecretRetriever = new AWSSecretRetriever(awsDbSecretArn);
+            password = awsSecretRetriever.getSecret("password");
         }        
 
         String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s?client_encoding=utf8", host, port, database);
@@ -56,38 +57,6 @@ public class DataSourceConfig {
             .password(password)
             .driverClassName("org.postgresql.Driver")
             .build();
-    }
-
-    private String getPasswordFromAwsSecret(String awsDbSecretArn) {
-        SecretsManagerClient secretManagerClient = SecretsManagerClient.builder()
-            .region(Region.of(awsRegion))
-            .build();
-
-        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-            .secretId(awsDbSecretArn)
-            .build();
-
-        GetSecretValueResponse getSecretValueResponse = secretManagerClient.getSecretValue(getSecretValueRequest);
-
-        String secretString = getSecretValueResponse.secretString();
-        if (secretString == null) {
-            throw new RuntimeException("Secret string is null");
-        }
-
-        // Parse JSON to get the password
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode secretJson = objectMapper.readTree(secretString);
-            JsonNode passwordNode = secretJson.get("password");
-
-            if (passwordNode == null || passwordNode.isNull()) {
-                throw new RuntimeException("Password not found in secret JSON");
-            }
-
-            return passwordNode.asText();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse secret JSON", e);
-        }
     }
 
 }

@@ -8,10 +8,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
-import * as dotenv from 'dotenv';
-
-// Load environment variables from .env file
-dotenv.config();
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 interface EnvironmentConfig {
   googleRedirectUri: string;
@@ -58,10 +55,21 @@ export class AwsCdkStack extends cdk.Stack {
     if (typeof envConfig.allocatedStorage !== 'number') throw new Error('allocatedStorage not found in environment configuration');
     if (typeof envConfig.multiAz !== 'boolean') throw new Error('multiAz not found in environment configuration');
 
+    const dbCredentialsSecretName = `${this.stackName}-${environment}-db-credentials`;
     const dbCredentials = rds.Credentials.fromGeneratedSecret(databaseUsername, {
-      secretName: `${this.stackName}-${environment}-db-credentials`
+      secretName: dbCredentialsSecretName
     });
-    if (!dbCredentials.secret) throw new Error('dbCredentials.secret not found');
+    const dbCredentialsSecretArn = `arn:aws:secretsmanager:${this.region}:${this.account}:secret:${dbCredentialsSecretName}*`;
+
+    const secretGoogle = new secretsmanager.Secret(this, 'SecretGoogle', {
+      secretName: `${this.stackName}-${environment}-google`,
+      generateSecretString: {
+        secretStringTemplate: JSON.stringify({
+          clientSecret: googleClientSecret
+        }),
+        generateStringKey: 'dummy'
+      }
+    });
 
     // VPC and Network Configuration
     const vpc = new ec2.Vpc(this, 'VPC', {
@@ -143,8 +151,11 @@ export class AwsCdkStack extends cdk.Stack {
     });
     
     elasticBeanstalkRole.addToPolicy(new iam.PolicyStatement({
-      actions: ['secretsmanager:GetSecretValue'],
-      resources: [dbCredentials.secret.secretArn]
+      actions: ['secretsmanager:GetSecretValue', 'ssm:GetParameter'],
+      resources: [
+        dbCredentialsSecretArn,
+        secretGoogle.secretArn
+      ]
     }));
 
     const elasticBeanstalkInstanceProfile = new iam.CfnInstanceProfile(this, 'ElasticBeanstalkInstanceProfile', {
@@ -196,7 +207,12 @@ export class AwsCdkStack extends cdk.Stack {
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'AWS_DB_SECRET_ARN',
-          value: dbCredentials.secret.secretArn
+          value: dbCredentialsSecretArn
+        },
+        {
+          namespace: 'aws:elasticbeanstalk:application:environment',
+          optionName: 'POSTGRES_PORT',
+          value: '5432'
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
@@ -210,13 +226,8 @@ export class AwsCdkStack extends cdk.Stack {
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
-          optionName: 'GOOGLE_CLIENT_ID',
-          value: googleClientId
-        },
-        {
-          namespace: 'aws:elasticbeanstalk:application:environment',
-          optionName: 'GOOGLE_CLIENT_SECRET',
-          value: googleClientSecret
+          optionName: 'AWS_SECRET_GOOGLE_CLIENT_SECRET_ARN',
+          value: secretGoogle.secretArn
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
