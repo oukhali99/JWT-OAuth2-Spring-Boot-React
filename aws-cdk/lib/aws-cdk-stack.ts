@@ -8,78 +8,56 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 export class AwsCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Parameters
-    const environment = new cdk.CfnParameter(this, 'Environment', {
-      type: 'String',
-      default: 'dev',
-      allowedValues: ['dev', 'prod'],
-      description: 'Environment name'
-    });
+    const environment = process.env.ENVIRONMENT;
+    if (!environment) throw new Error('ENVIRONMENT is not set');
 
-    const databaseName = new cdk.CfnParameter(this, 'DatabaseName', {
-      type: 'String',
-      default: 'oauth2db',
-      description: 'Name of the database'
-    });
+    const databaseName = process.env.DATABASE_NAME;
+    if (!databaseName) throw new Error('DATABASE_NAME is not set');
 
-    const databaseUsername = new cdk.CfnParameter(this, 'DatabaseUsername', {
-      type: 'String',
-      default: 'postgres',
-      description: 'Database admin username'
-    });
+    const databaseUsername = process.env.DATABASE_USERNAME;
+    if (!databaseUsername) throw new Error('DATABASE_USERNAME is not set');
 
-    const databasePassword = new cdk.CfnParameter(this, 'DatabasePassword', {
-      type: 'String',
-      noEcho: true,
-      description: 'Database admin password',
-      minLength: 8
-    });
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    if (!googleClientId) throw new Error('GOOGLE_CLIENT_ID is not set');
 
-    const googleClientId = new cdk.CfnParameter(this, 'GoogleClientId', {
-      type: 'String',
-      description: 'Google OAuth2 Client ID'
-    });
+    const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    if (!googleClientSecret) throw new Error('GOOGLE_CLIENT_SECRET is not set');
 
-    const googleClientSecret = new cdk.CfnParameter(this, 'GoogleClientSecret', {
-      type: 'String',
-      noEcho: true,
-      description: 'Google OAuth2 Client Secret'
-    });
+    const googleRedirectUri = process.env.GOOGLE_REDIRECT_URI;
+    if (!googleRedirectUri) throw new Error('GOOGLE_REDIRECT_URI is not set');
 
-    const googleRedirectUri = new cdk.CfnParameter(this, 'GoogleRedirectUri', {
-      type: 'String',
-      description: 'Google OAuth2 Redirect URI'
-    });
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) throw new Error('FRONTEND_URL is not set');
 
-    const springSecuritySecretKey = new cdk.CfnParameter(this, 'SpringSecuritySecretKey', {
-      type: 'String',
-      noEcho: true,
-      description: 'Spring Security Secret Key'
-    });
+    const githubConnectionArn = process.env.GITHUB_CONNECTION_ARN;
+    if (!githubConnectionArn) throw new Error('GITHUB_CONNECTION_ARN is not set');
 
-    const frontendUrl = new cdk.CfnParameter(this, 'FrontendUrl', {
-      type: 'String',
-      description: 'Frontend URL'
-    });
+    const s3BucketFrontend = process.env.S3_BUCKET_FRONTEND;
+    if (!s3BucketFrontend) throw new Error('S3_BUCKET_FRONTEND is not set');
 
-    const githubConnectionArn = new cdk.CfnParameter(this, 'GitHubConnectionArn', {
-      type: 'String',
-      description: 'GitHub Connection ARN'
-    });
+    const springSecuritySecretKey = process.env.SPRING_SECURITY_SECRET_KEY;
+    if (!springSecuritySecretKey) throw new Error('SPRING_SECURITY_SECRET_KEY is not set');
 
-    const s3BucketFrontend = new cdk.CfnParameter(this, 'S3BucketFrontend', {
-      type: 'String',
-      description: 'S3 Bucket Frontend Name'
+    const backendUrl = process.env.BACKEND_URL;
+    if (!backendUrl) throw new Error('BACKEND_URL is not set');
+
+    const dbCredentials = rds.Credentials.fromGeneratedSecret(databaseUsername, {
+      secretName: `${this.stackName}-${environment}-db-credentials`
     });
 
     // VPC and Network Configuration
     const vpc = new ec2.Vpc(this, 'VPC', {
-      vpcName: `${this.stackName}-${environment.valueAsString}-vpc`,
+      vpcName: `${this.stackName}-${environment}-vpc`,
       ipAddresses: ec2.IpAddresses.cidr('172.30.0.0/16'),
       maxAzs: 3,
       subnetConfiguration: [
@@ -100,13 +78,13 @@ export class AwsCdkStack extends cdk.Stack {
     const dbSecurityGroup = new ec2.SecurityGroup(this, 'DBSecurityGroup', {
       vpc,
       description: 'Security group for RDS instance',
-      securityGroupName: `${this.stackName}-${environment.valueAsString}-db-security-group`
+      securityGroupName: `${this.stackName}-${environment}-db-security-group`
     });
 
     const backendSecurityGroup = new ec2.SecurityGroup(this, 'BackendSecurityGroup', {
       vpc,
       description: 'Security group for ECS tasks',
-      securityGroupName: `${this.stackName}-${environment.valueAsString}-backend-security-group`
+      securityGroupName: `${this.stackName}-${environment}-backend-security-group`
     });
 
     dbSecurityGroup.addIngressRule(
@@ -131,10 +109,8 @@ export class AwsCdkStack extends cdk.Stack {
         subnetType: ec2.SubnetType.PRIVATE_ISOLATED
       },
       securityGroups: [dbSecurityGroup],
-      databaseName: databaseName.valueAsString,
-      credentials: rds.Credentials.fromGeneratedSecret(databaseUsername.valueAsString, {
-        secretName: `${this.stackName}-${environment.valueAsString}-db-credentials`
-      }),
+      databaseName: databaseName,
+      credentials: dbCredentials,
       allocatedStorage: 20,
       storageType: rds.StorageType.GP2,
       multiAz: false,
@@ -144,13 +120,13 @@ export class AwsCdkStack extends cdk.Stack {
 
     // Elastic Beanstalk Application
     const elasticBeanstalkApp = new elasticbeanstalk.CfnApplication(this, 'ElasticBeanstalkApplication', {
-      applicationName: `${this.stackName}-${environment.valueAsString}`,
+      applicationName: `${this.stackName}-${environment}`,
       description: 'JWT OAuth2 Spring Boot React Application'
     });
 
     // IAM Role for Elastic Beanstalk
     const elasticBeanstalkRole = new iam.Role(this, 'ElasticBeanstalkRole', {
-      roleName: `${this.stackName}-${environment.valueAsString}-elasticbeanstalk-role`,
+      roleName: `${this.stackName}-${environment}-elasticbeanstalk-role`,
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkWorkerTier'),
@@ -166,7 +142,7 @@ export class AwsCdkStack extends cdk.Stack {
     // Elastic Beanstalk Environment
     const elasticBeanstalkEnv = new elasticbeanstalk.CfnEnvironment(this, 'ElasticBeanstalkEnvironment', {
       applicationName: elasticBeanstalkApp.applicationName!,
-      environmentName: `${this.stackName}-${environment.valueAsString}-env`,
+      environmentName: `${this.stackName}-${environment}-env`,
       solutionStackName: '64bit Amazon Linux 2023 v4.5.1 running Corretto 21',
       optionSettings: [
         {
@@ -202,42 +178,43 @@ export class AwsCdkStack extends cdk.Stack {
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'POSTGRES_USER',
-          value: databaseUsername.valueAsString
+          value: databaseUsername
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'POSTGRES_PASSWORD',
-          value: databasePassword.valueAsString
+          value: dbCredentials.secret?.secretValueFromJson('password').unsafeUnwrap()
+
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'POSTGRES_DB',
-          value: databaseName.valueAsString
+          value: databaseName
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'SPRING_SECURITY_SECRET_KEY',
-          value: springSecuritySecretKey.valueAsString
+          value: springSecuritySecretKey
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'GOOGLE_CLIENT_ID',
-          value: googleClientId.valueAsString
+          value: googleClientId
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'GOOGLE_CLIENT_SECRET',
-          value: googleClientSecret.valueAsString
+          value: googleClientSecret
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'GOOGLE_REDIRECT_URI',
-          value: googleRedirectUri.valueAsString
+          value: googleRedirectUri
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
           optionName: 'FRONTEND_URL',
-          value: frontendUrl.valueAsString
+          value: frontendUrl
         },
         {
           namespace: 'aws:autoscaling:launchconfiguration',
@@ -274,7 +251,7 @@ export class AwsCdkStack extends cdk.Stack {
 
     // S3 Bucket for Artifacts
     const artifactsBucket = new s3.Bucket(this, 'ArtifactsBucket', {
-      bucketName: `${this.stackName.toLowerCase()}-${environment.valueAsString}-artifacts`,
+      bucketName: `${this.stackName.toLowerCase()}-${environment}-artifacts`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL
@@ -295,7 +272,7 @@ export class AwsCdkStack extends cdk.Stack {
       }
     });
     const codeBuildProjectBackend = new codebuild.Project(this, 'CodeBuildProject', {
-      projectName: `${this.stackName}-${environment.valueAsString}`,
+      projectName: `${this.stackName}-${environment}`,
       environment: {
         buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
         privileged: true,
@@ -332,11 +309,28 @@ export class AwsCdkStack extends cdk.Stack {
       }
     });
     const codeBuildProjectFrontend = new codebuild.Project(this, 'CodeBuildProjectFrontend', {
-      projectName: `${this.stackName}-${environment.valueAsString}-frontend`,
+      projectName: `${this.stackName}-${environment}-frontend`,
       environment: {
         buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
         privileged: true,
-        computeType: codebuild.ComputeType.SMALL
+        computeType: codebuild.ComputeType.SMALL,
+        environmentVariables: {
+          VITE_GOOGLE_CLIENT_ID: {
+            value: googleClientId
+          },
+          VITE_GOOGLE_RESPONSE_TYPE: {
+            value: 'code'
+          },
+          VITE_GOOGLE_SCOPE: {
+            value: 'profile email'
+          },
+          VITE_BACKEND_URL: {
+            value: backendUrl
+          },
+          VITE_GOOGLE_REDIRECT_URI: {
+            value: googleRedirectUri
+          }
+        }
       },
       buildSpec: buildSpecFrontend
     });
@@ -347,7 +341,7 @@ export class AwsCdkStack extends cdk.Stack {
 
     // CodePipeline
     const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-      pipelineName: `${this.stackName}-${environment.valueAsString}-pipeline`,
+      pipelineName: `${this.stackName}-${environment}-pipeline`,
       artifactBucket: artifactsBucket
     });
 
@@ -358,7 +352,7 @@ export class AwsCdkStack extends cdk.Stack {
       owner: 'oukhali99',
       repo: 'JWT-OAuth2-Spring-Boot-React',
       branch: 'main',
-      connectionArn: githubConnectionArn.valueAsString,
+      connectionArn: githubConnectionArn,
       output: sourceOutput
     });
 
@@ -389,7 +383,7 @@ export class AwsCdkStack extends cdk.Stack {
 
     const deployFrontendAction = new codepipeline_actions.S3DeployAction({
       actionName: 'Deploy-Frontend',
-      bucket: s3.Bucket.fromBucketName(this, 'FrontendBucket', s3BucketFrontend.valueAsString),
+      bucket: s3.Bucket.fromBucketName(this, 'FrontendBucket', s3BucketFrontend),
       input: buildFrontendOutput
     });
 
