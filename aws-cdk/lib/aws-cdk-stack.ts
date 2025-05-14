@@ -61,6 +61,7 @@ export class AwsCdkStack extends cdk.Stack {
     const dbCredentials = rds.Credentials.fromGeneratedSecret(databaseUsername, {
       secretName: `${this.stackName}-${environment}-db-credentials`
     });
+    if (!dbCredentials.secret) throw new Error('dbCredentials.secret not found');
 
     // VPC and Network Configuration
     const vpc = new ec2.Vpc(this, 'VPC', {
@@ -140,6 +141,11 @@ export class AwsCdkStack extends cdk.Stack {
         iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLogsFullAccess')
       ]
     });
+    
+    elasticBeanstalkRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['secretsmanager:GetSecretValue'],
+      resources: [dbCredentials.secret.secretArn]
+    }));
 
     const elasticBeanstalkInstanceProfile = new iam.CfnInstanceProfile(this, 'ElasticBeanstalkInstanceProfile', {
       path: '/',
@@ -189,9 +195,8 @@ export class AwsCdkStack extends cdk.Stack {
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',
-          optionName: 'POSTGRES_PASSWORD',
-          value: dbCredentials.secret?.secretValueFromJson('password').unsafeUnwrap()
-
+          optionName: 'AWS_DB_SECRET_ARN',
+          value: dbCredentials.secret.secretArn
         },
         {
           namespace: 'aws:elasticbeanstalk:application:environment',

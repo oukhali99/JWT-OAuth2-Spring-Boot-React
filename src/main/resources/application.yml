@@ -2,10 +2,12 @@ spring:
     frontend-url: ${FRONTEND_URL}
 
     datasource:
-        driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?client_encoding=utf8
+        port: ${POSTGRES_PORT}
+        host: ${POSTGRES_HOST}
+        database: ${POSTGRES_DB}
         username: ${POSTGRES_USER}
-        password: ${POSTGRES_PASSWORD}
+        password: ${POSTGRES_PASSWORD:}
+        aws-db-secret-arn: ${AWS_DB_SECRET_ARN:}
 
     jpa:
         hibernate:
@@ -23,3 +25,6 @@ spring:
         client-id: ${GOOGLE_CLIENT_ID}
         client-secret: ${GOOGLE_CLIENT_SECRET}
         redirect-uri: ${GOOGLE_REDIRECT_URI}
+
+aws:
+    region: ${AWS_REGION:us-east-1}
