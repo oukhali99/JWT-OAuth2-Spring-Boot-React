@@ -13,13 +13,13 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 
 public class AWSSecretRetriever {
 
-    @Value("${aws.region}")
-    private String awsRegion;
-
     private String secretArn;
 
-    public AWSSecretRetriever(String secretArn) {
+    private String awsRegion;
+
+    public AWSSecretRetriever(String secretArn, String awsRegion) {
         this.secretArn = secretArn;
+        this.awsRegion = awsRegion;
     }
 
     public String getSecret(String secretName) throws MyExceptionWrapper {

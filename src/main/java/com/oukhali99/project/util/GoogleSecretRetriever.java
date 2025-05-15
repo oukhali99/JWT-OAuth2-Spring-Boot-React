@@ -13,10 +13,13 @@ public class GoogleSecretRetriever {
     @Value("${spring.google.client-secret.aws-secret-arn}")
     private String awsSecretGoogleArn;
 
+    @Value("${aws.region}")
+    private String awsRegion;
+
     private AWSSecretRetriever awsSecretRetriever;
 
     public GoogleSecretRetriever() {
-        awsSecretRetriever = new AWSSecretRetriever(awsSecretGoogleArn);
+        awsSecretRetriever = new AWSSecretRetriever(awsSecretGoogleArn, awsRegion);
     }
 
     public String getGoogleClientSecret() throws MyExceptionWrapper {

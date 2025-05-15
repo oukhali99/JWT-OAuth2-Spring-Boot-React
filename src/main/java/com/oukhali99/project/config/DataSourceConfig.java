@@ -45,7 +45,7 @@ public class DataSourceConfig {
     public DataSource dataSource() throws MyExceptionWrapper {
         String password = this.password;
         if (password.isEmpty()) {
-            AWSSecretRetriever awsSecretRetriever = new AWSSecretRetriever(awsDbSecretArn);
+            AWSSecretRetriever awsSecretRetriever = new AWSSecretRetriever(awsDbSecretArn, awsRegion);
             password = awsSecretRetriever.getSecret("password");
         }        
 
