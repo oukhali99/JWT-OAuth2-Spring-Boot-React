@@ -26,7 +26,7 @@ public class GoogleSecretRetriever {
 
     public String getGoogleClientSecret() throws MyExceptionWrapper {
         if (!googleClientSecret.isEmpty()) return googleClientSecret;
-        return awsSecretRetriever.getSecret("client_secret");
+        return awsSecretRetriever.getSecret("clientSecret");
     };
 
 }
