@@ -1,6 +1,7 @@
 package com.oukhali99.project.util;
 
 import com.oukhali99.project.exception.MyExceptionWrapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,8 @@ public class GoogleSecretRetriever {
 
     private AWSSecretRetriever awsSecretRetriever;
 
-    public GoogleSecretRetriever() {
+    @PostConstruct
+    public void init() {
         awsSecretRetriever = new AWSSecretRetriever(awsSecretGoogleArn, awsRegion);
     }
 
