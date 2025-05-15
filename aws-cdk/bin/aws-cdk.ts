@@ -4,8 +4,8 @@ import { AwsCdkStack } from '../lib/aws-cdk-stack';
 
 const app = new cdk.App();
 
-// Get the environment from command line arguments or default to 'dev'
-const environment = app.node.tryGetContext('environment') || 'dev';
+const environment = app.node.tryGetContext('environment');
+if (!environment) throw new Error('Environment not found in context');
 
 new AwsCdkStack(app, `JWT-OAuth2-${environment}`, {
   env: { 
