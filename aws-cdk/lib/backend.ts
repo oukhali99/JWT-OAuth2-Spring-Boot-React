@@ -13,6 +13,7 @@ export class Backend {
     constructor(
         private readonly stack: cdk.Stack,
         private readonly environment: string,
+        private readonly googleClientId: string,
         private readonly secretGoogle: secretsmanager.Secret,
         private readonly vpc: ec2.Vpc,
         private readonly dbInstance: rds.DatabaseInstance,
@@ -136,6 +137,11 @@ export class Backend {
                     namespace: 'aws:elasticbeanstalk:application:environment',
                     optionName: 'GOOGLE_REDIRECT_URI',
                     value: googleRedirectUri
+                },
+                {
+                    namespace: 'aws:elasticbeanstalk:application:environment',
+                    optionName: 'GOOGLE_CLIENT_ID',
+                    value: googleClientId
                 },
                 {
                     namespace: 'aws:elasticbeanstalk:application:environment',

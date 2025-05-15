@@ -69,7 +69,7 @@ export class AwsCdkStack extends cdk.Stack {
 
     const database = new Database(this, environment, vpc, databaseName, dbCredentials, envConfig.allocatedStorage, envConfig.multiAz);
 
-    const backend = new Backend(this, environment, secretGoogle, vpc, database.dbInstance, databaseUsername, databaseName, springSecuritySecretKey, envConfig.googleRedirectUri, envConfig.frontendUrl);
+    const backend = new Backend(this, environment, googleClientId, secretGoogle, vpc, database.dbInstance, databaseUsername, databaseName, springSecuritySecretKey, envConfig.googleRedirectUri, envConfig.frontendUrl);
 
     database.allowAccessFrom(backend.securityGroup);
 
