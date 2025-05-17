@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { BrowserRouter,  Routes, Route, NavLink } from "react-router-dom";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, Badge } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { version } from '../package.json';
 import { About, Home } from "modules/main";
 import { UserHome, SpecificUser } from "modules/user";
 import {
@@ -29,9 +30,6 @@ const App = () => {
                         <Nav>
                             <NavLink to="/" className="navbar-brand">
                                 Home
-                            </NavLink>
-                            <NavLink to="/about" className="navbar-brand">
-                                About
                             </NavLink>
                             <NavLink to="/users" className="navbar-brand">
                                 Users
@@ -65,6 +63,10 @@ const App = () => {
                                 </>
                             )}
                         </Nav>
+                        <Navbar.Brand className="d-flex align-items-center">
+                            <span className="me-2">Deployed on AWS using CDK with Full CodePipeline CI/CD</span>
+                            <Badge bg="primary" className="ms-2">v{version}</Badge>
+                        </Navbar.Brand>
                     </Container>
                 </Navbar>
 
