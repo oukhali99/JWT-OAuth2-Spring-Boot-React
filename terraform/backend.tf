@@ -1,15 +1,46 @@
-# Security Group for Backend (Elastic Beanstalk)
-resource "aws_security_group" "backend" {
-  name        = "${local.stack_name}-${var.environment}-backend-security-group"
-  description = "Security group for ECS tasks"
+# Security Group for Load Balancer (when LoadBalanced)
+resource "aws_security_group" "alb" {
+  name        = "${local.stack_name}-${var.environment}-alb-security-group"
+  description = "Security group for Elastic Beanstalk load balancer"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "Allow HTTP access"
+    description = "Allow HTTP from internet"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.stack_name}-${var.environment}-alb-security-group"
+    }
+  )
+}
+
+# Security Group for Backend (Elastic Beanstalk instances)
+resource "aws_security_group" "backend" {
+  name        = "${local.stack_name}-${var.environment}-backend-security-group"
+  description = "Security group for Elastic Beanstalk instances"
+  vpc_id      = aws_vpc.main.id
+
+  # Application port for ALB target group health checks and forwarding
+  ingress {
+    description = "Allow app port from load balancer"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    security_groups = [aws_security_group.alb.id]
   }
 
   egress {
@@ -63,7 +94,87 @@ resource "aws_elastic_beanstalk_environment" "main" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
-    value     = "SingleInstance"
+    value     = "LoadBalanced"
+  }
+
+  # Load balancer security group (required when LoadBalanced + DisableDefaultEC2SecurityGroup)
+  setting {
+    namespace = "aws:elb:loadbalancer"
+    name      = "SecurityGroups"
+    value     = aws_security_group.alb.id
+  }
+
+  setting {
+    namespace = "aws:elbv2:loadbalancer"
+    name      = "IdleTimeout"
+    value     = "120"
+  }
+
+  setting {
+    namespace = "aws:elbv2:listener:default"
+    name      = "ListenerEnabled"
+    value     = "true"
+  }
+
+  # Autoscaling
+  setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "MinSize"
+    value     = tostring(var.eb_min_instances)
+  }
+
+  setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "MaxSize"
+    value     = tostring(var.eb_max_instances)
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "MeasureName"
+    value     = "CPUUtilization"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Statistic"
+    value     = "Average"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Unit"
+    value     = "Percent"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "UpperThreshold"
+    value     = "75"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "LowerThreshold"
+    value     = "25"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "UpperBreachScaleIncrement"
+    value     = "1"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "LowerBreachScaleIncrement"
+    value     = "-1"
+  }
+
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Period"
+    value     = "5"
   }
 
   setting {

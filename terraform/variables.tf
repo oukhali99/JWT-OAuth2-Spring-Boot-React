@@ -92,6 +92,18 @@ variable "eb_instance_type" {
   default     = "t3.nano"
 }
 
+variable "eb_min_instances" {
+  description = "Minimum number of EC2 instances in the Elastic Beanstalk environment"
+  type        = number
+  default     = 1
+}
+
+variable "eb_max_instances" {
+  description = "Maximum number of EC2 instances in the Elastic Beanstalk environment"
+  type        = number
+  default     = 4
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for VPC"
   type        = string
