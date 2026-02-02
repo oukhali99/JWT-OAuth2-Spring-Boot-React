@@ -1,6 +1,6 @@
 # Security Group for Load Balancer (when LoadBalanced)
 resource "aws_security_group" "alb" {
-  name        = "${local.stack_name}-${var.environment}-alb-security-group"
+  name        = "${local.stack_name}-alb-security-group"
   description = "Security group for Elastic Beanstalk load balancer"
   vpc_id      = aws_vpc.main.id
 
@@ -23,14 +23,14 @@ resource "aws_security_group" "alb" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.stack_name}-${var.environment}-alb-security-group"
+      Name = "${local.stack_name}-alb-security-group"
     }
   )
 }
 
 # Security Group for Backend (Elastic Beanstalk instances)
 resource "aws_security_group" "backend" {
-  name        = "${local.stack_name}-${var.environment}-backend-security-group"
+  name        = "${local.stack_name}-backend-security-group"
   description = "Security group for Elastic Beanstalk instances"
   vpc_id      = aws_vpc.main.id
 
@@ -54,14 +54,14 @@ resource "aws_security_group" "backend" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.stack_name}-${var.environment}-backend-security-group"
+      Name = "${local.stack_name}-backend-security-group"
     }
   )
 }
 
 # Elastic Beanstalk Application
 resource "aws_elastic_beanstalk_application" "main" {
-  name        = "${local.stack_name}-${var.environment}"
+  name        = "${local.stack_name}"
   description = "JWT OAuth2 Spring Boot React Application"
 
   tags = local.common_tags
@@ -69,7 +69,7 @@ resource "aws_elastic_beanstalk_application" "main" {
 
 # Elastic Beanstalk Environment
 resource "aws_elastic_beanstalk_environment" "main" {
-  name                = "${local.stack_name}-${var.environment}-env"
+  name                = "${local.stack_name}-env"
   application         = aws_elastic_beanstalk_application.main.name
   solution_stack_name = "64bit Amazon Linux 2023 v4.5.1 running Corretto 21"
 

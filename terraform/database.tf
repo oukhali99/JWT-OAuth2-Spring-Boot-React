@@ -1,6 +1,6 @@
 # Security Group for RDS
 resource "aws_security_group" "db" {
-  name        = "${local.stack_name}-${var.environment}-db-security-group"
+  name        = "${local.stack_name}-db-security-group"
   description = "Security group for RDS instance"
   vpc_id      = aws_vpc.main.id
 
@@ -23,27 +23,27 @@ resource "aws_security_group" "db" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.stack_name}-${var.environment}-db-security-group"
+      Name = "${local.stack_name}-db-security-group"
     }
   )
 }
 
 # DB Subnet Group
 resource "aws_db_subnet_group" "main" {
-  name       = "${local.stack_name}-${var.environment}-db-subnet-group"
+  name       = "${local.stack_name}-db-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.stack_name}-${var.environment}-db-subnet-group"
+      Name = "${local.stack_name}-db-subnet-group"
     }
   )
 }
 
 # RDS Parameter Group
 resource "aws_db_parameter_group" "main" {
-  name   = "${local.stack_name}-${var.environment}-postgres15"
+  name   = "${local.stack_name}-postgres15"
   family = "postgres15"
 
   tags = local.common_tags
@@ -51,7 +51,7 @@ resource "aws_db_parameter_group" "main" {
 
 # RDS Instance
 resource "aws_db_instance" "main" {
-  identifier = "${local.stack_name}-${var.environment}-db"
+  identifier = "${local.stack_name}-db"
 
   engine         = "postgres"
   engine_version = "15"
@@ -77,12 +77,12 @@ resource "aws_db_instance" "main" {
 
   skip_final_snapshot       = true
   deletion_protection        = false
-  final_snapshot_identifier  = "${local.stack_name}-${var.environment}-final-snapshot"
+  final_snapshot_identifier  = "${local.stack_name}-final-snapshot"
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.stack_name}-${var.environment}-db"
+      Name = "${local.stack_name}-db"
     }
   )
 }

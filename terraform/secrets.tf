@@ -6,7 +6,7 @@ resource "random_password" "db_password" {
 
 # Database credentials secret
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name                    = "${local.stack_name}-${var.environment}-db-credentials2"
+  name                    = "${local.stack_name}-db-credentials2"
   description             = "Database credentials for ${local.stack_name}"
   recovery_window_in_days = 0  # Allow immediate deletion
 
@@ -23,7 +23,7 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 
 # Google OAuth secret
 resource "aws_secretsmanager_secret" "google" {
-  name                    = "${local.stack_name}-${var.environment}-google2"
+  name                    = "${local.stack_name}-google2"
   description             = "Google OAuth credentials for ${local.stack_name}"
   recovery_window_in_days = 0  # Allow immediate deletion
 

@@ -1,6 +1,6 @@
 # IAM Role for Elastic Beanstalk
 resource "aws_iam_role" "elastic_beanstalk" {
-  name = "${local.stack_name}-${var.environment}-elasticbeanstalk-role"
+  name = "${local.stack_name}-elasticbeanstalk-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "elastic_beanstalk_cloudwatch" {
 
 # Custom policy for Secrets Manager and SSM access
 resource "aws_iam_role_policy" "elastic_beanstalk_secrets" {
-  name = "${local.stack_name}-${var.environment}-secrets-access"
+  name = "${local.stack_name}-secrets-access"
   role = aws_iam_role.elastic_beanstalk.id
 
   policy = jsonencode({
@@ -54,7 +54,7 @@ resource "aws_iam_role_policy" "elastic_beanstalk_secrets" {
 
 # Instance Profile for Elastic Beanstalk
 resource "aws_iam_instance_profile" "elastic_beanstalk" {
-  name = "${local.stack_name}-${var.environment}-elasticbeanstalk-profile"
+  name = "${local.stack_name}-elasticbeanstalk-profile"
   role = aws_iam_role.elastic_beanstalk.name
 
   tags = local.common_tags
@@ -62,7 +62,7 @@ resource "aws_iam_instance_profile" "elastic_beanstalk" {
 
 # IAM Role for CodeBuild
 resource "aws_iam_role" "codebuild" {
-  name = "${local.stack_name}-${var.environment}-codebuild-role"
+  name = "${local.stack_name}-codebuild-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -82,7 +82,7 @@ resource "aws_iam_role" "codebuild" {
 
 # CodeBuild policy
 resource "aws_iam_role_policy" "codebuild" {
-  name = "${local.stack_name}-${var.environment}-codebuild-policy"
+  name = "${local.stack_name}-codebuild-policy"
   role = aws_iam_role.codebuild.id
 
   policy = jsonencode({
@@ -116,7 +116,7 @@ resource "aws_iam_role_policy" "codebuild" {
 
 # IAM Role for CodePipeline
 resource "aws_iam_role" "codepipeline" {
-  name = "${local.stack_name}-${var.environment}-codepipeline-role"
+  name = "${local.stack_name}-codepipeline-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -136,7 +136,7 @@ resource "aws_iam_role" "codepipeline" {
 
 # CodePipeline policy
 resource "aws_iam_role_policy" "codepipeline" {
-  name = "${local.stack_name}-${var.environment}-codepipeline-policy"
+  name = "${local.stack_name}-codepipeline-policy"
   role = aws_iam_role.codepipeline.id
 
   policy = jsonencode({
